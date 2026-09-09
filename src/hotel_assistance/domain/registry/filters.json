@@ -1,0 +1,72 @@
+[
+  {
+    "id": "amenity.wifi",
+    "type": "boolean",
+    "description": "Free wireless internet access",
+    "aliases": ["wifi", "internet", "free wifi"]
+  },
+  {
+    "id": "amenity.pool",
+    "type": "boolean",
+    "description": "Swimming pool on site",
+    "aliases": ["pool", "swimming pool"]
+  },
+  {
+    "id": "amenity.parking",
+    "type": "boolean",
+    "description": "Parking available on site",
+    "aliases": ["parking", "free parking", "car park"]
+  },
+  {
+    "id": "amenity.pet_friendly",
+    "type": "boolean",
+    "description": "Pets are allowed",
+    "aliases": ["pet friendly", "pets allowed", "dog friendly"]
+  },
+  {
+    "id": "room.smoking_allowed",
+    "type": "boolean",
+    "description": "Smoking is allowed in the room",
+    "aliases": ["smoking room", "smoking allowed"],
+    "conflicts_with": ["room.non_smoking"]
+  },
+  {
+    "id": "room.non_smoking",
+    "type": "boolean",
+    "description": "Room is non-smoking",
+    "aliases": ["non-smoking", "non smoking room"],
+    "conflicts_with": ["room.smoking_allowed"]
+  },
+  {
+    "id": "room.size_m2",
+    "type": "range",
+    "description": "Room floor area",
+    "aliases": ["room size", "large room", "spacious room"],
+    "unit": "m2",
+    "bounds": {"min": 0}
+  },
+  {
+    "id": "price.per_night",
+    "type": "range",
+    "description": "Price per night",
+    "aliases": ["price", "budget", "cheap", "per night price"],
+    "unit": "USD",
+    "bounds": {"min": 0}
+  },
+  {
+    "id": "rating.stars",
+    "type": "range",
+    "description": "Hotel star rating",
+    "aliases": ["star rating", "stars", "luxury"],
+    "unit": "stars",
+    "bounds": {"min": 1, "max": 5}
+  },
+  {
+    "id": "distance.to_center_km",
+    "type": "range",
+    "description": "Distance to the city center",
+    "aliases": ["distance to center", "near city center", "close to downtown"],
+    "unit": "km",
+    "bounds": {"min": 0}
+  }
+]
