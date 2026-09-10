@@ -44,14 +44,27 @@ class FakeOrchestrator:
         self.state = STATE
         self.pending = pending
 
-    async def handle_message(self, session_id: str, message: str, on_stage=None) -> ChatResult:
+    async def handle_message(
+        self, session_id: str, message: str, on_stage=None, on_partial=None
+    ) -> ChatResult:
         if self._error is not None:
             raise self._error
         if on_stage is not None:
             for stage in ChatStage:
                 await on_stage(stage)
+        if on_partial is not None:
+            await on_partial(
+                ChatResult(
+                    reply=f"Applied: Parking. ({message})",
+                    filters_reply=f"Applied: Parking. ({message})",
+                    state=self.state,
+                    pending=self.pending,
+                )
+            )
         return ChatResult(
-            reply=f"Applied: Parking. ({message})",
+            reply=f"Applied: Parking. ({message}) There are 2 hotels available.",
+            filters_reply=f"Applied: Parking. ({message})",
+            offers_reply="There are 2 hotels available.",
             state=self.state,
             pending=self.pending,
             offers=self._offers,
@@ -126,9 +139,24 @@ def test_stream_emits_stages_before_the_result(client) -> None:
         assert response.status_code == 200
         events = [json.loads(line) for line in response.iter_lines() if line.strip()]
 
-    assert [event["stage"] for event in events[:-1]] == [stage.value for stage in ChatStage]
+    stages = [event["stage"] for event in events if event["type"] == "stage"]
+    assert stages == [stage.value for stage in ChatStage]
     assert events[-1]["type"] == "result"
     assert "Applied: Parking." in events[-1]["reply"]
+
+
+def test_stream_sends_the_filter_summary_before_the_search_result(client) -> None:
+    """The user reads what the search became while the backend is still working."""
+
+    with client(FakeOrchestrator()).stream(
+        "POST", "/api/chat/stream", json={"message": "I need parking"}
+    ) as response:
+        events = [json.loads(line) for line in response.iter_lines() if line.strip()]
+
+    filters = next(event for event in events if event["type"] == "filters")
+    assert "Applied: Parking." in filters["reply"]
+    assert filters["available_offers_count"] is None
+    assert events[-1]["offers_reply"] == "There are 2 hotels available."
 
 
 def test_stream_reports_failures_as_an_error_event(client) -> None:

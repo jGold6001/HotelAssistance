@@ -67,6 +67,11 @@ class SearchStateView(BaseModel):
 
 class ChatResponse(BaseModel):
     reply: str
+    # ``reply`` is the whole turn; these are the two messages it is delivered
+    # as when the caller streams - what validation settled, then what the
+    # hotel backend answered.
+    filters_reply: str = ""
+    offers_reply: str = ""
     state: SearchStateView
     issues: list[ValidationIssue] = []
     unmapped_requests: list[str] = []
@@ -114,6 +119,8 @@ def to_state_view(
 def to_chat_response(result: ChatResult, registry: FilterRegistry) -> ChatResponse:
     return ChatResponse(
         reply=result.reply,
+        filters_reply=result.filters_reply,
+        offers_reply=result.offers_reply,
         state=to_state_view(result.state, registry, result.pending),
         issues=result.issues,
         unmapped_requests=result.unmapped_requests,

@@ -3,6 +3,10 @@
  *
  * Reads the NDJSON stream from POST /api/chat/stream so the thinking
  * indicator shows the stage the backend is actually in, not a fake timer.
+ *
+ * A turn arrives in two messages: what the assistant made of the request, then
+ * what the hotel backend found. The wait indicator resumes between them, so
+ * the user reads the filter summary while the search is still running.
  */
 
 const SESSION_ID = "web";
@@ -11,7 +15,7 @@ const STAGE_LABELS = {
   retrieving_candidates: "Looking through the filter catalog…",
   extracting_intent: "Reading your request…",
   validating: "Validating the filter changes…",
-  searching_offers: "Checking the hotel backend…",
+  searching_offers: "Searching available apartments and hotels…",
   done: "Wrapping up…",
 };
 
@@ -60,12 +64,36 @@ function addNotes(bubble, notes) {
   const list = document.createElement("div");
   list.className = "bubble-notes";
   for (const note of notes) {
-    const line = document.createElement("span");
-    line.textContent = note;
-    list.appendChild(line);
+    list.appendChild(note.items ? buildNoteGroup(note) : buildNoteLine(note.text));
   }
   bubble.appendChild(list);
   scrollToBottom();
+}
+
+function buildNoteLine(text) {
+  const line = document.createElement("span");
+  line.textContent = text;
+  return line;
+}
+
+/** A titled note whose detail belongs in a list rather than in repeated lines. */
+function buildNoteGroup(note) {
+  const group = document.createElement("div");
+  group.className = "bubble-note-group";
+
+  const title = document.createElement("span");
+  title.className = "bubble-note-title";
+  title.textContent = note.title;
+  group.appendChild(title);
+
+  const items = document.createElement("ul");
+  for (const item of note.items) {
+    const entry = document.createElement("li");
+    entry.textContent = item;
+    items.appendChild(entry);
+  }
+  group.appendChild(items);
+  return group;
 }
 
 /**
@@ -278,15 +306,24 @@ function renderOffers(payload) {
   elements.offersCount.textContent = String(payload.available_offers_count);
 }
 
-/** Extra context worth showing under the reply, but not worth burying it in. */
+/**
+ * Extra context worth showing under the reply, but not worth burying it in.
+ *
+ * Relaxation suggestions are deliberately not here: the reply already names
+ * what it could give up, in a sentence, so a second machine-readable list
+ * would only repeat it. They stay in the API response for other clients.
+ */
 function collectNotes(payload) {
   const notes = [];
-  for (const item of payload.unmapped_requests) notes.push(`Not supported: ${item}`);
-  for (const issue of payload.issues) {
-    if (issue.code !== "not_applied") notes.push(issue.message);
+  if (payload.unmapped_requests.length) {
+    notes.push({
+      title:
+        "Some preferences cannot be guaranteed because dedicated filters are not currently available:",
+      items: payload.unmapped_requests,
+    });
   }
-  for (const suggestion of payload.relaxation_suggestions) {
-    notes.push(`Relax: ${suggestion.label}`);
+  for (const issue of payload.issues) {
+    if (issue.code !== "not_applied") notes.push({ text: issue.message });
   }
   return notes;
 }
@@ -299,7 +336,7 @@ async function sendMessage(message) {
   addMessage("user", message);
   elements.suggestions.hidden = true;
   setBusy(true);
-  const thinking = showThinking();
+  const turn = startTurn();
 
   try {
     const response = await fetch("/api/chat/stream", {
@@ -312,17 +349,17 @@ async function sendMessage(message) {
       throw new Error(`Request failed with status ${response.status}`);
     }
 
-    await readStream(response.body, thinking);
+    await readStream(response.body, turn);
   } catch (error) {
-    thinking.remove();
+    turn.stop();
     addMessage("error", `Could not reach the assistant: ${error.message}`);
   } finally {
-    thinking.remove();
+    turn.stop();
     setBusy(false);
   }
 }
 
-async function readStream(body, thinking) {
+async function readStream(body, turn) {
   const reader = body.pipeThrough(new TextDecoderStream()).getReader();
   let buffer = "";
 
@@ -335,31 +372,82 @@ async function readStream(body, thinking) {
     buffer = lines.pop() ?? "";
 
     for (const line of lines) {
-      if (line.trim()) handleEvent(JSON.parse(line), thinking);
+      if (line.trim()) handleEvent(JSON.parse(line), turn);
     }
   }
 
-  if (buffer.trim()) handleEvent(JSON.parse(buffer), thinking);
+  if (buffer.trim()) handleEvent(JSON.parse(buffer), turn);
 }
 
-function handleEvent(event, thinking) {
+function handleEvent(event, turn) {
   if (event.type === "stage") {
-    thinking.setStage(event.stage);
+    turn.setStage(event.stage);
     return;
   }
-
-  thinking.remove();
-
+  if (event.type === "filters") {
+    turn.showFilters(event);
+    return;
+  }
   if (event.type === "error") {
-    addMessage("error", event.message);
+    turn.fail(event.message);
     return;
   }
+  turn.finish(event);
+}
 
-  const bubble = addMessage("assistant", event.reply);
-  addNotes(bubble, collectNotes(event));
-  addOffersTable(event.offers, event.available_offers_count);
-  renderState(event.state);
-  renderOffers(event);
+/**
+ * One turn's rendering, from the first wait indicator to the last message.
+ *
+ * It remembers whether the filter summary already went out, because that
+ * decides what the closing message still has to say.
+ */
+function startTurn() {
+  let thinking = showThinking();
+  let shownFilters = false;
+
+  function stopWaiting() {
+    if (thinking) thinking.remove();
+    thinking = null;
+  }
+
+  return {
+    setStage(stage) {
+      if (thinking) thinking.setStage(stage);
+    },
+
+    showFilters(event) {
+      stopWaiting();
+      renderReply(event.reply, collectNotes(event));
+      renderState(event.state);
+      shownFilters = true;
+      // The search itself has not started yet, so the wait resumes below the
+      // summary instead of the turn looking finished.
+      thinking = showThinking();
+    },
+
+    finish(event) {
+      stopWaiting();
+      const text = shownFilters ? event.offers_reply : event.reply;
+      // The summary already carried the notes; when it never went out, this
+      // message is the only place left for them.
+      renderReply(text, shownFilters ? [] : collectNotes(event));
+      addOffersTable(event.offers, event.available_offers_count);
+      renderState(event.state);
+      renderOffers(event);
+    },
+
+    fail(message) {
+      stopWaiting();
+      addMessage("error", message);
+    },
+
+    stop: stopWaiting,
+  };
+}
+
+function renderReply(text, notes) {
+  if (!text) return;
+  addNotes(addMessage("assistant", text), notes);
 }
 
 async function resetSearch() {

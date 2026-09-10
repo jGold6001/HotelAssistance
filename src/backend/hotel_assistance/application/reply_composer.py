@@ -10,23 +10,38 @@ Every reply that asks something also says what the search still holds. A
 follow-up turn ("I need something in May") only makes sense against the
 context of earlier ones, so the user has to be able to see that the context
 survived without repeating themselves.
+
+A turn speaks twice. What validation settled is known immediately, while the
+offer count has to wait for the hotel backend, so the two halves are composed
+by two functions and can be delivered as two messages with the search running
+in between.
 """
 
 from datetime import date
+from typing import NamedTuple
 
 from hotel_assistance.domain.models.filter_operation import (
     FilterOperation,
     FilterOperationType,
 )
 from hotel_assistance.domain.models.filter_value import RangeValue
+from hotel_assistance.domain.models.filter_definition import FilterDefinition
+from hotel_assistance.domain.models.filter_value import FilterValue
 from hotel_assistance.domain.models.guest_config import GuestConfig
 from hotel_assistance.domain.models.search_state import SearchState
+from hotel_assistance.domain.models.strength import FilterStrength
 from hotel_assistance.domain.services.filter_registry import FilterRegistry
 from hotel_assistance.domain.services.relaxation import RelaxationSuggestion
 from hotel_assistance.domain.services.search_validator import (
     IssueCode,
     TripField,
     ValidationIssue,
+)
+
+NO_MATCH = "No hotels match all of your current filters."
+
+NOTHING_CHANGED = (
+    "I did not find anything to change in the search. Could you say a bit more about what you want?"
 )
 
 OUT_OF_SCOPE_REPLY = (
@@ -44,6 +59,10 @@ MISSING_LABELS = {
 # Enough to show the user what was dropped without turning the reply into a
 # list; the full set is still returned in the API response.
 MAX_LISTED_UNMAPPED = 3
+
+# A zero-result reply names examples, not an inventory: the full ranked list
+# is still returned as relaxation_suggestions.
+MAX_NAMED_FILTERS = 3
 
 # Month names are fixed rather than taken from strftime, which follows the
 # process locale and would otherwise leak a non-English reply.
@@ -63,7 +82,18 @@ MONTH_NAMES = (
 )
 
 
-def compose_reply(
+class FiltersReply(NamedTuple):
+    """The first half of a turn, plus what it already told the user.
+
+    ``named_trip`` says whether the text opened with the destination and the
+    stay, so the offer count that follows does not repeat them.
+    """
+
+    text: str
+    named_trip: bool
+
+
+def compose_filters_reply(
     state: SearchState,
     registry: FilterRegistry,
     applied: list[FilterOperation],
@@ -71,13 +101,17 @@ def compose_reply(
     issues: list[ValidationIssue],
     unmapped_requests: list[str],
     clarification_question: str | None,
-    available_offers_count: int | None,
-    relaxations: list[RelaxationSuggestion],
     was_reset: bool,
     destination_hint: str | None = None,
     date_hint: str | None = None,
-    offers_note: str | None = None,
-) -> str:
+) -> FiltersReply:
+    """Say what the turn settled about the search itself.
+
+    Everything here follows from validation alone, so it is ready before the
+    hotel backend has been asked anything and can be sent while the search is
+    still running.
+    """
+
     parts: list[str] = []
 
     if was_reset:
@@ -100,18 +134,40 @@ def compose_reply(
     if unmapped_requests:
         parts.append(_describe_unmapped(unmapped_requests))
 
-    parts.extend(_describe_offers(available_offers_count, relaxations, offers_note))
-
     if question:
         parts.append(question)
 
-    if not parts:
-        parts.append("I did not find anything to change in the search. Could you say a bit more about what you want?")
+    return FiltersReply(" ".join(parts), named_trip=context is not None)
 
-    return " ".join(parts)
+
+def compose_offers_reply(
+    state: SearchState,
+    registry: FilterRegistry,
+    available_offers_count: int | None,
+    relaxations: list[RelaxationSuggestion],
+    offers_note: str | None = None,
+    include_trip: bool = True,
+) -> str:
+    """Report what the hotel backend answered, as a message of its own.
+
+    Stays empty when the backend gave no count, so a turn that never reached a
+    search does not end on a sentence about offers.
+    """
+
+    return " ".join(
+        _describe_offers(state, registry, available_offers_count, relaxations, offers_note, include_trip)
+    )
+
+
+def join_replies(filters_reply: str, offers_reply: str) -> str:
+    """The whole turn as one string, for history and for callers that do not stream."""
+
+    return " ".join(part for part in (filters_reply, offers_reply) if part)
 
 
 def compose_simulated_search_reply(
+    state: SearchState,
+    registry: FilterRegistry,
     available_offers_count: int | None,
     relaxations: list[RelaxationSuggestion],
     offers_note: str | None = None,
@@ -123,32 +179,162 @@ def compose_simulated_search_reply(
     deterministic part of a reply.
     """
 
-    parts = _describe_offers(available_offers_count, relaxations, offers_note)
-    if not parts:
+    reply = compose_offers_reply(state, registry, available_offers_count, relaxations, offers_note)
+    if not reply:
         return "The hotel backend is unavailable, so I cannot say how many offers match."
-    return " ".join(parts)
+    return reply
 
 
 def _describe_offers(
+    state: SearchState,
+    registry: FilterRegistry,
     available_offers_count: int | None,
     relaxations: list[RelaxationSuggestion],
     note: str | None = None,
+    include_trip: bool = True,
 ) -> list[str]:
     """Report the backend's answer, or stay silent when it has not given one."""
 
     if available_offers_count is None:
         return []
     if available_offers_count == 0:
-        parts = ["The hotel backend finds no offers for this search."]
-        if relaxations:
-            options = "; ".join(f"{item.label} - {item.reason}" for item in relaxations)
-            parts.append(f"You could relax: {options}.")
+        parts = _describe_zero_result(state, registry, relaxations)
     else:
-        plural = "" if available_offers_count == 1 else "s"
-        parts = [f"The hotel backend currently matches {available_offers_count} offer{plural}."]
+        parts = [_describe_available_offers(state, available_offers_count, include_trip)]
     if note:
         parts.append(note)
     return parts
+
+
+def _describe_available_offers(state: SearchState, count: int, include_trip: bool = True) -> str:
+    """State the backend's count against the search it answers.
+
+    A bare number means little on its own - the same "38" is a good result for
+    a narrow search and a poor one for a broad one - so the sentence carries
+    the destination, the stay and the fact that the filters were applied. All
+    of it comes from the validated state; only the number comes from the
+    backend, and it is never adjusted on the way through.
+    """
+
+    bits = ["There is 1 hotel" if count == 1 else f"There are {count} hotels", "available"]
+    if include_trip and state.destination:
+        bits.append(f"in {state.destination}")
+    dates = _describe_offer_dates(state) if include_trip else None
+    if dates:
+        bits.append(dates)
+    if state.filters:
+        bits.append("that matches your filters" if count == 1 else "that match your filters")
+    return " ".join(bits) + "."
+
+
+def _describe_offer_dates(state: SearchState) -> str | None:
+    """Render the stay for this sentence, where a full range needs a preposition.
+
+    A half-specified stay already reads as one ("from 15 Aug 2026"), so it is
+    left alone.
+    """
+
+    dates = _describe_dates(state)
+    if dates is None:
+        return None
+    return f"for {dates}" if state.check_in and state.check_out else dates
+
+
+def _describe_zero_result(
+    state: SearchState,
+    registry: FilterRegistry,
+    relaxations: list[RelaxationSuggestion],
+) -> list[str]:
+    """Offer a way out of a zero-result search, in the user's own terms.
+
+    The offer is split along the line the user themselves drew: preferences
+    are given up, requirements are kept. That way the reply proposes
+    something concrete to do next instead of just reporting a dead end, and it
+    never volunteers to drop a filter the user called a requirement.
+    """
+
+    preferences = _named_filters(state, registry, FilterStrength.PREFERRED)
+    requirements = _named_filters(state, registry, FilterStrength.REQUIRED)
+
+    if not preferences and not requirements:
+        return [
+            "No hotels match this search.",
+            "There are no filters to relax, so widening it means changing the dates or the destination.",
+        ]
+
+    if not preferences:
+        # Everything is a hard requirement, so there is no cheap side to give
+        # up and the choice is the user's. The ranked suggestions decide what
+        # to name first: a numeric limit can be widened instead of dropped.
+        candidates = _ranked_names(state, registry, relaxations) or requirements
+        return [
+            NO_MATCH,
+            "Every filter you set is a required one, so broadening the search means giving one up, "
+            f"such as {_join_alternatives(candidates)}.",
+            "Which of them would you like me to relax?",
+        ]
+
+    offer = f"I can broaden the search by removing some preferences, such as {_join_alternatives(preferences)}"
+    if requirements:
+        offer += f", while keeping your required criteria like {_join_readable(requirements[:MAX_NAMED_FILTERS])}"
+    return [NO_MATCH, f"{offer}.", "Would you like me to relax those preferences?"]
+
+
+def _named_filters(
+    state: SearchState,
+    registry: FilterRegistry,
+    strength: FilterStrength,
+) -> list[str]:
+    """Name the active filters of one strength, ordered as the ranking orders them."""
+
+    names: list[str] = []
+    for applied in sorted(state.filters, key=lambda item: item.filter_id):
+        definition = registry.get(applied.filter_id)
+        if definition is None or applied.strength is not strength:
+            continue
+        names.append(_filter_name(definition, applied.value))
+    return names
+
+
+def _ranked_names(
+    state: SearchState,
+    registry: FilterRegistry,
+    relaxations: list[RelaxationSuggestion],
+) -> list[str]:
+    """Name the ranked suggestions, cheapest to give up first."""
+
+    names: list[str] = []
+    for suggestion in relaxations:
+        definition = registry.get(suggestion.filter_id)
+        applied = state.filter_by_id(suggestion.filter_id)
+        if definition is None or applied is None:
+            continue
+        names.append(_filter_name(definition, applied.value))
+    return names
+
+
+def _filter_name(definition: FilterDefinition, value: FilterValue) -> str:
+    """Call a filter what the user would call it.
+
+    The first alias is the short spoken form ("room size"); the description is
+    written for a catalog and reads badly inside a sentence.
+    """
+
+    name = definition.aliases[0] if definition.aliases else definition.description
+    if isinstance(value, RangeValue):
+        return f"{name} ({value.describe(definition.unit)})"
+    if value is False:
+        return f"no {name}"
+    return name
+
+
+def _join_alternatives(items: list[str]) -> str:
+    """Join options the user picks between, rather than a list they get all of."""
+
+    items = items[:MAX_NAMED_FILTERS]
+    if len(items) == 1:
+        return items[0]
+    return f"{', '.join(items[:-1])} or {items[-1]}"
 
 
 def compose_out_of_scope_reply(state: SearchState) -> str:

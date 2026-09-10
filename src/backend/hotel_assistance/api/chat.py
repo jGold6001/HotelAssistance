@@ -15,7 +15,11 @@ from hotel_assistance.api.schemas import (
     to_chat_response,
     to_state_view,
 )
-from hotel_assistance.application.chat_orchestrator import ChatOrchestrator, ChatStage
+from hotel_assistance.application.chat_orchestrator import (
+    ChatOrchestrator,
+    ChatResult,
+    ChatStage,
+)
 from hotel_assistance.domain.services.filter_registry import FilterRegistry
 from hotel_assistance.infrastructure.llm.provider import LLMExtractionError
 
@@ -47,7 +51,10 @@ async def chat_stream(
     """Stream real processing stages, then the final result, as NDJSON.
 
     Stages are emitted by the orchestrator as they actually happen, so the
-    thinking indicator in the UI reflects work rather than a timer. Once the
+    thinking indicator in the UI reflects work rather than a timer. A turn
+    speaks twice: a ``filters`` event carries what validation settled, and the
+    ``result`` event that follows carries what the hotel backend answered, so
+    the user reads the first half while the search is still running. Once the
     response has started there is no status code left to set, so failures are
     reported as an ``error`` event instead.
     """
@@ -58,10 +65,17 @@ async def chat_stream(
         async def on_stage(stage: ChatStage) -> None:
             await events.put(json.dumps({"type": "stage", "stage": stage.value}))
 
+        async def on_partial(partial: ChatResult) -> None:
+            payload = to_chat_response(partial, registry).model_dump(mode="json")
+            await events.put(json.dumps({"type": "filters", **payload}))
+
         async def run_turn() -> None:
             try:
                 result = await orchestrator.handle_message(
-                    request.session_id, request.message, on_stage=on_stage
+                    request.session_id,
+                    request.message,
+                    on_stage=on_stage,
+                    on_partial=on_partial,
                 )
                 payload = to_chat_response(result, registry).model_dump(mode="json")
                 await events.put(json.dumps({"type": "result", **payload}))

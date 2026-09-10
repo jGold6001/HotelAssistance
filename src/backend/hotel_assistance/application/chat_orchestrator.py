@@ -14,9 +14,12 @@ from pydantic import BaseModel, Field, ValidationError
 
 from hotel_assistance.application.patch_builder import build_patch, clean_unmapped_requests
 from hotel_assistance.application.reply_composer import (
+    NOTHING_CHANGED,
+    compose_filters_reply,
+    compose_offers_reply,
     compose_out_of_scope_reply,
-    compose_reply,
     compose_simulated_search_reply,
+    join_replies,
 )
 from hotel_assistance.application.session_store import Session, SessionStore
 from hotel_assistance.application.simulator_directive import extract_offer_directive
@@ -51,6 +54,7 @@ from hotel_assistance.infrastructure.llm.provider import (
 logger = logging.getLogger(__name__)
 
 StageCallback = Callable[["ChatStage"], Awaitable[None]]
+PartialCallback = Callable[["ChatResult"], Awaitable[None]]
 
 
 class ChatStage(StrEnum):
@@ -65,6 +69,11 @@ class ChatStage(StrEnum):
 
 class ChatResult(BaseModel):
     reply: str
+    # The two halves the reply is made of: what validation settled, and what
+    # the hotel backend answered afterwards. A streaming caller shows them as
+    # they arrive; anyone else reads ``reply``.
+    filters_reply: str = ""
+    offers_reply: str = ""
     state: SearchState
     pending: PendingTripChange | None = None
     issues: list[ValidationIssue] = Field(default_factory=list)
@@ -110,6 +119,7 @@ class ChatOrchestrator:
         session_id: str,
         message: str,
         on_stage: StageCallback | None = None,
+        on_partial: PartialCallback | None = None,
     ) -> ChatResult:
         session = self._sessions.get(session_id)
 
@@ -148,6 +158,7 @@ class ChatOrchestrator:
             await _notify(on_stage, ChatStage.DONE)
             return ChatResult(
                 reply=reply,
+                filters_reply=reply,
                 state=session.state,
                 pending=session.pending,
                 missing_trip_info=session.state.missing_trip_info(),
@@ -166,13 +177,10 @@ class ChatOrchestrator:
         carried = None if patch.reset else _resolve_pending(session.pending, session.state)
         session.pending = _open_pending(extraction.trip, previous_state, session.state) or carried
 
-        await _notify(on_stage, ChatStage.SEARCHING)
-        offers = await self._search_offers(session.state, requested_offers)
-        relaxations: list[RelaxationSuggestion] = []
-        if offers.available_offers_count == 0:
-            relaxations = suggest_relaxations(session.state, self._registry)
-
-        reply = compose_reply(
+        # Everything the filters half says is settled by now, so it goes out
+        # before the backend is asked anything - the user reads what the
+        # search became while the search itself is still running.
+        filters_reply = compose_filters_reply(
             state=session.state,
             registry=self._registry,
             applied=outcome.applied,
@@ -180,13 +188,44 @@ class ChatOrchestrator:
             issues=issues,
             unmapped_requests=unmapped_requests,
             clarification_question=extraction.clarification_question,
-            available_offers_count=offers.available_offers_count,
-            relaxations=relaxations,
-            offers_note=offers.note,
             was_reset=patch.reset,
             destination_hint=_hint_for(TripField.DESTINATION, extraction.trip.destination_hint, session.pending),
             date_hint=_hint_for(TripField.DATES, extraction.trip.date_hint, session.pending),
         )
+        if filters_reply.text and on_partial is not None:
+            await on_partial(
+                ChatResult(
+                    reply=filters_reply.text,
+                    filters_reply=filters_reply.text,
+                    state=session.state,
+                    pending=session.pending,
+                    issues=issues,
+                    unmapped_requests=unmapped_requests,
+                    missing_trip_info=session.state.missing_trip_info(),
+                    candidates=candidates,
+                )
+            )
+
+        await _notify(on_stage, ChatStage.SEARCHING)
+        offers = await self._search_offers(session.state, requested_offers)
+        relaxations: list[RelaxationSuggestion] = []
+        if offers.available_offers_count == 0:
+            relaxations = suggest_relaxations(session.state, self._registry)
+
+        offers_reply = compose_offers_reply(
+            state=session.state,
+            registry=self._registry,
+            available_offers_count=offers.available_offers_count,
+            relaxations=relaxations,
+            offers_note=offers.note,
+            # The filters half already named the trip, so the count does not.
+            include_trip=not filters_reply.named_trip,
+        )
+        # A turn that settled nothing and reached no backend still has to say
+        # something, and by then the second message is the only one left.
+        if not filters_reply.text and not offers_reply:
+            offers_reply = NOTHING_CHANGED
+        reply = join_replies(filters_reply.text, offers_reply)
         session.record(ChatRole.ASSISTANT, reply)
 
         logger.info(
@@ -201,6 +240,8 @@ class ChatOrchestrator:
 
         return ChatResult(
             reply=reply,
+            filters_reply=filters_reply.text,
+            offers_reply=offers_reply,
             state=session.state,
             pending=session.pending,
             issues=issues,
@@ -234,10 +275,13 @@ class ChatOrchestrator:
         if offers.available_offers_count == 0:
             relaxations = suggest_relaxations(session.state, self._registry)
 
-        reply = compose_simulated_search_reply(offers.available_offers_count, relaxations, offers.note)
+        reply = compose_simulated_search_reply(
+            session.state, self._registry, offers.available_offers_count, relaxations, offers.note
+        )
         await _notify(on_stage, ChatStage.DONE)
         return ChatResult(
             reply=reply,
+            offers_reply=reply,
             state=session.state,
             pending=session.pending,
             missing_trip_info=session.state.missing_trip_info(),

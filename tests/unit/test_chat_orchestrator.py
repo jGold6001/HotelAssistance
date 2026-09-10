@@ -21,6 +21,9 @@ from hotel_assistance.infrastructure.hotel_search.client import (
     HotelSearchError,
     OfferResult,
 )
+from hotel_assistance.infrastructure.hotel_search.simulator import (
+    SimulatedHotelSearchClient,
+)
 from hotel_assistance.infrastructure.llm.provider import LLMExtractionError
 
 PARKING = FilterDefinition(id="hotel.parking", type="boolean", description="Parking")
@@ -268,7 +271,8 @@ def test_zero_results_produce_relaxation_suggestions_from_the_current_state() ->
 
     assert result.available_offers_count == 0
     assert [item.filter_id for item in result.relaxation_suggestions] == ["room.soundproofing", "room.size_m2"]
-    assert "no offers" in result.reply
+    assert "No hotels match all of your current filters." in result.reply
+    assert "removing some preferences, such as Soundproofed room" in result.reply
 
 
 def test_a_bare_test_directive_simulates_a_search_without_the_model() -> None:
@@ -282,7 +286,7 @@ def test_a_bare_test_directive_simulates_a_search_without_the_model() -> None:
     assert hotel_search.requested_counts == [32]
     assert result.available_offers_count == 32
     assert len(result.offers) == 32
-    assert "matches 32 offers" in result.reply
+    assert "There are 32 hotels available." in result.reply
 
 
 def test_a_message_with_no_directive_still_reaches_the_model() -> None:
@@ -352,7 +356,38 @@ def test_a_zero_directive_still_suggests_relaxations() -> None:
     assert result.available_offers_count == 0
     assert result.offers == []
     assert [item.filter_id for item in result.relaxation_suggestions] == ["room.soundproofing"]
-    assert "no offers" in result.reply
+    assert "No hotels match all of your current filters." in result.reply
+    assert result.reply.endswith("Would you like me to relax those preferences?")
+
+
+def test_a_message_without_a_directive_runs_no_simulated_search() -> None:
+    """A complete search still gets no offers unless a directive asks for them."""
+
+    orchestrator = build_orchestrator(
+        FakeLLM(
+            extraction(
+                ExtractedFilter(
+                    filter_id="hotel.parking", op="add", type="boolean", strength="required", boolean_value=True
+                ),
+                trip=TripDetails(
+                    destination="Haarlem",
+                    check_in="2026-08-15",
+                    check_out="2026-08-18",
+                    guests=GuestCounts(adults=2),
+                ),
+            )
+        ),
+        hotel_search=SimulatedHotelSearchClient(),
+    )
+
+    result = asyncio.run(orchestrator.handle_message("s1", "parking in Haarlem 15-18 Aug for two"))
+
+    assert result.state.is_ready_for_search()
+    assert result.available_offers_count is None
+    assert result.backend_available is False
+    assert result.offers == []
+    assert result.relaxation_suggestions == []
+    assert "hotels" not in result.reply
 
 
 def test_offer_count_is_unknown_until_the_search_is_complete() -> None:
@@ -408,6 +443,79 @@ def test_stages_are_reported_in_order() -> None:
         ChatStage.SEARCHING,
         ChatStage.DONE,
     ]
+
+
+def test_the_filter_summary_is_delivered_before_the_search_starts() -> None:
+    """Half a reply early beats a whole one after the backend round trip."""
+
+    orchestrator = build_orchestrator(
+        FakeLLM(
+            extraction(
+                ExtractedFilter(
+                    filter_id="hotel.parking", op="add", type="boolean", strength="required", boolean_value=True
+                ),
+                trip=TripDetails(
+                    destination="Haarlem",
+                    check_in="2026-08-15",
+                    check_out="2026-08-18",
+                    guests=GuestCounts(adults=1),
+                ),
+            )
+        ),
+        hotel_search=FakeHotelSearch(count=7),
+    )
+    events: list[str] = []
+
+    async def on_stage(stage: ChatStage) -> None:
+        events.append(f"stage:{stage.value}")
+
+    async def on_partial(partial) -> None:
+        events.append(f"partial:{partial.reply}")
+        # Nothing has been asked of the hotel backend yet, so the partial must
+        # not carry a count that would then be restated.
+        assert partial.available_offers_count is None
+
+    result = asyncio.run(
+        orchestrator.handle_message("s1", "parking in Haarlem", on_stage=on_stage, on_partial=on_partial)
+    )
+
+    partial_index = next(index for index, event in enumerate(events) if event.startswith("partial:"))
+    assert partial_index < events.index(f"stage:{ChatStage.SEARCHING.value}")
+    assert events[partial_index] == f"partial:{result.filters_reply}"
+    assert "Applied: Parking." in result.filters_reply
+    assert result.offers_reply == "There are 7 hotels available that match your filters."
+    assert result.reply == f"{result.filters_reply} {result.offers_reply}"
+
+
+def test_a_turn_with_nothing_to_report_still_answers() -> None:
+    """A complete search, an unchanged turn and a silent backend: neither half
+    has anything of its own to say, so the fallback carries the turn."""
+
+    orchestrator = build_orchestrator(
+        FakeLLM(
+            extraction(
+                trip=TripDetails(
+                    destination="Haarlem",
+                    check_in="2026-08-15",
+                    check_out="2026-08-18",
+                    guests=GuestCounts(adults=1),
+                )
+            ),
+            extraction(),
+        ),
+        hotel_search=FakeHotelSearch(error=HotelSearchError("backend down")),
+    )
+    asyncio.run(orchestrator.handle_message("s1", "Haarlem, 15-18 August 2026, one adult"))
+    partials: list[str] = []
+
+    async def on_partial(partial) -> None:
+        partials.append(partial.reply)
+
+    result = asyncio.run(orchestrator.handle_message("s1", "thanks", on_partial=on_partial))
+
+    assert partials == []
+    assert "Could you say a bit more" in result.offers_reply
+    assert result.reply == result.offers_reply
 
 
 def test_conversation_history_is_given_to_the_provider() -> None:

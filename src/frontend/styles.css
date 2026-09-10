@@ -173,6 +173,28 @@ body {
   gap: 4px;
 }
 
+.bubble-note-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bubble-note-title {
+  color: var(--text-muted);
+}
+
+.bubble-note-group ul {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bubble-note-group li {
+  line-height: 1.45;
+}
+
 /* Offer table: the properties behind the backend's count */
 .offers-panel {
   max-width: min(720px, 94%);

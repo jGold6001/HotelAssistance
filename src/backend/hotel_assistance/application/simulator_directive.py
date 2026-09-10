@@ -6,8 +6,9 @@ directive is a test instrument, not a search request: it is stripped out of
 the message before anything interprets language, and it never touches the
 search state.
 
-A message with no directive means zero offers, which is the whole point of
-the default - the zero-result path is the one worth exercising by accident.
+A message with no directive runs no simulated search at all: the offer count
+stays unknown and no properties are shown. Zero is a result the tester asks
+for explicitly, with ``@test_aparts = 0``.
 """
 
 import re

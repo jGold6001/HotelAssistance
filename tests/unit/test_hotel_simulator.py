@@ -33,6 +33,15 @@ def dataset(tmp_path: Path):
     return build
 
 
+def dataset_none():
+    """A dataset builder for cases that must never read the dataset at all."""
+
+    def build(entries: int) -> Path:
+        return Path("does-not-exist.json")
+
+    return build
+
+
 def build_client(dataset, entries: int = 4, **kwargs) -> SimulatedHotelSearchClient:
     return SimulatedHotelSearchClient(dataset_path=dataset(entries), rng=random.Random(1), **kwargs)
 
@@ -41,13 +50,21 @@ def search(client: SimulatedHotelSearchClient, requested: int | None):
     return asyncio.run(client.search_offers(STATE, requested))
 
 
-def test_no_directive_means_no_offers(dataset) -> None:
-    result = search(build_client(dataset), None)
+def test_without_a_directive_the_simulator_runs_no_search() -> None:
+    result = search(build_client(dataset_none()), None)
+
+    # Unknown, not zero: no search was run, so there is nothing to report.
+    assert result.available_offers_count is None
+    assert result.backend_available is False
+    assert result.offers == []
+
+
+def test_an_explicit_zero_is_a_result(dataset) -> None:
+    result = search(build_client(dataset), 0)
 
     assert result.available_offers_count == 0
-    assert result.offers == []
-    # The simulator is reachable; it simply matched nothing.
     assert result.backend_available is True
+    assert result.offers == []
 
 
 def test_the_directive_decides_how_many_offers_come_back(dataset) -> None:

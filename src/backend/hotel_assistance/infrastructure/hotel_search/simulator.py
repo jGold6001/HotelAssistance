@@ -3,7 +3,9 @@
 There is no real property backend yet, so this client simulates one. It
 cannot match filters, which is exactly why the number of offers is not its
 decision: the count comes from the ``@test_aparts`` directive the tester
-types into the chat, and is zero when no directive is present.
+types into the chat. Without a directive the simulator has nothing to say and
+reports the count as unknown - it will not answer zero on a search it never
+actually ran.
 
 The listings themselves come from a fixed JSON dataset. Asking for more
 offers than the dataset holds repeats entries at random rather than
@@ -51,9 +53,14 @@ class SimulatedHotelSearchClient:
     async def search_offers(
         self, state: SearchState, requested_count: int | None = None
     ) -> OfferResult:
-        count = min(max(requested_count or 0, 0), self._max_offers)
+        if requested_count is None:
+            # No directive, no simulated search: an unknown count leaves the
+            # reply silent about offers rather than claiming none exist.
+            return OfferResult()
+
+        count = min(max(requested_count, 0), self._max_offers)
         note = None
-        if requested_count is not None and requested_count > self._max_offers:
+        if requested_count > self._max_offers:
             logger.info("simulated offer count %d capped at %d", requested_count, count)
             note = f"The simulator caps a test run at {self._max_offers} offers, so {requested_count} became {count}."
         return OfferResult(
