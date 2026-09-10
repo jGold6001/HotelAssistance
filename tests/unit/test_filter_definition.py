@@ -1,7 +1,10 @@
 import pytest
+from hotel_assistance.domain.models.filter_definition import (
+    FilterDefinition,
+    FilterType,
+    RangeBounds,
+)
 from pydantic import ValidationError
-
-from hotel_assistance.domain.models.filter_definition import FilterDefinition, FilterType, RangeBounds
 
 
 def test_boolean_filter_definition_defaults() -> None:

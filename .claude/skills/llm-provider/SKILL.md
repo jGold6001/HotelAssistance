@@ -1,6 +1,6 @@
 ---
 name: llm-provider
-description: Implement or modify the provider-independent LLM integration for Hotel Assistance, including OpenAIProvider, OllamaProvider, structured extraction, schema handling, and provider error translation.
+description: Implement or modify the provider-independent LLM integration for Hotel Assistance, including OpenAIProvider, structured extraction, schema handling, and provider error translation.
 ---
 
 # LLM Provider Integration
@@ -26,21 +26,22 @@ Adapters must not own:
 
 ## OpenAIProvider
 
-- Use the OpenAI Responses API.
-- Prefer Structured Outputs with a strict schema when supported.
+OpenAI is the only supported provider. Adding another one means writing a new adapter behind
+`LLMProvider`, not loosening the interface.
+
+- Use the OpenAI Responses API via `client.responses.parse(..., text_format=ExtractionResult)`,
+  which derives a strict Structured Outputs schema from the Pydantic model.
 - Keep OpenAI SDK imports and request construction inside the adapter.
-- Parse into the same application-owned Pydantic models used elsewhere.
-
-## OllamaProvider
-
-- Use Ollama for local development/testing.
-- Keep Ollama-specific request/response handling inside the adapter.
-- Normalize and validate output with the same Pydantic/domain rules as OpenAI.
+- Reasoning-family models (`gpt-5*`, `o1`/`o3`/`o4`) reject an explicit `temperature`; omit it there.
+- Short follow-up messages may be routed to the cheaper fallback model.
+- Never put backend provenance (`FilterDefinition.source`) into a prompt.
 
 ## Structured extraction
 
-The model returns `SearchPatch`, not a complete reconstructed `SearchState`.
-Support explicit `add`, `remove`, and `update` filter operations.
+The model returns an `ExtractionResult` over a preselected candidate set — not a `SearchPatch`, and
+never a reconstructed `SearchState`. The application turns that result into a `SearchPatch` with
+explicit `add`, `remove`, and `update` operations after checking every ID against the candidate set
+and the registry.
 
 Treat every model response as untrusted:
 
@@ -58,4 +59,6 @@ Do not weaken schemas or domain validation merely to accept a provider response.
 
 Translate provider-specific exceptions at the adapter boundary. Do not leak provider SDK exception types into domain/application code.
 
-Test application logic with provider fakes/mocks. Provider-specific integration tests should be separate from default unit tests.
+Test application logic with provider fakes/mocks: pass a fake client into `OpenAIProvider`, or a
+fake provider into the orchestrator. Tests that call the real API belong in `tests/integration/`,
+marked `integration`, which the default `pytest` run deselects.

@@ -1,33 +1,49 @@
+from datetime import date
 from typing import Protocol
 
-from hotel_assistance.domain.models.search_patch import SearchPatch
+from pydantic import BaseModel, Field
+
+from hotel_assistance.domain.models.candidate_filter import CandidateFilter
+from hotel_assistance.domain.models.chat import ChatTurn
+from hotel_assistance.domain.models.extraction import ExtractionResult
+from hotel_assistance.domain.models.search_state import SearchState
 
 
 class LLMExtractionError(Exception):
-    """Raised when a provider cannot produce a valid SearchPatch.
+    """Raised when a provider cannot produce a valid ExtractionResult.
 
     Adapters must translate provider-specific failures (SDK exceptions,
     malformed responses, network errors) into this application-level error.
     """
 
 
+class ExtractionRequest(BaseModel):
+    """Everything a provider needs to interpret one user message.
+
+    Application-level and provider-agnostic: no adapter may require anything
+    beyond this, and nothing here is provider-specific.
+    """
+
+    message: str
+    candidates: list[CandidateFilter] = Field(default_factory=list)
+    state: SearchState = Field(default_factory=SearchState)
+    history: list[ChatTurn] = Field(default_factory=list)
+    today: date
+
+
 class LLMProvider(Protocol):
     """Provider-independent interface for extracting structured search intent.
 
     Implementations must not own search-state mutation, filter conflict
-    rules, date/range validation, or any other domain business rule; they
-    only translate natural language into a SearchPatch.
+    rules, date/range validation, availability, or offer counts; they only
+    translate natural language into an ExtractionResult.
     """
 
-    async def extract_search_patch(
-        self,
-        message: str,
-        conversation_history: list[str] | None = None,
-    ) -> SearchPatch:
-        """Extract a SearchPatch from a user message.
+    async def extract(self, request: ExtractionRequest) -> ExtractionResult:
+        """Extract structured intent from a user message.
 
         Raises:
             LLMExtractionError: if the provider fails or returns output that
-                cannot be normalized into a SearchPatch.
+                cannot be parsed into an ExtractionResult.
         """
         ...

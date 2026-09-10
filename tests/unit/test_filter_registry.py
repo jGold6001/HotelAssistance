@@ -1,9 +1,13 @@
 import json
 
 import pytest
-
 from hotel_assistance.domain.models.filter_definition import FilterDefinition
-from hotel_assistance.domain.services.filter_registry import FilterRegistry, FilterRegistryError
+from hotel_assistance.domain.models.filter_value import RangeValue
+from hotel_assistance.domain.services.filter_registry import (
+    FilterRegistry,
+    FilterRegistryError,
+    FilterValueError,
+)
 
 
 def _write_registry(tmp_path, definitions: list[dict]) -> str:
@@ -15,20 +19,24 @@ def _write_registry(tmp_path, definitions: list[dict]) -> str:
 def test_default_registry_loads_without_error() -> None:
     registry = FilterRegistry.default()
 
-    assert len(registry.list_all()) > 0
-    assert "amenity.wifi" in registry
+    assert len(registry) > 400
+    assert "hotel.parking" in registry
+    assert "room.size_m2" in registry
 
 
 def test_get_returns_none_for_unknown_id() -> None:
-    registry = FilterRegistry.default()
+    assert FilterRegistry.default().get("does.not.exist") is None
 
-    assert registry.get("does.not.exist") is None
+
+def test_require_raises_for_unknown_id() -> None:
+    with pytest.raises(FilterRegistryError):
+        FilterRegistry.default().require("does.not.exist")
 
 
 def test_duplicate_filter_id_raises() -> None:
     definitions = [
-        FilterDefinition(id="amenity.wifi", type="boolean", description="a"),
-        FilterDefinition(id="amenity.wifi", type="boolean", description="b"),
+        FilterDefinition(id="hotel.parking", type="boolean", description="a"),
+        FilterDefinition(id="hotel.parking", type="boolean", description="b"),
     ]
 
     with pytest.raises(FilterRegistryError):
@@ -38,15 +46,33 @@ def test_duplicate_filter_id_raises() -> None:
 def test_conflicts_with_unknown_id_raises() -> None:
     definitions = [
         FilterDefinition(
-            id="room.smoking_allowed",
+            id="hotel.designated_smoking_area",
             type="boolean",
-            description="Smoking allowed",
-            conflicts_with=["room.does_not_exist"],
+            description="Smoking area",
+            conflicts_with=["hotel.does_not_exist"],
         ),
     ]
 
     with pytest.raises(FilterRegistryError):
         FilterRegistry(definitions)
+
+
+def test_range_filter_without_unit_raises() -> None:
+    definitions = [FilterDefinition(id="room.size_m2", type="range", description="Room size")]
+
+    with pytest.raises(FilterRegistryError):
+        FilterRegistry(definitions)
+
+
+def test_conflicts_are_symmetric_even_when_declared_on_one_side() -> None:
+    definitions = [
+        FilterDefinition(id="a", type="boolean", description="A", conflicts_with=["b"]),
+        FilterDefinition(id="b", type="boolean", description="B"),
+    ]
+    registry = FilterRegistry(definitions)
+
+    assert registry.conflicts_for("a") == {"b"}
+    assert registry.conflicts_for("b") == {"a"}
 
 
 def test_from_file_rejects_malformed_data(tmp_path) -> None:
@@ -61,64 +87,34 @@ def test_from_file_rejects_missing_file(tmp_path) -> None:
         FilterRegistry.from_file(tmp_path / "missing.json")
 
 
-def test_find_candidates_matches_alias() -> None:
-    registry = FilterRegistry.default()
-
-    candidates = registry.find_candidates("Does the hotel have a swimming pool and wifi?")
-
-    ids = {definition.id for definition in candidates}
-    assert "amenity.pool" in ids
-    assert "amenity.wifi" in ids
-
-
-def test_find_candidates_returns_empty_for_unrelated_text() -> None:
-    registry = FilterRegistry.default()
-
-    assert registry.find_candidates("what is the capital of France") == []
-
-
 def test_validate_value_boolean_accepts_bool() -> None:
-    registry = FilterRegistry.default()
-
-    registry.validate_value("amenity.wifi", True)
+    FilterRegistry.default().validate_value("hotel.parking", True)
 
 
-def test_validate_value_boolean_rejects_non_bool() -> None:
-    registry = FilterRegistry.default()
-
-    with pytest.raises(FilterRegistryError):
-        registry.validate_value("amenity.wifi", "yes")
+def test_validate_value_boolean_rejects_range() -> None:
+    with pytest.raises(FilterValueError):
+        FilterRegistry.default().validate_value("hotel.parking", RangeValue(min=1))
 
 
 def test_validate_value_range_accepts_within_bounds() -> None:
-    registry = FilterRegistry.default()
-
-    registry.validate_value("rating.stars", 4)
+    FilterRegistry.default().validate_value("rating.stars", RangeValue(min=4))
 
 
 def test_validate_value_range_rejects_below_min() -> None:
-    registry = FilterRegistry.default()
-
-    with pytest.raises(FilterRegistryError):
-        registry.validate_value("rating.stars", 0)
+    with pytest.raises(FilterValueError):
+        FilterRegistry.default().validate_value("rating.stars", RangeValue(min=0))
 
 
 def test_validate_value_range_rejects_above_max() -> None:
-    registry = FilterRegistry.default()
-
-    with pytest.raises(FilterRegistryError):
-        registry.validate_value("rating.stars", 6)
+    with pytest.raises(FilterValueError):
+        FilterRegistry.default().validate_value("rating.stars", RangeValue(max=6))
 
 
-def test_validate_value_range_rejects_non_numeric() -> None:
-    registry = FilterRegistry.default()
-
-    with pytest.raises(FilterRegistryError):
-        registry.validate_value("rating.stars", "five")
+def test_validate_value_range_rejects_bool() -> None:
+    with pytest.raises(FilterValueError):
+        FilterRegistry.default().validate_value("rating.stars", True)
 
 
 def test_validate_value_unknown_filter_id_raises() -> None:
-    registry = FilterRegistry.default()
-
     with pytest.raises(FilterRegistryError):
-        registry.validate_value("does.not.exist", True)
+        FilterRegistry.default().validate_value("does.not.exist", True)

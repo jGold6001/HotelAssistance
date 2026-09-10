@@ -45,16 +45,28 @@ Conflict handling belongs to application/domain validation, not the LLM.
 
 For a 1000+ filter catalog, do not inject the entire registry into each prompt.
 
-Initial approach:
+Current approach:
 
 ```text
-filters.json / filters.yaml
- -> aliases / keywords
- -> candidate filters (~20-50)
+filters.json
+ -> semantic ranking (OpenAI embeddings, cached index)
+ +  deterministic alias matching (reserved slots)
+ -> candidate filters (~24)
  -> LLM extraction
+ -> re-check every returned ID against the candidate set and the registry
 ```
 
-Keep retrieval deterministic and simple first. Only introduce PostgreSQL + pgvector or other semantic retrieval infrastructure when a concrete production requirement justifies it.
+Embedding one long message yields a single averaged vector, so a specific ask buried in a detailed
+request can fall far outside the top-K even when its alias appears verbatim. That is why the hybrid
+retriever reserves slots for exact alias hits; do not remove that lane without measuring the effect
+on a long, multi-request message.
+
+The index is cached in `.cache/filter_embeddings.json`, keyed by a fingerprint of the registry text
+plus the embedding model, so any registry edit rebuilds it automatically. Only the user's message is
+embedded per request.
+
+Keep retrieval cheap and explainable. Only introduce PostgreSQL + pgvector or a standalone vector DB
+when a concrete production requirement justifies it.
 
 ## Bulk additions or edits
 

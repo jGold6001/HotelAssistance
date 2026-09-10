@@ -1,9 +1,8 @@
 from datetime import date
 
 import pytest
-from pydantic import ValidationError
-
 from hotel_assistance.domain.models import DateRange
+from pydantic import ValidationError
 
 
 def test_valid_date_range_is_accepted() -> None:

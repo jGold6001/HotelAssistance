@@ -15,8 +15,8 @@ Prefer simple, deterministic, testable code. Never move business-critical decisi
 ## Stack
 Default stack:
 - Python 3.12+, FastAPI, Pydantic v2
-- OpenAI Responses API for production
-- Ollama for local development/testing
+- OpenAI Responses API (the only supported LLM provider)
+- OpenAI embeddings for filter candidate retrieval
 - `uv` + `pyproject.toml`
 - `pytest`, `httpx`
 - JSON/YAML filter registry
@@ -26,35 +26,48 @@ Use strict structured output when supported. Treat all LLM output as untrusted u
 
 Do not add LangChain, LangGraph, multi-agent architecture, Kafka, Kubernetes, Redis, PostgreSQL/pgvector, or a standalone vector DB unless a concrete requirement justifies it.
 
+## Layout
+`src/backend/hotel_assistance/` holds the Python package; `src/frontend/` holds the static chat UI
+(plain HTML/CSS/JS, no build step) that FastAPI mounts at `/`. Keep the two apart: the backend
+serves JSON and never renders markup, the frontend holds no business rules.
+
 ## Architecture
 Keep FastAPI routes thin: validate transport input, call an application service, return the result.
 
 ```text
 API
  -> ChatOrchestrator
+    -> CandidateRetriever
+       -> SemanticCandidateRetriever (OpenAI embeddings + cached index)
+       -> KeywordCandidateRetriever (deterministic aliases)
+       -> HybridCandidateRetriever (both; the default)
     -> LLMProvider
        -> OpenAIProvider
-       -> OllamaProvider
     -> FilterRegistry
     -> SearchValidator
     -> SearchState
     -> HotelSearchClient
 ```
 
-Provider-specific SDK code stays inside adapters. Business logic must not depend on OpenAI/Ollama types.
+Provider-specific SDK code stays inside adapters. Business logic must not depend on OpenAI types.
 
-`LLMProvider` accepts application-level extraction requests, returns shared Pydantic models, and translates provider errors. It must not own state mutation, conflict rules, date/range validation, availability, or offer-count logic.
+`LLMProvider` accepts an `ExtractionRequest`, returns an `ExtractionResult`, and translates provider errors. It must not own state mutation, conflict rules, date/range validation, availability, or offer-count logic.
 
 For provider implementation details, use `.claude/skills/llm-provider/SKILL.md`.
 
 ## Data Models
 Prefer explicit Pydantic models: `SearchState`, `SearchPatch`, `FilterOperation`, `FilterDefinition`, `DateRange`, `GuestConfig`.
 
-The LLM returns a **patch**, never a reconstructed full state. Support explicit `add`, `remove`, and `update` operations. Preserve valid state unless the user changes it.
+The LLM returns an `ExtractionResult`, which the application turns into a `SearchPatch` — never a
+reconstructed full state. Support explicit `add`, `remove`, and `update` operations. Preserve valid
+state unless the user changes it.
 
 ```text
-current_state + SearchPatch -> validate -> new_state
+candidates + message -> ExtractionResult -> SearchPatch -> validate -> new_state
 ```
+
+Assistant replies are composed deterministically from what validation actually applied, so a reply can
+never claim a filter the validator refused. Only the clarification question comes from the model.
 
 ## Domain Rules
 - Extract destination, dates, and guests whenever present.
@@ -69,7 +82,12 @@ current_state + SearchPatch -> validate -> new_state
 - Never invent availability, prices, offers, or `available_offers_count`.
 
 ## Filter Registry
-Use canonical filter IDs. Never persist arbitrary LLM-generated filter names. For large registries, preselect relevant candidates before LLM extraction instead of sending the entire registry.
+Use canonical filter IDs. Never persist arbitrary LLM-generated filter names. For large registries,
+preselect relevant candidates before LLM extraction instead of sending the entire registry.
+
+Retrieval modes (`HOTEL_ASSISTANCE_RETRIEVAL_MODE`): `hybrid` (default), `semantic`, `keyword`.
+Retrieval is allowed to be fuzzy — every candidate ID it returns is re-checked against the registry
+before it can reach the state.
 
 For registry schema, retrieval, validation, and bulk-edit rules, use `.claude/skills/filter-registry/SKILL.md`.
 
@@ -84,7 +102,7 @@ Use `pytest`.
 - Run the narrowest relevant tests first.
 - Mock external LLM and hotel-backend calls in default unit tests.
 - Default tests must never make paid OpenAI API calls.
-- Ollama tests are optional integration tests.
+- OpenAI-backed tests are optional integration tests, marked `integration` and deselected by default.
 - Cover search-state updates, conflicts, clarification, zero-result behavior, and invalid structured LLM output.
 
 ## Code and Configuration
@@ -118,4 +136,4 @@ Run relevant checks before declaring work complete and report anything not run.
 ## Scope
 This project originates from a time-boxed AI Engineer test task. Prioritize clarity of architecture and reasoning over infrastructure completeness.
 
-Base scope: **FastAPI + provider-independent LLMProvider + OpenAI/Ollama + Structured Outputs + Pydantic + JSON/YAML registry + in-memory state + pytest.**
+Base scope: **FastAPI + provider-independent LLMProvider + OpenAI + Structured Outputs + Pydantic + JSON registry with candidate retrieval + in-memory state + static chat frontend + pytest.**

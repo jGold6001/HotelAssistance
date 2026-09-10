@@ -1,72 +1,7187 @@
 [
   {
-    "id": "amenity.wifi",
+    "id": "hotel.parking",
     "type": "boolean",
-    "description": "Free wireless internet access",
-    "aliases": ["wifi", "internet", "free wifi"]
+    "description": "Property offers parking",
+    "aliases": [
+      "parking",
+      "car park",
+      "place to park",
+      "parking lot"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 2,
+      "facility_name": "PARKING",
+      "allowed_details": [
+        "ParkingDetails",
+        "PaymentDetails"
+      ],
+      "required_details": [
+        "PaymentDetails",
+        "ParkingDetails"
+      ]
+    }
   },
   {
-    "id": "amenity.pool",
+    "id": "hotel.restaurant",
     "type": "boolean",
-    "description": "Swimming pool on site",
-    "aliases": ["pool", "swimming pool"]
+    "description": "Property offers restaurant",
+    "aliases": [
+      "restaurant",
+      "on-site dining",
+      "place to eat"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 3,
+      "facility_name": "RESTAURANT",
+      "ota_hotel_amenity_type": 76,
+      "allowed_details": [
+        "ScheduleDetails",
+        "RestaurantDetails",
+        "TemporarilyClosedDetails"
+      ],
+      "required_details": [
+        "RestaurantDetails"
+      ]
+    }
   },
   {
-    "id": "amenity.parking",
+    "id": "hotel.roomservice",
     "type": "boolean",
-    "description": "Parking available on site",
-    "aliases": ["parking", "free parking", "car park"]
+    "description": "Property offers roomservice",
+    "aliases": [
+      "roomservice",
+      "room service",
+      "food to the room",
+      "in-room dining"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 5,
+      "facility_name": "ROOMSERVICE",
+      "ota_hotel_amenity_type": 77
+    }
   },
   {
-    "id": "amenity.pet_friendly",
+    "id": "hotel.meetingbanquet_facilities",
     "type": "boolean",
-    "description": "Pets are allowed",
-    "aliases": ["pet friendly", "pets allowed", "dog friendly"]
+    "description": "Property offers meeting and banquet facilities; may be available at a surcharge",
+    "aliases": [
+      "meeting and banquet facilities",
+      "conference room",
+      "meeting room",
+      "banquet hall",
+      "event space"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 6,
+      "facility_name": "MEETINGBANQUET_FACILITIES",
+      "ota_hotel_amenity_type": 269,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
   },
   {
-    "id": "room.smoking_allowed",
+    "id": "hotel.bar",
     "type": "boolean",
-    "description": "Smoking is allowed in the room",
-    "aliases": ["smoking room", "smoking allowed"],
-    "conflicts_with": ["room.non_smoking"]
+    "description": "Property offers bar",
+    "aliases": [
+      "bar",
+      "hotel bar",
+      "drinks"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 7,
+      "facility_name": "BAR",
+      "ota_hotel_amenity_type": 165,
+      "allowed_details": [
+        "TemporarilyClosedDetails"
+      ]
+    }
   },
   {
-    "id": "room.non_smoking",
+    "id": "hotel.twenty_four_hour_front_desk",
     "type": "boolean",
-    "description": "Room is non-smoking",
-    "aliases": ["non-smoking", "non smoking room"],
-    "conflicts_with": ["room.smoking_allowed"]
+    "description": "Property offers 24-hour front desk",
+    "aliases": [
+      "24-hour front desk",
+      "24 hour front desk",
+      "24/7 reception",
+      "24 hour reception",
+      "late check-in",
+      "front desk always open"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 8,
+      "facility_name": "TWENTY_FOUR_HOUR_FRONT_DESK",
+      "ota_hotel_amenity_type": 1
+    }
+  },
+  {
+    "id": "hotel.tenniscourt",
+    "type": "boolean",
+    "description": "Property offers tenniscourt; may be available at a surcharge",
+    "aliases": [
+      "tenniscourt",
+      "tennis",
+      "tennis court"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 9,
+      "facility_name": "TENNISCOURT",
+      "ota_hotel_amenity_type": 233,
+      "allowed_details": [
+        "OnsiteDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.sauna",
+    "type": "boolean",
+    "description": "Property offers sauna; may be available at a surcharge",
+    "aliases": [
+      "sauna"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 10,
+      "facility_name": "SAUNA",
+      "ota_hotel_amenity_type": 79,
+      "allowed_details": [
+        "ScheduleDetails",
+        "TemporarilyClosedDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.fitness_room",
+    "type": "boolean",
+    "description": "Property offers fitness room; may be available at a surcharge",
+    "aliases": [
+      "fitness room",
+      "gym",
+      "fitness centre",
+      "workout"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 11,
+      "facility_name": "FITNESS_ROOM",
+      "ota_hotel_amenity_type": 35,
+      "allowed_details": [
+        "ScheduleDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.golfcourse_within_3km",
+    "type": "boolean",
+    "description": "Property offers golf course within 3 km; may be available at a surcharge",
+    "aliases": [
+      "golf course within 3 km",
+      "golf",
+      "golf course nearby"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 12,
+      "facility_name": "GOLFCOURSE_WITHIN_3KM",
+      "ota_hotel_amenity_type": 236,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.garden",
+    "type": "boolean",
+    "description": "Property offers garden",
+    "aliases": [
+      "garden"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 14,
+      "facility_name": "GARDEN",
+      "booking_extended_legacy_code": 5005
+    }
+  },
+  {
+    "id": "hotel.terrace",
+    "type": "boolean",
+    "description": "Property offers terrace",
+    "aliases": [
+      "terrace"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 15,
+      "facility_name": "TERRACE",
+      "booking_extended_legacy_code": 5006
+    }
+  },
+  {
+    "id": "hotel.non_smoking_rooms",
+    "type": "boolean",
+    "description": "Property has non-smoking rooms",
+    "aliases": [
+      "non smoking rooms",
+      "non-smoking",
+      "no smoking rooms",
+      "smoke free"
+    ],
+    "conflicts_with": [
+      "hotel.designated_smoking_area"
+    ],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 16,
+      "facility_name": "NON_SMOKING_ROOMS",
+      "ota_hotel_amenity_type": 198
+    }
+  },
+  {
+    "id": "hotel.airport_shuttle",
+    "type": "boolean",
+    "description": "Property offers airport shuttle",
+    "aliases": [
+      "airport shuttle",
+      "airport transfer"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 17,
+      "facility_name": "AIRPORT_SHUTTLE"
+    }
+  },
+  {
+    "id": "hotel.fishing",
+    "type": "boolean",
+    "description": "Property offers fishing; may be available at a surcharge",
+    "aliases": [
+      "fishing"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 19,
+      "facility_name": "FISHING",
+      "booking_extended_legacy_code": 5018,
+      "allowed_details": [
+        "OnsiteDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.business_center",
+    "type": "boolean",
+    "description": "Property offers business center; may be available at a surcharge",
+    "aliases": [
+      "business center",
+      "business centre",
+      "work space",
+      "business facilities"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 20,
+      "facility_name": "BUSINESS_CENTER",
+      "ota_hotel_amenity_type": 228,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.babysittingchild_services",
+    "type": "boolean",
+    "description": "Property offers babysitting / child services; may be available at a surcharge",
+    "aliases": [
+      "babysitting / child services",
+      "babysitting child services",
+      "babysitting",
+      "childcare",
+      "nanny"
+    ],
+    "conflicts_with": [
+      "hotel.adult_only"
+    ],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 21,
+      "facility_name": "BABYSITTINGCHILD_SERVICES",
+      "ota_hotel_amenity_type": 8,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.laundry",
+    "type": "boolean",
+    "description": "Property offers laundry; may be available at a surcharge",
+    "aliases": [
+      "laundry",
+      "laundry service"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 22,
+      "facility_name": "LAUNDRY",
+      "ota_hotel_amenity_type": 168,
+      "allowed_details": [
+        "ScheduleDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.dry_cleaning",
+    "type": "boolean",
+    "description": "Property offers dry cleaning; may be available at a surcharge",
+    "aliases": [
+      "dry cleaning"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 23,
+      "facility_name": "DRY_CLEANING",
+      "ota_hotel_amenity_type": 96,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.roomsfacilities_for_disabled",
+    "type": "boolean",
+    "description": "Property has rooms and facilities for disabled guests",
+    "aliases": [
+      "rooms and facilities for disabled guests",
+      "accessible rooms",
+      "disabled facilities",
+      "accessible facilities"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 25,
+      "facility_name": "ROOMSFACILITIES_FOR_DISABLED",
+      "booking_extended_legacy_code": 5039
+    }
+  },
+  {
+    "id": "hotel.skiing",
+    "type": "boolean",
+    "description": "Property offers skiing; may be available at a surcharge",
+    "aliases": [
+      "skiing",
+      "ski"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 26,
+      "facility_name": "SKIING",
+      "ota_hotel_amenity_type": 272,
+      "allowed_details": [
+        "OnsiteDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.hair_dresserbeautician",
+    "type": "boolean",
+    "description": "Property offers hairdresser / beautician",
+    "aliases": [
+      "hairdresser / beautician",
+      "hairdresser beautician",
+      "hairdresser",
+      "beauty salon"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 27,
+      "facility_name": "HAIR_DRESSERBEAUTICIAN",
+      "booking_extended_legacy_code": 5040
+    }
+  },
+  {
+    "id": "hotel.family_rooms",
+    "type": "boolean",
+    "description": "Property offers family rooms",
+    "aliases": [
+      "family rooms",
+      "room for a family"
+    ],
+    "conflicts_with": [
+      "hotel.adult_only"
+    ],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 28,
+      "facility_name": "FAMILY_ROOMS",
+      "booking_extended_legacy_code": 5041
+    }
+  },
+  {
+    "id": "hotel.game_room",
+    "type": "boolean",
+    "description": "Property offers game room",
+    "aliases": [
+      "game room",
+      "games room"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 29,
+      "facility_name": "GAME_ROOM",
+      "ota_hotel_amenity_type": 44
+    }
+  },
+  {
+    "id": "hotel.casino",
+    "type": "boolean",
+    "description": "Property offers casino",
+    "aliases": [
+      "casino"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 30,
+      "facility_name": "CASINO",
+      "ota_hotel_amenity_type": 16
+    }
+  },
+  {
+    "id": "hotel.breakfast_in_the_room",
+    "type": "boolean",
+    "description": "Property offers breakfast in the room",
+    "aliases": [
+      "breakfast in the room",
+      "in-room breakfast"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 43,
+      "facility_name": "BREAKFAST_IN_THE_ROOM",
+      "booking_extended_legacy_code": 5000
+    }
+  },
+  {
+    "id": "hotel.ironing_service",
+    "type": "boolean",
+    "description": "Property offers ironing service; may be available at a surcharge",
+    "aliases": [
+      "ironing service",
+      "pressing service"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 44,
+      "facility_name": "IRONING_SERVICE",
+      "booking_extended_legacy_code": 5010,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.internet_services",
+    "type": "boolean",
+    "description": "Property offers internet services",
+    "aliases": [
+      "internet services",
+      "internet",
+      "internet access",
+      "wifi"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 47,
+      "facility_name": "INTERNET_SERVICES",
+      "allowed_details": [
+        "InternetDetails",
+        "PaymentDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.elevator",
+    "type": "boolean",
+    "description": "Property offers elevator",
+    "aliases": [
+      "elevator",
+      "lift"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 48,
+      "facility_name": "ELEVATOR",
+      "ota_hotel_amenity_type": 33
+    }
+  },
+  {
+    "id": "hotel.express_checkincheckout",
+    "type": "boolean",
+    "description": "Property offers express check-in / check-out; may be available at a surcharge",
+    "aliases": [
+      "express check-in / check-out",
+      "express check in check out",
+      "express check-in",
+      "fast checkout"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 49,
+      "facility_name": "EXPRESS_CHECKINCHECKOUT",
+      "ota_hotel_amenity_type": 36,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.solarium",
+    "type": "boolean",
+    "description": "Property offers solarium; may be available at a surcharge",
+    "aliases": [
+      "solarium"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 50,
+      "facility_name": "SOLARIUM",
+      "ota_hotel_amenity_type": 83,
+      "allowed_details": [
+        "ScheduleDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.safe_deposit_box",
+    "type": "boolean",
+    "description": "Property offers safe deposit box; may be available at a surcharge",
+    "aliases": [
+      "safe deposit box",
+      "safe",
+      "safety deposit box"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 51,
+      "facility_name": "SAFE_DEPOSIT_BOX",
+      "ota_hotel_amenity_type": 78,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.currency_exchange",
+    "type": "boolean",
+    "description": "Property offers currency exchange",
+    "aliases": [
+      "currency exchange",
+      "money exchange"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 53,
+      "facility_name": "CURRENCY_EXCHANGE",
+      "ota_hotel_amenity_type": 26
+    }
+  },
+  {
+    "id": "hotel.spa_and_wellness_centre",
+    "type": "boolean",
+    "description": "Property offers spa and wellness centre; may be available at a surcharge",
+    "aliases": [
+      "spa and wellness centre",
+      "spa",
+      "wellness centre",
+      "spa centre"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 54,
+      "facility_name": "SPA_AND_WELLNESS_CENTRE",
+      "booking_extended_legacy_code": 5044,
+      "allowed_details": [
+        "TemporarilyClosedDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.massage",
+    "type": "boolean",
+    "description": "Property offers massage; may be available at a surcharge",
+    "aliases": [
+      "massage",
+      "massages"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 55,
+      "facility_name": "MASSAGE",
+      "ota_hotel_amenity_type": 61,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.children_play_ground",
+    "type": "boolean",
+    "description": "Property offers children play ground",
+    "aliases": [
+      "children play ground",
+      "playground",
+      "kids playground"
+    ],
+    "conflicts_with": [
+      "hotel.adult_only"
+    ],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 56,
+      "facility_name": "CHILDREN_PLAY_GROUND",
+      "ota_hotel_amenity_type": 193,
+      "allowed_details": [
+        "ScheduleDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.billiard",
+    "type": "boolean",
+    "description": "Property offers billiard; may be available at a surcharge",
+    "aliases": [
+      "billiard"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 57,
+      "facility_name": "BILLIARD",
+      "booking_extended_legacy_code": 5025,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.table_tennis",
+    "type": "boolean",
+    "description": "Property offers table tennis; may be available at a surcharge",
+    "aliases": [
+      "table tennis"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 58,
+      "facility_name": "TABLE_TENNIS",
+      "booking_extended_legacy_code": 5026,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.karaoke",
+    "type": "boolean",
+    "description": "Property offers karaoke; may be available at a surcharge",
+    "aliases": [
+      "karaoke"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 59,
+      "facility_name": "KARAOKE",
+      "booking_extended_legacy_code": 5045,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.windsurfing",
+    "type": "boolean",
+    "description": "Property offers windsurfing; may be available at a surcharge",
+    "aliases": [
+      "windsurfing"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 61,
+      "facility_name": "WINDSURFING",
+      "booking_extended_legacy_code": 5024,
+      "allowed_details": [
+        "OnsiteDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.darts",
+    "type": "boolean",
+    "description": "Property offers darts; may be available at a surcharge",
+    "aliases": [
+      "darts"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 62,
+      "facility_name": "DARTS",
+      "booking_extended_legacy_code": 5017,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.hot_tub",
+    "type": "boolean",
+    "description": "Property offers hot tub; may be available at a surcharge",
+    "aliases": [
+      "hot tub",
+      "jacuzzi",
+      "whirlpool"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 63,
+      "facility_name": "HOT_TUB",
+      "ota_hotel_amenity_type": 55,
+      "allowed_details": [
+        "ScheduleDetails",
+        "TemporarilyClosedDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.soundproofrooms",
+    "type": "boolean",
+    "description": "Property has soundproof rooms",
+    "aliases": [
+      "soundproof rooms",
+      "soundproof",
+      "quiet rooms",
+      "noise insulation"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 64,
+      "facility_name": "SOUNDPROOFROOMS",
+      "booking_extended_legacy_code": 5046
+    }
+  },
+  {
+    "id": "hotel.bicycle_rent",
+    "type": "boolean",
+    "description": "Property offers bicycle rent",
+    "aliases": [
+      "bicycle rent",
+      "bike rental",
+      "rent a bike"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 65,
+      "facility_name": "BICYCLE_RENT",
+      "ota_hotel_amenity_type": 202
+    }
+  },
+  {
+    "id": "hotel.canoeing",
+    "type": "boolean",
+    "description": "Property offers canoeing; may be available at a surcharge",
+    "aliases": [
+      "canoeing"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 69,
+      "facility_name": "CANOEING",
+      "booking_extended_legacy_code": 5027,
+      "allowed_details": [
+        "OnsiteDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.hiking",
+    "type": "boolean",
+    "description": "Property offers hiking; may be available at a surcharge",
+    "aliases": [
+      "hiking",
+      "trekking"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 70,
+      "facility_name": "HIKING",
+      "booking_extended_legacy_code": 5020,
+      "allowed_details": [
+        "OnsiteDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.chapelshrine",
+    "type": "boolean",
+    "description": "Property offers chapel / shrine",
+    "aliases": [
+      "chapel / shrine",
+      "chapel shrine"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 71,
+      "facility_name": "CHAPELSHRINE",
+      "booking_extended_legacy_code": 5008
+    }
+  },
+  {
+    "id": "hotel.bbq_facilities",
+    "type": "boolean",
+    "description": "Property offers bbq facilities; may be available at a surcharge",
+    "aliases": [
+      "bbq facilities",
+      "bbq",
+      "barbecue",
+      "grill"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 72,
+      "facility_name": "BBQ_FACILITIES",
+      "ota_hotel_amenity_type": 9,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.packed_lunches",
+    "type": "boolean",
+    "description": "Property offers packed lunches",
+    "aliases": [
+      "packed lunches"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 73,
+      "facility_name": "PACKED_LUNCHES",
+      "booking_extended_legacy_code": 5047
+    }
+  },
+  {
+    "id": "hotel.car_rental",
+    "type": "boolean",
+    "description": "Property offers car rental",
+    "aliases": [
+      "car rental",
+      "rent a car"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 75,
+      "facility_name": "CAR_RENTAL",
+      "ota_hotel_amenity_type": 15
+    }
+  },
+  {
+    "id": "hotel.cycling",
+    "type": "boolean",
+    "description": "Property offers cycling",
+    "aliases": [
+      "cycling",
+      "bike routes"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 76,
+      "facility_name": "CYCLING",
+      "booking_extended_legacy_code": 5032,
+      "allowed_details": [
+        "OnsiteDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.bowling",
+    "type": "boolean",
+    "description": "Property offers bowling; may be available at a surcharge",
+    "aliases": [
+      "bowling"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 77,
+      "facility_name": "BOWLING",
+      "booking_extended_legacy_code": 5016,
+      "allowed_details": [
+        "OnsiteDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.tour_desk",
+    "type": "boolean",
+    "description": "Property offers tour desk",
+    "aliases": [
+      "tour desk",
+      "excursions"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 78,
+      "facility_name": "TOUR_DESK",
+      "ota_hotel_amenity_type": 91
+    }
+  },
+  {
+    "id": "hotel.turkishsteam_bath",
+    "type": "boolean",
+    "description": "Property offers Turkish / steam bath; may be available at a surcharge",
+    "aliases": [
+      "turkish / steam bath",
+      "turkish steam bath"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 79,
+      "facility_name": "TURKISHSTEAM_BATH",
+      "ota_hotel_amenity_type": 86,
+      "allowed_details": [
+        "ScheduleDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.heating",
+    "type": "boolean",
+    "description": "Property offers heating",
+    "aliases": [
+      "heating",
+      "heated"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 80,
+      "facility_name": "HEATING",
+      "ota_hotel_amenity_type": 242
+    }
+  },
+  {
+    "id": "hotel.diving",
+    "type": "boolean",
+    "description": "Property offers diving; may be available at a surcharge",
+    "aliases": [
+      "diving",
+      "scuba"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 82,
+      "facility_name": "DIVING",
+      "booking_extended_legacy_code": 5029,
+      "allowed_details": [
+        "OnsiteDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.horseriding",
+    "type": "boolean",
+    "description": "Property offers horseriding; may be available at a surcharge",
+    "aliases": [
+      "horseriding",
+      "horse riding",
+      "horseback riding"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 86,
+      "facility_name": "HORSERIDING",
+      "ota_hotel_amenity_type": 237,
+      "allowed_details": [
+        "OnsiteDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.squash",
+    "type": "boolean",
+    "description": "Property offers squash; may be available at a surcharge",
+    "aliases": [
+      "squash"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 87,
+      "facility_name": "SQUASH",
+      "booking_extended_legacy_code": 5023,
+      "allowed_details": [
+        "OnsiteDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.snorkeling",
+    "type": "boolean",
+    "description": "Property offers snorkeling; may be available at a surcharge",
+    "aliases": [
+      "snorkeling"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 90,
+      "facility_name": "SNORKELING",
+      "booking_extended_legacy_code": 5022,
+      "allowed_details": [
+        "OnsiteDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.luggage_storage",
+    "type": "boolean",
+    "description": "Property offers luggage storage; may be available at a surcharge",
+    "aliases": [
+      "luggage storage",
+      "leave bags",
+      "bag drop"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 91,
+      "facility_name": "LUGGAGE_STORAGE",
+      "ota_hotel_amenity_type": 283,
+      "allowed_details": [
+        "ScheduleDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.wireless_lan",
+    "type": "boolean",
+    "description": "Property offers wireless lan",
+    "aliases": [
+      "wireless lan",
+      "wifi",
+      "wi-fi",
+      "wireless internet"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 96,
+      "facility_name": "WIRELESS_LAN"
+    }
+  },
+  {
+    "id": "hotel.minigolf",
+    "type": "boolean",
+    "description": "Property offers minigolf; may be available at a surcharge",
+    "aliases": [
+      "minigolf"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 97,
+      "facility_name": "MINIGOLF",
+      "booking_extended_legacy_code": 5021,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.ski_storage",
+    "type": "boolean",
+    "description": "Property offers ski storage; may be available at a surcharge",
+    "aliases": [
+      "ski storage"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 99,
+      "facility_name": "SKI_STORAGE",
+      "booking_extended_legacy_code": 5033,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.ski_school",
+    "type": "boolean",
+    "description": "Property offers ski school; may be available at a surcharge",
+    "aliases": [
+      "ski school"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 100,
+      "facility_name": "SKI_SCHOOL",
+      "booking_extended_legacy_code": 5034,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.allergy_free_room_available",
+    "type": "boolean",
+    "description": "Property has allergy-free rooms available",
+    "aliases": [
+      "allergy-free room available",
+      "allergy free room available",
+      "allergy free room",
+      "hypoallergenic room"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 101,
+      "facility_name": "ALLERGY_FREE_ROOM_AVAILABLE",
+      "ota_hotel_amenity_type": 310
+    }
+  },
+  {
+    "id": "hotel.airconditioning",
+    "type": "boolean",
+    "description": "Property offers air conditioning; may be available at a surcharge",
+    "aliases": [
+      "air conditioning",
+      "ac",
+      "aircon"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 109,
+      "facility_name": "AIRCONDITIONING",
+      "ota_hotel_amenity_type": 5,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.designated_smoking_area",
+    "type": "boolean",
+    "description": "Property offers designated smoking area",
+    "aliases": [
+      "designated smoking area",
+      "smoking area",
+      "place to smoke"
+    ],
+    "conflicts_with": [
+      "hotel.non_smoking_rooms"
+    ],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 110,
+      "facility_name": "DESIGNATED_SMOKING_AREA",
+      "booking_extended_legacy_code": 5012
+    }
+  },
+  {
+    "id": "hotel.atmcash_machine_on_site",
+    "type": "boolean",
+    "description": "Property offers ATM / cash machine on site",
+    "aliases": [
+      "atm / cash machine on site",
+      "atm cash machine on site",
+      "atm",
+      "cash machine"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 111,
+      "facility_name": "ATMCASH_MACHINE_ON_SITE",
+      "ota_hotel_amenity_type": 7
+    }
+  },
+  {
+    "id": "hotel.private_beach_area",
+    "type": "boolean",
+    "description": "Property offers private beach area; may be available at a surcharge",
+    "aliases": [
+      "private beach area",
+      "private beach"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 114,
+      "facility_name": "PRIVATE_BEACH_AREA",
+      "booking_extended_legacy_code": 5037,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.snack_bar",
+    "type": "boolean",
+    "description": "Property offers snack bar",
+    "aliases": [
+      "snack bar",
+      "snacks"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 117,
+      "facility_name": "SNACK_BAR",
+      "ota_hotel_amenity_type": 342
+    }
+  },
+  {
+    "id": "hotel.sun_terrace",
+    "type": "boolean",
+    "description": "Property offers sun terrace",
+    "aliases": [
+      "sun terrace",
+      "sun deck"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 118,
+      "facility_name": "SUN_TERRACE",
+      "booking_extended_legacy_code": 5007
+    }
+  },
+  {
+    "id": "hotel.concierge_service",
+    "type": "boolean",
+    "description": "Property offers concierge service",
+    "aliases": [
+      "concierge service",
+      "concierge"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 124,
+      "facility_name": "CONCIERGE_SERVICE",
+      "ota_hotel_amenity_type": 22
+    }
+  },
+  {
+    "id": "hotel.entertainment_staff",
+    "type": "boolean",
+    "description": "Property offers entertainment staff",
+    "aliases": [
+      "entertainment staff",
+      "animation team"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 125,
+      "facility_name": "ENTERTAINMENT_STAFF",
+      "booking_extended_legacy_code": 5049
+    }
+  },
+  {
+    "id": "hotel.nightclub_dj",
+    "type": "boolean",
+    "description": "Property offers nightclub / DJ; may be available at a surcharge",
+    "aliases": [
+      "nightclub / dj",
+      "nightclub dj"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 126,
+      "facility_name": "NIGHTCLUB__DJ",
+      "ota_hotel_amenity_type": 62,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.private_checkinout",
+    "type": "boolean",
+    "description": "Property offers private check-in / check-out",
+    "aliases": [
+      "private check-in / check-out",
+      "private check in check out",
+      "private check-in",
+      "private checkout"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 127,
+      "facility_name": "PRIVATE_CHECKINOUT",
+      "booking_extended_legacy_code": 5050
+    }
+  },
+  {
+    "id": "hotel.shuttle_service_free",
+    "type": "boolean",
+    "description": "Property offers free shuttle service",
+    "aliases": [
+      "free shuttle service",
+      "free shuttle",
+      "complimentary shuttle"
+    ],
+    "conflicts_with": [
+      "hotel.shuttle_service_surcharge"
+    ],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 128,
+      "facility_name": "SHUTTLE_SERVICE_FREE",
+      "booking_extended_legacy_code": 5152
+    }
+  },
+  {
+    "id": "hotel.shuttle_service_surcharge",
+    "type": "boolean",
+    "description": "Property offers shuttle service (surcharge)",
+    "aliases": [
+      "shuttle service (surcharge)",
+      "shuttle service surcharge",
+      "paid shuttle",
+      "shuttle for a fee"
+    ],
+    "conflicts_with": [
+      "hotel.shuttle_service_free"
+    ],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 129,
+      "facility_name": "SHUTTLE_SERVICE_SURCHARGE",
+      "booking_extended_legacy_code": 5153
+    }
+  },
+  {
+    "id": "hotel.ski_equipment_hire_on_site",
+    "type": "boolean",
+    "description": "Property offers ski equipment hire on site",
+    "aliases": [
+      "ski equipment hire on site",
+      "ski rental",
+      "ski hire"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 130,
+      "facility_name": "SKI_EQUIPMENT_HIRE_ON_SITE",
+      "booking_extended_legacy_code": 5035
+    }
+  },
+  {
+    "id": "hotel.ski_pass_vendor",
+    "type": "boolean",
+    "description": "Property offers ski pass vendor",
+    "aliases": [
+      "ski pass vendor"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 131,
+      "facility_name": "SKI_PASS_VENDOR",
+      "booking_extended_legacy_code": 5036
+    }
+  },
+  {
+    "id": "hotel.skitodoor_access",
+    "type": "boolean",
+    "description": "Property offers ski-to-door access",
+    "aliases": [
+      "ski-to-door access",
+      "ski to door access",
+      "ski-in ski-out",
+      "ski to door"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 132,
+      "facility_name": "SKITODOOR_ACCESS",
+      "booking_extended_legacy_code": 5028
+    }
+  },
+  {
+    "id": "hotel.special_diet_menus_on_request",
+    "type": "boolean",
+    "description": "Property offers special diet menus on request",
+    "aliases": [
+      "special diet menus on request",
+      "special diet",
+      "vegetarian menu",
+      "vegan options",
+      "gluten free menu"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 133,
+      "facility_name": "SPECIAL_DIET_MENUS_ON_REQUEST",
+      "booking_extended_legacy_code": 5051
+    }
+  },
+  {
+    "id": "hotel.trouser_press",
+    "type": "boolean",
+    "description": "Property offers trouser press; may be available at a surcharge",
+    "aliases": [
+      "trouser press"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 134,
+      "facility_name": "TROUSER_PRESS",
+      "booking_extended_legacy_code": 5011,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.vending_machine_drinks",
+    "type": "boolean",
+    "description": "Property offers vending machine drinks",
+    "aliases": [
+      "vending machine drinks",
+      "drinks vending machine"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 135,
+      "facility_name": "VENDING_MACHINE_DRINKS",
+      "booking_extended_legacy_code": 5052
+    }
+  },
+  {
+    "id": "hotel.vending_machine_snacks",
+    "type": "boolean",
+    "description": "Property offers vending machine snacks",
+    "aliases": [
+      "vending machine snacks",
+      "snack vending machine"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 136,
+      "facility_name": "VENDING_MACHINE_SNACKS",
+      "ota_hotel_amenity_type": 98
+    }
+  },
+  {
+    "id": "hotel.water_sports_facilities_on_site",
+    "type": "boolean",
+    "description": "Property offers water sports facilities on site; may be available at a surcharge",
+    "aliases": [
+      "water sports facilities on site"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 137,
+      "facility_name": "WATER_SPORTS_FACILITIES_ON_SITE",
+      "ota_hotel_amenity_type": 234,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.hot_spring_bath",
+    "type": "boolean",
+    "description": "Property offers hot spring bath; may be available at a surcharge",
+    "aliases": [
+      "hot spring bath"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 138,
+      "facility_name": "HOT_SPRING_BATH",
+      "booking_extended_legacy_code": 5053,
+      "allowed_details": [
+        "ScheduleDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.airport_shuttle_free",
+    "type": "boolean",
+    "description": "Property offers free airport shuttle",
+    "aliases": [
+      "free airport shuttle",
+      "free airport transfer"
+    ],
+    "conflicts_with": [
+      "hotel.airport_shuttle_surcharge"
+    ],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 139,
+      "facility_name": "AIRPORT_SHUTTLE_FREE",
+      "ota_hotel_amenity_type": 41
+    }
+  },
+  {
+    "id": "hotel.airport_shuttle_surcharge",
+    "type": "boolean",
+    "description": "Property offers airport shuttle (surcharge)",
+    "aliases": [
+      "airport shuttle (surcharge)",
+      "airport shuttle surcharge",
+      "paid airport shuttle",
+      "airport transfer for a fee"
+    ],
+    "conflicts_with": [
+      "hotel.airport_shuttle_free"
+    ],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 140,
+      "facility_name": "AIRPORT_SHUTTLE_SURCHARGE",
+      "ota_hotel_amenity_type": 282,
+      "booking_extended_legacy_code": 5123
+    }
+  },
+  {
+    "id": "hotel.communal_kitchen",
+    "type": "boolean",
+    "description": "Property offers communal kitchen",
+    "aliases": [
+      "communal kitchen",
+      "shared kitchen"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 141,
+      "facility_name": "COMMUNAL_KITCHEN",
+      "ota_hotel_amenity_type": 262
+    }
+  },
+  {
+    "id": "hotel.lockers",
+    "type": "boolean",
+    "description": "Property offers lockers",
+    "aliases": [
+      "lockers"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 142,
+      "facility_name": "LOCKERS",
+      "ota_hotel_amenity_type": 197
+    }
+  },
+  {
+    "id": "hotel.communal_loungetv_room",
+    "type": "boolean",
+    "description": "Property offers communal lounge / TV room",
+    "aliases": [
+      "communal lounge / tv room",
+      "communal lounge tv room"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 143,
+      "facility_name": "COMMUNAL_LOUNGETV_ROOM",
+      "booking_extended_legacy_code": 5009
+    }
+  },
+  {
+    "id": "hotel.kids_club",
+    "type": "boolean",
+    "description": "Property offers kids club; may be available at a surcharge",
+    "aliases": [
+      "kids club",
+      "children's club"
+    ],
+    "conflicts_with": [
+      "hotel.adult_only"
+    ],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 144,
+      "facility_name": "KIDS_CLUB",
+      "booking_extended_legacy_code": 5054,
+      "allowed_details": [
+        "ScheduleDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.minimarket_on_site",
+    "type": "boolean",
+    "description": "Property offers minimarket on site",
+    "aliases": [
+      "minimarket on site",
+      "mini market",
+      "grocery store on site",
+      "shop"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 145,
+      "facility_name": "MINIMARKET_ON_SITE",
+      "booking_extended_legacy_code": 5055
+    }
+  },
+  {
+    "id": "hotel.beach_front",
+    "type": "boolean",
+    "description": "Property is located on the beachfront",
+    "aliases": [
+      "beach front",
+      "beachfront",
+      "on the beach",
+      "by the sea"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 146,
+      "facility_name": "BEACH_FRONT",
+      "ota_hotel_amenity_type": 239
+    }
+  },
+  {
+    "id": "hotel.evening_entertainment",
+    "type": "boolean",
+    "description": "Property offers evening entertainment; may be available at a surcharge",
+    "aliases": [
+      "evening entertainment",
+      "shows"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 147,
+      "facility_name": "EVENING_ENTERTAINMENT",
+      "ota_hotel_amenity_type": 60,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.aqua_park",
+    "type": "boolean",
+    "description": "Property offers aqua park; may be available at a surcharge",
+    "aliases": [
+      "aqua park",
+      "aquapark",
+      "water park",
+      "water slides"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 148,
+      "facility_name": "AQUA_PARK",
+      "booking_extended_legacy_code": 5056,
+      "allowed_details": [
+        "OnsiteDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.adult_only",
+    "type": "boolean",
+    "description": "Property accepts adults only",
+    "aliases": [
+      "adult only",
+      "adults only",
+      "no children",
+      "child free"
+    ],
+    "conflicts_with": [
+      "hotel.baby_safety_gates",
+      "hotel.babysittingchild_services",
+      "hotel.child_friendly_buffet",
+      "hotel.children_play_ground",
+      "hotel.family_rooms",
+      "hotel.indoor_play_area",
+      "hotel.kid_meals",
+      "hotel.kids_club",
+      "hotel.kids_outdoor_play_equipment",
+      "hotel.kids_pool",
+      "hotel.stroller",
+      "room.baby_safety_gates",
+      "room.book_dvd_music_library_for_children",
+      "room.child_safety_socket_covers",
+      "room.children_crib_cots",
+      "room.children_highchair"
+    ],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 149,
+      "facility_name": "ADULT_ONLY",
+      "booking_extended_legacy_code": 5057
+    }
+  },
+  {
+    "id": "hotel.daily_maid_service",
+    "type": "boolean",
+    "description": "Property offers daily maid service; may be available at a surcharge",
+    "aliases": [
+      "daily maid service",
+      "daily housekeeping",
+      "maid service"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 158,
+      "facility_name": "DAILY_MAID_SERVICE",
+      "ota_hotel_amenity_type": 50,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.grocery_deliveries",
+    "type": "boolean",
+    "description": "Property offers grocery deliveries; may be available at a surcharge",
+    "aliases": [
+      "grocery deliveries",
+      "grocery delivery"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 159,
+      "facility_name": "GROCERY_DELIVERIES",
+      "ota_hotel_amenity_type": 149,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.openair_bath",
+    "type": "boolean",
+    "description": "Property offers open-air bath; may be available at a surcharge",
+    "aliases": [
+      "open-air bath",
+      "open air bath"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 166,
+      "facility_name": "OPENAIR_BATH",
+      "booking_extended_legacy_code": 5058,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.public_bath",
+    "type": "boolean",
+    "description": "Property offers public bath; may be available at a surcharge",
+    "aliases": [
+      "public bath"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 167,
+      "facility_name": "PUBLIC_BATH",
+      "booking_extended_legacy_code": 5059,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.water_slide",
+    "type": "boolean",
+    "description": "Property offers water slide",
+    "aliases": [
+      "water slide",
+      "slides"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 168,
+      "facility_name": "WATER_SLIDE",
+      "booking_extended_legacy_code": 5060
+    }
+  },
+  {
+    "id": "hotel.board_games_puzzles",
+    "type": "boolean",
+    "description": "Property offers board games and puzzles",
+    "aliases": [
+      "board games and puzzles"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 170,
+      "facility_name": "BOARD_GAMES_PUZZLES",
+      "booking_extended_legacy_code": 5061
+    }
+  },
+  {
+    "id": "hotel.indoor_play_area",
+    "type": "boolean",
+    "description": "Property offers indoor play area",
+    "aliases": [
+      "indoor play area"
+    ],
+    "conflicts_with": [
+      "hotel.adult_only"
+    ],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 172,
+      "facility_name": "INDOOR_PLAY_AREA",
+      "booking_extended_legacy_code": 5063
+    }
+  },
+  {
+    "id": "hotel.kids_outdoor_play_equipment",
+    "type": "boolean",
+    "description": "Property offers kids outdoor play equipment",
+    "aliases": [
+      "kids outdoor play equipment"
+    ],
+    "conflicts_with": [
+      "hotel.adult_only"
+    ],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 173,
+      "facility_name": "KIDS_OUTDOOR_PLAY_EQUIPMENT",
+      "booking_extended_legacy_code": 5064
+    }
+  },
+  {
+    "id": "hotel.baby_safety_gates",
+    "type": "boolean",
+    "description": "Property offers baby safety gates",
+    "aliases": [
+      "baby safety gates"
+    ],
+    "conflicts_with": [
+      "hotel.adult_only"
+    ],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 174,
+      "facility_name": "BABY_SAFETY_GATES",
+      "booking_extended_legacy_code": 5065
+    }
+  },
+  {
+    "id": "hotel.kid_meals",
+    "type": "boolean",
+    "description": "Property offers kids' meals; may be available at a surcharge",
+    "aliases": [
+      "kids' meals",
+      "kids meals"
+    ],
+    "conflicts_with": [
+      "hotel.adult_only"
+    ],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 176,
+      "facility_name": "KID_MEALS",
+      "booking_extended_legacy_code": 5067,
+      "allowed_details": [
+        "AgeLimitDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.child_friendly_buffet",
+    "type": "boolean",
+    "description": "Property offers child friendly buffet",
+    "aliases": [
+      "child friendly buffet"
+    ],
+    "conflicts_with": [
+      "hotel.adult_only"
+    ],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 177,
+      "facility_name": "CHILD_FRIENDLY_BUFFET",
+      "booking_extended_legacy_code": 5068,
+      "allowed_details": [
+        "AgeLimitDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.public_transport_tickets",
+    "type": "boolean",
+    "description": "Property offers public transport tickets; may be available at a surcharge",
+    "aliases": [
+      "public transport tickets",
+      "transit tickets"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 183,
+      "facility_name": "PUBLIC_TRANSPORT_TICKETS",
+      "booking_extended_legacy_code": 5001,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.wheelchair_accessible",
+    "type": "boolean",
+    "description": "Property is wheelchair accessible",
+    "aliases": [
+      "wheelchair accessible",
+      "accessible",
+      "step free access"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 185,
+      "facility_name": "WHEELCHAIR_ACCESSIBLE",
+      "booking_extended_legacy_code": 5124
+    }
+  },
+  {
+    "id": "hotel.toilet_with_grab_rails",
+    "type": "boolean",
+    "description": "Property offers toilet with grab rails",
+    "aliases": [
+      "toilet with grab rails"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 186,
+      "facility_name": "TOILET_WITH_GRAB_RAILS",
+      "booking_extended_legacy_code": 5125
+    }
+  },
+  {
+    "id": "hotel.higher_level_toilet",
+    "type": "boolean",
+    "description": "Property offers higher level toilet",
+    "aliases": [
+      "higher level toilet"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 187,
+      "facility_name": "HIGHER_LEVEL_TOILET",
+      "booking_extended_legacy_code": 5126
+    }
+  },
+  {
+    "id": "hotel.lower_bathroom_sink",
+    "type": "boolean",
+    "description": "Property offers lower bathroom sink",
+    "aliases": [
+      "lower bathroom sink"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 188,
+      "facility_name": "LOWER_BATHROOM_SINK",
+      "booking_extended_legacy_code": 5127
+    }
+  },
+  {
+    "id": "hotel.emergency_cord",
+    "type": "boolean",
+    "description": "Property offers emergency cord",
+    "aliases": [
+      "emergency cord"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 189,
+      "facility_name": "EMERGENCY_CORD",
+      "booking_extended_legacy_code": 5128
+    }
+  },
+  {
+    "id": "hotel.wine_champagne",
+    "type": "boolean",
+    "description": "Property offers wine / champagne; may be available at a surcharge",
+    "aliases": [
+      "wine / champagne",
+      "wine champagne"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 203,
+      "facility_name": "WINE_CHAMPAGNE",
+      "booking_extended_legacy_code": 5070,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.fruits",
+    "type": "boolean",
+    "description": "Property offers fruits; may be available at a surcharge",
+    "aliases": [
+      "fruits"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 205,
+      "facility_name": "FRUITS",
+      "booking_extended_legacy_code": 5072,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.chocolate_cookies",
+    "type": "boolean",
+    "description": "Property offers chocolate / cookies",
+    "aliases": [
+      "chocolate / cookies",
+      "chocolate cookies"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 206,
+      "facility_name": "CHOCOLATE_COOKIES",
+      "booking_extended_legacy_code": 5073
+    }
+  },
+  {
+    "id": "hotel.airport_pickup",
+    "type": "boolean",
+    "description": "Property offers airport pickup; may be available at a surcharge",
+    "aliases": [
+      "airport pickup",
+      "pick up from airport"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 209,
+      "facility_name": "AIRPORT_PICKUP",
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.airport_dropoff",
+    "type": "boolean",
+    "description": "Property offers airport dropoff; may be available at a surcharge",
+    "aliases": [
+      "airport dropoff",
+      "airport drop-off",
+      "drive to the airport"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 210,
+      "facility_name": "AIRPORT_DROPOFF",
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.visual_aid_braille",
+    "type": "boolean",
+    "description": "Property offers visual aid braille",
+    "aliases": [
+      "visual aid braille"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 211,
+      "facility_name": "VISUAL_AID_BRAILLE",
+      "booking_extended_legacy_code": 5129
+    }
+  },
+  {
+    "id": "hotel.visual_aid_tactile_signs",
+    "type": "boolean",
+    "description": "Property offers visual aid tactile signs",
+    "aliases": [
+      "visual aid tactile signs"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 212,
+      "facility_name": "VISUAL_AID_TACTILE_SIGNS",
+      "booking_extended_legacy_code": 5130
+    }
+  },
+  {
+    "id": "hotel.auditory_guidance",
+    "type": "boolean",
+    "description": "Property offers auditory guidance",
+    "aliases": [
+      "auditory guidance"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 213,
+      "facility_name": "AUDITORY_GUIDANCE",
+      "booking_extended_legacy_code": 5131
+    }
+  },
+  {
+    "id": "hotel.stroller",
+    "type": "boolean",
+    "description": "Property offers stroller",
+    "aliases": [
+      "stroller"
+    ],
+    "conflicts_with": [
+      "hotel.adult_only"
+    ],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 214,
+      "facility_name": "STROLLER",
+      "booking_extended_legacy_code": 5074
+    }
+  },
+  {
+    "id": "hotel.tennis_equipment",
+    "type": "boolean",
+    "description": "Property offers tennis equipment; may be available at a surcharge",
+    "aliases": [
+      "tennis equipment"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 215,
+      "facility_name": "TENNIS_EQUIPMENT",
+      "booking_extended_legacy_code": 5030,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.badminton_equipment",
+    "type": "boolean",
+    "description": "Property offers badminton equipment; may be available at a surcharge",
+    "aliases": [
+      "badminton equipment"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 216,
+      "facility_name": "BADMINTON_EQUIPMENT",
+      "booking_extended_legacy_code": 5031,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.pet_basket",
+    "type": "boolean",
+    "description": "Property offers pet basket",
+    "aliases": [
+      "pet basket",
+      "pet friendly"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 217,
+      "facility_name": "PET_BASKET",
+      "booking_extended_legacy_code": 5013
+    }
+  },
+  {
+    "id": "hotel.pet_bowls",
+    "type": "boolean",
+    "description": "Property offers pet bowls",
+    "aliases": [
+      "pet bowls",
+      "pet friendly"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 218,
+      "facility_name": "PET_BOWLS",
+      "booking_extended_legacy_code": 5014
+    }
+  },
+  {
+    "id": "hotel.coffee_shop_onsite",
+    "type": "boolean",
+    "description": "Property offers coffee shop onsite",
+    "aliases": [
+      "coffee shop onsite",
+      "coffee shop",
+      "cafe"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 219,
+      "facility_name": "COFFEE_SHOP_ONSITE",
+      "booking_extended_legacy_code": 5075,
+      "allowed_details": [
+        "ScheduleDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.beach_chairs_loungers",
+    "type": "boolean",
+    "description": "Property offers beach chairs loungers; may be available at a surcharge",
+    "aliases": [
+      "beach chairs loungers"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 220,
+      "facility_name": "BEACH_CHAIRS_LOUNGERS",
+      "booking_extended_legacy_code": 5076,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.beach_umbrellas",
+    "type": "boolean",
+    "description": "Property offers beach umbrellas; may be available at a surcharge",
+    "aliases": [
+      "beach umbrellas"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 221,
+      "facility_name": "BEACH_UMBRELLAS",
+      "booking_extended_legacy_code": 5077,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.outdoor_furniture",
+    "type": "boolean",
+    "description": "Property offers outdoor furniture",
+    "aliases": [
+      "outdoor furniture"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 222,
+      "facility_name": "OUTDOOR_FURNITURE",
+      "booking_extended_legacy_code": 5003
+    }
+  },
+  {
+    "id": "hotel.picnic_area",
+    "type": "boolean",
+    "description": "Property offers picnic area",
+    "aliases": [
+      "picnic area"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 224,
+      "facility_name": "PICNIC_AREA",
+      "booking_extended_legacy_code": 5078
+    }
+  },
+  {
+    "id": "hotel.outdoor_fireplace",
+    "type": "boolean",
+    "description": "Property offers outdoor fireplace",
+    "aliases": [
+      "outdoor fireplace"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 225,
+      "facility_name": "OUTDOOR_FIREPLACE",
+      "booking_extended_legacy_code": 5004
+    }
+  },
+  {
+    "id": "hotel.beauty_services",
+    "type": "boolean",
+    "description": "Property offers beauty services",
+    "aliases": [
+      "beauty services"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 226,
+      "facility_name": "BEAUTY_SERVICES",
+      "booking_extended_legacy_code": 5079
+    }
+  },
+  {
+    "id": "hotel.facial_treatments",
+    "type": "boolean",
+    "description": "Property offers facial treatments",
+    "aliases": [
+      "facial treatments"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 227,
+      "facility_name": "FACIAL_TREATMENTS",
+      "booking_extended_legacy_code": 5139
+    }
+  },
+  {
+    "id": "hotel.waxing_services",
+    "type": "boolean",
+    "description": "Property offers waxing services",
+    "aliases": [
+      "waxing services"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 228,
+      "facility_name": "WAXING_SERVICES",
+      "booking_extended_legacy_code": 5140
+    }
+  },
+  {
+    "id": "hotel.make_up_services",
+    "type": "boolean",
+    "description": "Property offers make up services",
+    "aliases": [
+      "make up services"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 229,
+      "facility_name": "MAKE_UP_SERVICES",
+      "booking_extended_legacy_code": 5141
+    }
+  },
+  {
+    "id": "hotel.hair_treatments",
+    "type": "boolean",
+    "description": "Property offers hair treatments",
+    "aliases": [
+      "hair treatments"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 230,
+      "facility_name": "HAIR_TREATMENTS",
+      "booking_extended_legacy_code": 5142
+    }
+  },
+  {
+    "id": "hotel.manicure",
+    "type": "boolean",
+    "description": "Property offers manicure",
+    "aliases": [
+      "manicure"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 231,
+      "facility_name": "MANICURE",
+      "booking_extended_legacy_code": 5143
+    }
+  },
+  {
+    "id": "hotel.pedicure",
+    "type": "boolean",
+    "description": "Property offers pedicure",
+    "aliases": [
+      "pedicure"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 232,
+      "facility_name": "PEDICURE",
+      "booking_extended_legacy_code": 5144
+    }
+  },
+  {
+    "id": "hotel.hair_cut",
+    "type": "boolean",
+    "description": "Property offers hair cut",
+    "aliases": [
+      "hair cut"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 233,
+      "facility_name": "HAIR_CUT",
+      "booking_extended_legacy_code": 5145
+    }
+  },
+  {
+    "id": "hotel.hair_colouring",
+    "type": "boolean",
+    "description": "Property offers hair colouring",
+    "aliases": [
+      "hair colouring"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 234,
+      "facility_name": "HAIR_COLOURING",
+      "booking_extended_legacy_code": 5146
+    }
+  },
+  {
+    "id": "hotel.hair_styling",
+    "type": "boolean",
+    "description": "Property offers hair styling",
+    "aliases": [
+      "hair styling"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 235,
+      "facility_name": "HAIR_STYLING",
+      "booking_extended_legacy_code": 5147
+    }
+  },
+  {
+    "id": "hotel.body_treatments",
+    "type": "boolean",
+    "description": "Property offers body treatments",
+    "aliases": [
+      "body treatments"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 236,
+      "facility_name": "BODY_TREATMENTS",
+      "booking_extended_legacy_code": 5148
+    }
+  },
+  {
+    "id": "hotel.body_scrub",
+    "type": "boolean",
+    "description": "Property offers body scrub",
+    "aliases": [
+      "body scrub"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 237,
+      "facility_name": "BODY_SCRUB",
+      "booking_extended_legacy_code": 5149
+    }
+  },
+  {
+    "id": "hotel.body_wrap",
+    "type": "boolean",
+    "description": "Property offers body wrap",
+    "aliases": [
+      "body wrap"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 238,
+      "facility_name": "BODY_WRAP",
+      "booking_extended_legacy_code": 5150
+    }
+  },
+  {
+    "id": "hotel.light_therapy",
+    "type": "boolean",
+    "description": "Property offers light therapy",
+    "aliases": [
+      "light therapy"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 239,
+      "facility_name": "LIGHT_THERAPY",
+      "booking_extended_legacy_code": 5151
+    }
+  },
+  {
+    "id": "hotel.spa_facilities",
+    "type": "boolean",
+    "description": "Property offers spa facilities",
+    "aliases": [
+      "spa facilities"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 240,
+      "facility_name": "SPA_FACILITIES",
+      "booking_extended_legacy_code": 5080
+    }
+  },
+  {
+    "id": "hotel.steam_room",
+    "type": "boolean",
+    "description": "Property offers steam room",
+    "aliases": [
+      "steam room"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 241,
+      "facility_name": "STEAM_ROOM",
+      "booking_extended_legacy_code": 5081,
+      "allowed_details": [
+        "ScheduleDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.spa_lounge_relaxation_area",
+    "type": "boolean",
+    "description": "Property offers spa lounge relaxation area",
+    "aliases": [
+      "spa lounge relaxation area"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 242,
+      "facility_name": "SPA_LOUNGE_RELAXATION_AREA",
+      "booking_extended_legacy_code": 5082
+    }
+  },
+  {
+    "id": "hotel.foot_bath",
+    "type": "boolean",
+    "description": "Property offers foot bath",
+    "aliases": [
+      "foot bath"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 243,
+      "facility_name": "FOOT_BATH",
+      "booking_extended_legacy_code": 5083
+    }
+  },
+  {
+    "id": "hotel.spa_wellness_packages",
+    "type": "boolean",
+    "description": "Property offers spa wellness packages",
+    "aliases": [
+      "spa wellness packages"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 244,
+      "facility_name": "SPA_WELLNESS_PACKAGES",
+      "booking_extended_legacy_code": 5084
+    }
+  },
+  {
+    "id": "hotel.back_massage",
+    "type": "boolean",
+    "description": "Property offers back massage",
+    "aliases": [
+      "back massage"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 245,
+      "facility_name": "BACK_MASSAGE",
+      "booking_extended_legacy_code": 5132
+    }
+  },
+  {
+    "id": "hotel.neck_massage",
+    "type": "boolean",
+    "description": "Property offers neck massage",
+    "aliases": [
+      "neck massage"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 246,
+      "facility_name": "NECK_MASSAGE",
+      "booking_extended_legacy_code": 5133
+    }
+  },
+  {
+    "id": "hotel.foot_massage",
+    "type": "boolean",
+    "description": "Property offers foot massage",
+    "aliases": [
+      "foot massage"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 247,
+      "facility_name": "FOOT_MASSAGE",
+      "booking_extended_legacy_code": 5134
+    }
+  },
+  {
+    "id": "hotel.couples_massage",
+    "type": "boolean",
+    "description": "Property offers couples massage",
+    "aliases": [
+      "couples massage"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 248,
+      "facility_name": "COUPLES_MASSAGE",
+      "booking_extended_legacy_code": 5135
+    }
+  },
+  {
+    "id": "hotel.head_massage",
+    "type": "boolean",
+    "description": "Property offers head massage",
+    "aliases": [
+      "head massage"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 249,
+      "facility_name": "HEAD_MASSAGE",
+      "booking_extended_legacy_code": 5136
+    }
+  },
+  {
+    "id": "hotel.hand_massage",
+    "type": "boolean",
+    "description": "Property offers hand massage",
+    "aliases": [
+      "hand massage"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 250,
+      "facility_name": "HAND_MASSAGE",
+      "booking_extended_legacy_code": 5137
+    }
+  },
+  {
+    "id": "hotel.full_body_massage",
+    "type": "boolean",
+    "description": "Property offers full body massage",
+    "aliases": [
+      "full body massage"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 251,
+      "facility_name": "FULL_BODY_MASSAGE",
+      "booking_extended_legacy_code": 5138
+    }
+  },
+  {
+    "id": "hotel.massage_chair",
+    "type": "boolean",
+    "description": "Property offers massage chair",
+    "aliases": [
+      "massage chair"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 252,
+      "facility_name": "MASSAGE_CHAIR",
+      "booking_extended_legacy_code": 5085
+    }
+  },
+  {
+    "id": "hotel.fitness",
+    "type": "boolean",
+    "description": "Property offers fitness",
+    "aliases": [
+      "fitness",
+      "gym"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 253,
+      "facility_name": "FITNESS",
+      "booking_extended_legacy_code": 5086,
+      "allowed_details": [
+        "TemporarilyClosedDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.yoga_classes",
+    "type": "boolean",
+    "description": "Property offers yoga classes",
+    "aliases": [
+      "yoga classes"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 254,
+      "facility_name": "YOGA_CLASSES",
+      "booking_extended_legacy_code": 5087
+    }
+  },
+  {
+    "id": "hotel.fitness_classes",
+    "type": "boolean",
+    "description": "Property offers fitness classes",
+    "aliases": [
+      "fitness classes"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 255,
+      "facility_name": "FITNESS_CLASSES",
+      "booking_extended_legacy_code": 5088
+    }
+  },
+  {
+    "id": "hotel.personal_trainer",
+    "type": "boolean",
+    "description": "Property offers personal trainer",
+    "aliases": [
+      "personal trainer"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 256,
+      "facility_name": "PERSONAL_TRAINER",
+      "booking_extended_legacy_code": 5089
+    }
+  },
+  {
+    "id": "hotel.locker_rooms",
+    "type": "boolean",
+    "description": "Property offers locker rooms",
+    "aliases": [
+      "locker rooms"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 257,
+      "facility_name": "LOCKER_ROOMS",
+      "booking_extended_legacy_code": 5090
+    }
+  },
+  {
+    "id": "hotel.kids_pool",
+    "type": "boolean",
+    "description": "Property offers kids pool",
+    "aliases": [
+      "kids pool",
+      "children's pool",
+      "shallow pool"
+    ],
+    "conflicts_with": [
+      "hotel.adult_only"
+    ],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 258,
+      "facility_name": "KIDS_POOL",
+      "booking_extended_legacy_code": 5091,
+      "allowed_details": [
+        "KidsPoolDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.beach",
+    "type": "boolean",
+    "description": "Property offers beach",
+    "aliases": [
+      "beach",
+      "beach access"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 302,
+      "facility_name": "BEACH",
+      "booking_extended_legacy_code": 5015
+    }
+  },
+  {
+    "id": "hotel.shuttle_service",
+    "type": "boolean",
+    "description": "Property offers shuttle service",
+    "aliases": [
+      "shuttle service",
+      "shuttle",
+      "shuttle bus"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 304,
+      "facility_name": "SHUTTLE_SERVICE",
+      "booking_extended_legacy_code": 5092
+    }
+  },
+  {
+    "id": "hotel.temporary_art_galleries",
+    "type": "boolean",
+    "description": "Property offers temporary art galleries; may be available at a surcharge",
+    "aliases": [
+      "temporary art galleries"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 400,
+      "facility_name": "TEMPORARY_ART_GALLERIES",
+      "booking_extended_legacy_code": 5093,
+      "allowed_details": [
+        "OnsiteDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.pub_crawls",
+    "type": "boolean",
+    "description": "Property offers pub crawls; may be available at a surcharge",
+    "aliases": [
+      "pub crawls"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 401,
+      "facility_name": "PUB_CRAWLS",
+      "booking_extended_legacy_code": 5094,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.standup_comedy",
+    "type": "boolean",
+    "description": "Property offers standup comedy; may be available at a surcharge",
+    "aliases": [
+      "standup comedy"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 402,
+      "facility_name": "STANDUP_COMEDY",
+      "booking_extended_legacy_code": 5095,
+      "allowed_details": [
+        "OnsiteDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.movie_nights",
+    "type": "boolean",
+    "description": "Property offers movie nights; may be available at a surcharge",
+    "aliases": [
+      "movie nights"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 403,
+      "facility_name": "MOVIE_NIGHTS",
+      "booking_extended_legacy_code": 5096,
+      "allowed_details": [
+        "OnsiteDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.walking_tours",
+    "type": "boolean",
+    "description": "Property offers walking tours; may be available at a surcharge",
+    "aliases": [
+      "walking tours"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 404,
+      "facility_name": "WALKING_TOURS",
+      "booking_extended_legacy_code": 5097,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.bike_tours",
+    "type": "boolean",
+    "description": "Property offers bike tours; may be available at a surcharge",
+    "aliases": [
+      "bike tours"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 405,
+      "facility_name": "BIKE_TOURS",
+      "booking_extended_legacy_code": 5098,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.themed_dinner_nights",
+    "type": "boolean",
+    "description": "Property offers themed dinner nights; may be available at a surcharge",
+    "aliases": [
+      "themed dinner nights"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 406,
+      "facility_name": "THEMED_DINNER_NIGHTS",
+      "booking_extended_legacy_code": 5099,
+      "allowed_details": [
+        "OnsiteDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.happy_hour",
+    "type": "boolean",
+    "description": "Property offers happy hour; may be available at a surcharge",
+    "aliases": [
+      "happy hour"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 407,
+      "facility_name": "HAPPY_HOUR",
+      "booking_extended_legacy_code": 5100,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.local_culture_tour",
+    "type": "boolean",
+    "description": "Property offers local culture tour; may be available at a surcharge",
+    "aliases": [
+      "local culture tour"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 408,
+      "facility_name": "LOCAL_CULTURE_TOUR",
+      "booking_extended_legacy_code": 5101,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.cooking_class",
+    "type": "boolean",
+    "description": "Property offers cooking class; may be available at a surcharge",
+    "aliases": [
+      "cooking class"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 409,
+      "facility_name": "COOKING_CLASS",
+      "booking_extended_legacy_code": 5102,
+      "allowed_details": [
+        "OnsiteDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.live_music_performance",
+    "type": "boolean",
+    "description": "Property offers live music performance; may be available at a surcharge",
+    "aliases": [
+      "live music performance",
+      "live music"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 410,
+      "facility_name": "LIVE_MUSIC_PERFORMANCE",
+      "booking_extended_legacy_code": 5103,
+      "allowed_details": [
+        "OnsiteDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.live_sports_events_broadcast",
+    "type": "boolean",
+    "description": "Property offers live sports events broadcast; may be available at a surcharge",
+    "aliases": [
+      "live sports events broadcast"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 411,
+      "facility_name": "LIVE_SPORTS_EVENTS_BROADCAST",
+      "booking_extended_legacy_code": 5104,
+      "allowed_details": [
+        "OnsiteDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.archery",
+    "type": "boolean",
+    "description": "Property offers archery; may be available at a surcharge",
+    "aliases": [
+      "archery"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 412,
+      "facility_name": "ARCHERY",
+      "booking_extended_legacy_code": 5105,
+      "allowed_details": [
+        "OnsiteDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.aerobics",
+    "type": "boolean",
+    "description": "Property offers aerobics; may be available at a surcharge",
+    "aliases": [
+      "aerobics"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 413,
+      "facility_name": "AEROBICS",
+      "booking_extended_legacy_code": 5106,
+      "allowed_details": [
+        "OnsiteDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.bingo",
+    "type": "boolean",
+    "description": "Property offers bingo; may be available at a surcharge",
+    "aliases": [
+      "bingo"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 414,
+      "facility_name": "BINGO",
+      "booking_extended_legacy_code": 5107,
+      "allowed_details": [
+        "OnsiteDetails",
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.twenty_four_hour_security",
+    "type": "boolean",
+    "description": "Property offers 24-hour security",
+    "aliases": [
+      "24-hour security",
+      "24 hour security",
+      "security staff"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 418,
+      "facility_name": "TWENTY_FOUR_HOUR_SECURITY",
+      "booking_extended_legacy_code": 5158
+    }
+  },
+  {
+    "id": "hotel.metal_key_access",
+    "type": "boolean",
+    "description": "Property offers metal key access",
+    "aliases": [
+      "metal key access"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 419,
+      "facility_name": "METAL_KEY_ACCESS",
+      "booking_extended_legacy_code": 5164
+    }
+  },
+  {
+    "id": "hotel.electronic_key_card_access",
+    "type": "boolean",
+    "description": "Property offers electronic key card access",
+    "aliases": [
+      "electronic key card access",
+      "key card access",
+      "keycard"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 420,
+      "facility_name": "ELECTRONIC_KEY_CARD_ACCESS",
+      "booking_extended_legacy_code": 5165
+    }
+  },
+  {
+    "id": "hotel.security_alarm",
+    "type": "boolean",
+    "description": "Property offers security alarm",
+    "aliases": [
+      "security alarm"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 421,
+      "facility_name": "SECURITY_ALARM",
+      "booking_extended_legacy_code": 5159
+    }
+  },
+  {
+    "id": "hotel.fire_smoke_detector_in_public_areas",
+    "type": "boolean",
+    "description": "Property offers fire smoke detector in public areas",
+    "aliases": [
+      "fire smoke detector in public areas"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 422,
+      "facility_name": "FIRE_SMOKE_DETECTOR_IN_PUBLIC_AREAS",
+      "booking_extended_legacy_code": 5160
+    }
+  },
+  {
+    "id": "hotel.cctv_in_public_areas",
+    "type": "boolean",
+    "description": "Property offers cctv in public areas",
+    "aliases": [
+      "cctv in public areas",
+      "cctv",
+      "security cameras"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 423,
+      "facility_name": "CCTV_IN_PUBLIC_AREAS",
+      "booking_extended_legacy_code": 5161
+    }
+  },
+  {
+    "id": "hotel.cctv_outside_public_areas",
+    "type": "boolean",
+    "description": "Property offers cctv outside public areas",
+    "aliases": [
+      "cctv outside public areas"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 424,
+      "facility_name": "CCTV_OUTSIDE_PUBLIC_AREAS",
+      "booking_extended_legacy_code": 5162
+    }
+  },
+  {
+    "id": "hotel.fire_extinguishers",
+    "type": "boolean",
+    "description": "Property offers fire extinguishers",
+    "aliases": [
+      "fire extinguishers"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 425,
+      "facility_name": "FIRE_EXTINGUISHERS",
+      "booking_extended_legacy_code": 5163
+    }
+  },
+  {
+    "id": "hotel.bicycle_parking",
+    "type": "boolean",
+    "description": "Property offers bicycle parking; may be available at a surcharge",
+    "aliases": [
+      "bicycle parking",
+      "bike parking",
+      "bicycle storage"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 426,
+      "facility_name": "BICYCLE_PARKING",
+      "booking_extended_legacy_code": 5178,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.ski_shuttle",
+    "type": "boolean",
+    "description": "Property offers ski shuttle",
+    "aliases": [
+      "ski shuttle"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 430,
+      "facility_name": "SKI_SHUTTLE",
+      "booking_extended_legacy_code": 5108
+    }
+  },
+  {
+    "id": "hotel.swimming_pool",
+    "type": "boolean",
+    "description": "Property offers swimming pool; may be available at a surcharge",
+    "aliases": [
+      "swimming pool",
+      "pool",
+      "hotel with a pool"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 433,
+      "facility_name": "SWIMMING_POOL",
+      "booking_extended_legacy_code": 5154,
+      "allowed_details": [
+        "ScheduleDetails",
+        "TemporarilyClosedDetails",
+        "SurchargeDetails",
+        "SwimmingPoolDetails"
+      ],
+      "required_details": [
+        "SwimmingPoolDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.carbon_monoxide_detector",
+    "type": "boolean",
+    "description": "Property offers carbon monoxide detector",
+    "aliases": [
+      "carbon monoxide detector"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 437,
+      "facility_name": "CARBON_MONOXIDE_DETECTOR",
+      "booking_extended_legacy_code": 5166
+    }
+  },
+  {
+    "id": "hotel.carbon_monoxide_source",
+    "type": "boolean",
+    "description": "Property offers carbon monoxide source",
+    "aliases": [
+      "carbon monoxide source"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 438,
+      "facility_name": "CARBON_MONOXIDE_SOURCE",
+      "booking_extended_legacy_code": 5167
+    }
+  },
+  {
+    "id": "hotel.bike_rental",
+    "type": "boolean",
+    "description": "Property offers bike rental; may be available at a surcharge",
+    "aliases": [
+      "bike rental",
+      "bicycle hire"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 447,
+      "facility_name": "BIKE_RENTAL",
+      "booking_extended_legacy_code": 5177,
+      "allowed_details": [
+        "SurchargeDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.cleaning_chemicals",
+    "type": "boolean",
+    "description": "Property offers cleaning chemicals",
+    "aliases": [
+      "cleaning chemicals"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 449,
+      "facility_name": "CLEANING_CHEMICALS",
+      "booking_extended_legacy_code": 5179
+    }
+  },
+  {
+    "id": "hotel.linens_legal_wash",
+    "type": "boolean",
+    "description": "Linens are washed per local guidelines",
+    "aliases": [
+      "linens washed per local guidelines"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 450,
+      "facility_name": "LINENS_LEGAL_WASH",
+      "booking_extended_legacy_code": 5180
+    }
+  },
+  {
+    "id": "hotel.rooms_disinfected",
+    "type": "boolean",
+    "description": "Rooms are disinfected between stays",
+    "aliases": [
+      "rooms disinfected"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 451,
+      "facility_name": "ROOMS_DISINFECTED",
+      "booking_extended_legacy_code": 5181
+    }
+  },
+  {
+    "id": "hotel.rooms_sealed_after_cleaning",
+    "type": "boolean",
+    "description": "Rooms are sealed after cleaning",
+    "aliases": [
+      "rooms sealed after cleaning"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 452,
+      "facility_name": "ROOMS_SEALED_AFTER_CLEANING",
+      "booking_extended_legacy_code": 5182
+    }
+  },
+  {
+    "id": "hotel.social_distancing_in_dining_areas",
+    "type": "boolean",
+    "description": "Property applies social distancing in dining areas",
+    "aliases": [
+      "social distancing in dining areas"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 453,
+      "facility_name": "SOCIAL_DISTANCING_IN_DINING_AREAS",
+      "booking_extended_legacy_code": 5183
+    }
+  },
+  {
+    "id": "hotel.food_delivered_to_rooms",
+    "type": "boolean",
+    "description": "Property offers food delivered to rooms",
+    "aliases": [
+      "food delivered to rooms"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 454,
+      "facility_name": "FOOD_DELIVERED_TO_ROOMS",
+      "booking_extended_legacy_code": 5184
+    }
+  },
+  {
+    "id": "hotel.staff_follows_safety_measures",
+    "type": "boolean",
+    "description": "Staff follows all safety protocols",
+    "aliases": [
+      "staff follows safety measures"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 455,
+      "facility_name": "STAFF_FOLLOWS_SAFETY_MEASURES",
+      "booking_extended_legacy_code": 5185
+    }
+  },
+  {
+    "id": "hotel.stationery_removed",
+    "type": "boolean",
+    "description": "Shared stationery such as printed menus and magazines is removed",
+    "aliases": [
+      "stationery removed"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 456,
+      "facility_name": "STATIONERY_REMOVED",
+      "booking_extended_legacy_code": 5186
+    }
+  },
+  {
+    "id": "hotel.hand_sanitizers_available",
+    "type": "boolean",
+    "description": "Property offers hand sanitizers available",
+    "aliases": [
+      "hand sanitizers available"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 457,
+      "facility_name": "HAND_SANITIZERS_AVAILABLE",
+      "booking_extended_legacy_code": 5187
+    }
+  },
+  {
+    "id": "hotel.health_check_available",
+    "type": "boolean",
+    "description": "Property offers health check available",
+    "aliases": [
+      "health check available"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 458,
+      "facility_name": "HEALTH_CHECK_AVAILABLE",
+      "booking_extended_legacy_code": 5188
+    }
+  },
+  {
+    "id": "hotel.first_aid_kit_available",
+    "type": "boolean",
+    "description": "Property offers first aid kit available",
+    "aliases": [
+      "first aid kit available"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 459,
+      "facility_name": "FIRST_AID_KIT_AVAILABLE",
+      "booking_extended_legacy_code": 5189
+    }
+  },
+  {
+    "id": "hotel.contactless_checkin",
+    "type": "boolean",
+    "description": "Property offers contactless check-in",
+    "aliases": [
+      "contactless check-in",
+      "contactless check in",
+      "self check-in"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 460,
+      "facility_name": "CONTACTLESS_CHECKIN",
+      "booking_extended_legacy_code": 5190
+    }
+  },
+  {
+    "id": "hotel.cashless_payments",
+    "type": "boolean",
+    "description": "Property accepts cashless payments",
+    "aliases": [
+      "cashless payments",
+      "cashless payment",
+      "card payment"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 461,
+      "facility_name": "CASHLESS_PAYMENTS",
+      "booking_extended_legacy_code": 5191
+    }
+  },
+  {
+    "id": "hotel.social_distancing",
+    "type": "boolean",
+    "description": "Property applies social distancing measures",
+    "aliases": [
+      "social distancing"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 462,
+      "facility_name": "SOCIAL_DISTANCING",
+      "booking_extended_legacy_code": 5192
+    }
+  },
+  {
+    "id": "hotel.room_service_app",
+    "type": "boolean",
+    "description": "Property offers room service app",
+    "aliases": [
+      "room service app"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 463,
+      "facility_name": "ROOM_SERVICE_APP",
+      "booking_extended_legacy_code": 5193
+    }
+  },
+  {
+    "id": "hotel.separators",
+    "type": "boolean",
+    "description": "Property offers separators",
+    "aliases": [
+      "separators"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 464,
+      "facility_name": "SEPARATORS",
+      "booking_extended_legacy_code": 5194
+    }
+  },
+  {
+    "id": "hotel.invoices_provided",
+    "type": "boolean",
+    "description": "Property provides invoices",
+    "aliases": [
+      "invoices provided"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 465,
+      "facility_name": "INVOICES_PROVIDED",
+      "booking_extended_legacy_code": 5198
+    }
+  },
+  {
+    "id": "hotel.professional_cleaning",
+    "type": "boolean",
+    "description": "Property uses professional cleaning services",
+    "aliases": [
+      "professional cleaning"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 466,
+      "facility_name": "PROFESSIONAL_CLEANING",
+      "booking_extended_legacy_code": 5195
+    }
+  },
+  {
+    "id": "hotel.sanitized_dinnerware",
+    "type": "boolean",
+    "description": "Property offers sanitized dinnerware",
+    "aliases": [
+      "sanitized dinnerware"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 467,
+      "facility_name": "SANITIZED_DINNERWARE",
+      "booking_extended_legacy_code": 5196
+    }
+  },
+  {
+    "id": "hotel.optional_cleaning",
+    "type": "boolean",
+    "description": "Cleaning services are optional for the guest",
+    "aliases": [
+      "optional cleaning"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 468,
+      "facility_name": "OPTIONAL_CLEANING",
+      "booking_extended_legacy_code": 5197
+    }
+  },
+  {
+    "id": "hotel.oci_guest_ids_collcted_online",
+    "type": "boolean",
+    "description": "Property offers guest IDs collected online",
+    "aliases": [
+      "guest ids collected online"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 470,
+      "facility_name": "OCI_GUEST_IDS_COLLCTED_ONLINE"
+    }
+  },
+  {
+    "id": "hotel.oci_checkin_kiosk_in_lobby",
+    "type": "boolean",
+    "description": "Property offers checkin kiosk in lobby",
+    "aliases": [
+      "checkin kiosk in lobby"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 471,
+      "facility_name": "OCI_CHECKIN_KIOSK_IN_LOBBY"
+    }
+  },
+  {
+    "id": "hotel.oci_lockbox_key_collection_at_property",
+    "type": "boolean",
+    "description": "Property offers lockbox key collection at property",
+    "aliases": [
+      "lockbox key collection at property"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 472,
+      "facility_name": "OCI_LOCKBOX_KEY_COLLECTION_AT_PROPERTY"
+    }
+  },
+  {
+    "id": "hotel.oci_lockbox_key_collection_at_separate_location",
+    "type": "boolean",
+    "description": "Property offers lockbox key collection at separate location",
+    "aliases": [
+      "lockbox key collection at separate location"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 473,
+      "facility_name": "OCI_LOCKBOX_KEY_COLLECTION_AT_SEPARATE_LOCATION"
+    }
+  },
+  {
+    "id": "hotel.oci_room_level_digital_key_mobile_bluetooth",
+    "type": "boolean",
+    "description": "Property offers room level digital key mobile bluetooth",
+    "aliases": [
+      "room level digital key mobile bluetooth"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 474,
+      "facility_name": "OCI_ROOM_LEVEL_DIGITAL_KEY_MOBILE_BLUETOOTH"
+    }
+  },
+  {
+    "id": "hotel.oci_room_level_digital_key_mobile_internet",
+    "type": "boolean",
+    "description": "Property offers room level digital key mobile internet",
+    "aliases": [
+      "room level digital key mobile internet"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 475,
+      "facility_name": "OCI_ROOM_LEVEL_DIGITAL_KEY_MOBILE_INTERNET"
+    }
+  },
+  {
+    "id": "hotel.oci_room_level_digital_key_shared_pin_code",
+    "type": "boolean",
+    "description": "Property offers room level digital key shared pin code",
+    "aliases": [
+      "room level digital key shared pin code"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 476,
+      "facility_name": "OCI_ROOM_LEVEL_DIGITAL_KEY_SHARED_PIN_CODE"
+    }
+  },
+  {
+    "id": "hotel.oci_room_level_digital_key_qr_code",
+    "type": "boolean",
+    "description": "Property offers room level digital key qr code",
+    "aliases": [
+      "room level digital key qr code"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 477,
+      "facility_name": "OCI_ROOM_LEVEL_DIGITAL_KEY_QR_CODE"
+    }
+  },
+  {
+    "id": "hotel.oci_room_level_digital_key_via_app",
+    "type": "boolean",
+    "description": "Property offers room level digital key via app",
+    "aliases": [
+      "room level digital key via app"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 478,
+      "facility_name": "OCI_ROOM_LEVEL_DIGITAL_KEY_VIA_APP"
+    }
+  },
+  {
+    "id": "hotel.oci_property_level_digital_key_mobile_bluetooth",
+    "type": "boolean",
+    "description": "Property offers property level digital key mobile bluetooth",
+    "aliases": [
+      "property level digital key mobile bluetooth"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 479,
+      "facility_name": "OCI_PROPERTY_LEVEL_DIGITAL_KEY_MOBILE_BLUETOOTH"
+    }
+  },
+  {
+    "id": "hotel.oci_property_level_digital_key_mobile_internet",
+    "type": "boolean",
+    "description": "Property offers property level digital key mobile internet",
+    "aliases": [
+      "property level digital key mobile internet"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 480,
+      "facility_name": "OCI_PROPERTY_LEVEL_DIGITAL_KEY_MOBILE_INTERNET"
+    }
+  },
+  {
+    "id": "hotel.oci_property_level_digital_key_shared_pin_code",
+    "type": "boolean",
+    "description": "Property offers property level digital key shared pin code",
+    "aliases": [
+      "property level digital key shared pin code"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 481,
+      "facility_name": "OCI_PROPERTY_LEVEL_DIGITAL_KEY_SHARED_PIN_CODE"
+    }
+  },
+  {
+    "id": "hotel.oci_property_level_digital_key_qr_code",
+    "type": "boolean",
+    "description": "Property offers property level digital key qr code",
+    "aliases": [
+      "property level digital key qr code"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 482,
+      "facility_name": "OCI_PROPERTY_LEVEL_DIGITAL_KEY_QR_CODE"
+    }
+  },
+  {
+    "id": "hotel.oci_property_level_digital_key_via_app",
+    "type": "boolean",
+    "description": "Property offers property level digital key via app",
+    "aliases": [
+      "property level digital key via app"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 483,
+      "facility_name": "OCI_PROPERTY_LEVEL_DIGITAL_KEY_VIA_APP"
+    }
+  },
+  {
+    "id": "hotel.breakfast_takeaway_boxes",
+    "type": "boolean",
+    "description": "Property offers breakfast takeaway boxes",
+    "aliases": [
+      "breakfast takeaway boxes"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 484,
+      "facility_name": "BREAKFAST_TAKEAWAY_BOXES",
+      "booking_extended_legacy_code": 5199
+    }
+  },
+  {
+    "id": "hotel.covered_food_delivery",
+    "type": "boolean",
+    "description": "Property offers covered food delivery",
+    "aliases": [
+      "covered food delivery"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 485,
+      "facility_name": "COVERED_FOOD_DELIVERY",
+      "booking_extended_legacy_code": 5200
+    }
+  },
+  {
+    "id": "hotel.access_to_health_care_professional",
+    "type": "boolean",
+    "description": "Property offers access to health care professional",
+    "aliases": [
+      "access to health care professional"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 486,
+      "facility_name": "ACCESS_TO_HEALTH_CARE_PROFESSIONAL",
+      "booking_extended_legacy_code": 5201
+    }
+  },
+  {
+    "id": "hotel.thermometers_available",
+    "type": "boolean",
+    "description": "Property offers thermometers available",
+    "aliases": [
+      "thermometers available"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 487,
+      "facility_name": "THERMOMETERS_AVAILABLE",
+      "booking_extended_legacy_code": 5202
+    }
+  },
+  {
+    "id": "hotel.free_face_masks",
+    "type": "boolean",
+    "description": "Property offers free face masks",
+    "aliases": [
+      "free face masks"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 488,
+      "facility_name": "FREE_FACE_MASKS",
+      "booking_extended_legacy_code": 5203
+    }
+  },
+  {
+    "id": "hotel.indoor_fireplace",
+    "type": "boolean",
+    "description": "Property offers indoor fireplace",
+    "aliases": [
+      "indoor fireplace"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 511,
+      "facility_name": "INDOOR_FIREPLACE"
+    }
+  },
+  {
+    "id": "hotel.breakfast",
+    "type": "boolean",
+    "description": "Property offers breakfast",
+    "aliases": [
+      "breakfast",
+      "with breakfast",
+      "breakfast included"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 9111,
+      "facility_name": "BREAKFAST",
+      "allowed_details": [
+        "ScheduleDetails"
+      ],
+      "required_details": [
+        "MealDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.lunch_available",
+    "type": "boolean",
+    "description": "Property offers lunch available",
+    "aliases": [
+      "lunch available",
+      "lunch"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 9114,
+      "facility_name": "LUNCH_AVAILABLE",
+      "required_details": [
+        "MealDetails"
+      ]
+    }
+  },
+  {
+    "id": "hotel.dinner_available",
+    "type": "boolean",
+    "description": "Property offers dinner available",
+    "aliases": [
+      "dinner available",
+      "dinner",
+      "half board"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "property",
+      "facility_id": 9115,
+      "facility_name": "DINNER_AVAILABLE",
+      "required_details": [
+        "MealDetails"
+      ]
+    }
+  },
+  {
+    "id": "room.coffeetea_maker",
+    "type": "boolean",
+    "description": "Room has coffeetea maker",
+    "aliases": [
+      "coffeetea maker",
+      "coffee maker",
+      "tea maker",
+      "kettle"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 1,
+      "facility_name": "COFFEETEA_MAKER"
+    }
+  },
+  {
+    "id": "room.internet_facilities",
+    "type": "boolean",
+    "description": "Room has internet facilities",
+    "aliases": [
+      "internet facilities",
+      "wifi in room",
+      "internet in room"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 2,
+      "facility_name": "INTERNET_FACILITIES"
+    }
+  },
+  {
+    "id": "room.minibar",
+    "type": "boolean",
+    "description": "Room has minibar",
+    "aliases": [
+      "minibar"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 3,
+      "facility_name": "MINIBAR"
+    }
+  },
+  {
+    "id": "room.shower",
+    "type": "boolean",
+    "description": "Room has shower",
+    "aliases": [
+      "shower"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 4,
+      "facility_name": "SHOWER"
+    }
+  },
+  {
+    "id": "room.bath",
+    "type": "boolean",
+    "description": "Room has bath",
+    "aliases": [
+      "bath",
+      "bathtub"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 5,
+      "facility_name": "BATH"
+    }
+  },
+  {
+    "id": "room.safe_deposit_box",
+    "type": "boolean",
+    "description": "Room has safe deposit box",
+    "aliases": [
+      "safe deposit box",
+      "in-room safe",
+      "safe"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 6,
+      "facility_name": "SAFE_DEPOSIT_BOX"
+    }
+  },
+  {
+    "id": "room.payperview_channels",
+    "type": "boolean",
+    "description": "Room has pay-per-view channels",
+    "aliases": [
+      "pay-per-view channels",
+      "pay per view channels"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 7,
+      "facility_name": "PAYPERVIEW_CHANNELS"
+    }
+  },
+  {
+    "id": "room.tv",
+    "type": "boolean",
+    "description": "Room has tv",
+    "aliases": [
+      "tv",
+      "television"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 8,
+      "facility_name": "TV"
+    }
+  },
+  {
+    "id": "room.telephone",
+    "type": "boolean",
+    "description": "Room has telephone",
+    "aliases": [
+      "telephone"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 9,
+      "facility_name": "TELEPHONE"
+    }
+  },
+  {
+    "id": "room.fax",
+    "type": "boolean",
+    "description": "Room has fax",
+    "aliases": [
+      "fax"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 10,
+      "facility_name": "FAX"
+    }
+  },
+  {
+    "id": "room.airconditioning",
+    "type": "boolean",
+    "description": "Room has air conditioning",
+    "aliases": [
+      "air conditioning",
+      "ac",
+      "aircon"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 11,
+      "facility_name": "AIRCONDITIONING"
+    }
+  },
+  {
+    "id": "room.hair_dryer",
+    "type": "boolean",
+    "description": "Room has hair dryer",
+    "aliases": [
+      "hair dryer"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 12,
+      "facility_name": "HAIR_DRYER"
+    }
+  },
+  {
+    "id": "room.wake_up_servicealarmclock",
+    "type": "boolean",
+    "description": "Room has wake-up service / alarm clock",
+    "aliases": [
+      "wake-up service / alarm clock",
+      "wake up service alarm clock"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 13,
+      "facility_name": "WAKE_UP_SERVICEALARMCLOCK"
+    }
+  },
+  {
+    "id": "room.hot_tub",
+    "type": "boolean",
+    "description": "Room has hot tub",
+    "aliases": [
+      "hot tub",
+      "hot tub in room",
+      "jacuzzi"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 14,
+      "facility_name": "HOT_TUB"
+    }
+  },
+  {
+    "id": "room.clothing_iron",
+    "type": "boolean",
+    "description": "Room has clothing iron",
+    "aliases": [
+      "clothing iron"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 15,
+      "facility_name": "CLOTHING_IRON",
+      "booking_extended_legacy_code": 5015
+    }
+  },
+  {
+    "id": "room.kitchenette",
+    "type": "boolean",
+    "description": "Room has kitchenette",
+    "aliases": [
+      "kitchenette"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 16,
+      "facility_name": "KITCHENETTE"
+    }
+  },
+  {
+    "id": "room.balcony",
+    "type": "boolean",
+    "description": "Room has balcony",
+    "aliases": [
+      "balcony"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 17,
+      "facility_name": "BALCONY"
+    }
+  },
+  {
+    "id": "room.trouser_press",
+    "type": "boolean",
+    "description": "Room has trouser press",
+    "aliases": [
+      "trouser press"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 18,
+      "facility_name": "TROUSER_PRESS"
+    }
+  },
+  {
+    "id": "room.bathrobe",
+    "type": "boolean",
+    "description": "Room has bathrobe",
+    "aliases": [
+      "bathrobe",
+      "robe"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 19,
+      "facility_name": "BATHROBE"
+    }
+  },
+  {
+    "id": "room.spa_bath",
+    "type": "boolean",
+    "description": "Room has spa bath",
+    "aliases": [
+      "spa bath",
+      "jacuzzi in room"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 20,
+      "facility_name": "SPA_BATH"
+    }
+  },
+  {
+    "id": "room.radio",
+    "type": "boolean",
+    "description": "Room has radio",
+    "aliases": [
+      "radio"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 21,
+      "facility_name": "RADIO"
+    }
+  },
+  {
+    "id": "room.refrigerator",
+    "type": "boolean",
+    "description": "Room has refrigerator",
+    "aliases": [
+      "refrigerator",
+      "fridge"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 22,
+      "facility_name": "REFRIGERATOR"
+    }
+  },
+  {
+    "id": "room.desk",
+    "type": "boolean",
+    "description": "Room has desk",
+    "aliases": [
+      "desk",
+      "work desk",
+      "workspace"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 23,
+      "facility_name": "DESK"
+    }
+  },
+  {
+    "id": "room.ironing_facilities",
+    "type": "boolean",
+    "description": "Room has ironing facilities",
+    "aliases": [
+      "ironing facilities"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 25,
+      "facility_name": "IRONING_FACILITIES"
+    }
+  },
+  {
+    "id": "room.seating_area",
+    "type": "boolean",
+    "description": "Room has seating area",
+    "aliases": [
+      "seating area",
+      "sofa area"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 26,
+      "facility_name": "SEATING_AREA"
+    }
+  },
+  {
+    "id": "room.free_toiletries",
+    "type": "boolean",
+    "description": "Room has free toiletries",
+    "aliases": [
+      "free toiletries",
+      "amenities kit"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 27,
+      "facility_name": "FREE_TOILETRIES"
+    }
+  },
+  {
+    "id": "room.dvdplayer",
+    "type": "boolean",
+    "description": "Room has DVD player",
+    "aliases": [
+      "dvd player"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 28,
+      "facility_name": "DVDPLAYER"
+    }
+  },
+  {
+    "id": "room.cdplayer",
+    "type": "boolean",
+    "description": "Room has CD player",
+    "aliases": [
+      "cd player"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 29,
+      "facility_name": "CDPLAYER"
+    }
+  },
+  {
+    "id": "room.fan",
+    "type": "boolean",
+    "description": "Room has fan",
+    "aliases": [
+      "fan"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 30,
+      "facility_name": "FAN"
+    }
+  },
+  {
+    "id": "room.toilet",
+    "type": "boolean",
+    "description": "Room has toilet",
+    "aliases": [
+      "toilet"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 31,
+      "facility_name": "TOILET"
+    }
+  },
+  {
+    "id": "room.microwave",
+    "type": "boolean",
+    "description": "Room has microwave",
+    "aliases": [
+      "microwave"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 32,
+      "facility_name": "MICROWAVE"
+    }
+  },
+  {
+    "id": "room.dishwasher",
+    "type": "boolean",
+    "description": "Room has dishwasher",
+    "aliases": [
+      "dishwasher"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 33,
+      "facility_name": "DISHWASHER"
+    }
+  },
+  {
+    "id": "room.washing_machine",
+    "type": "boolean",
+    "description": "Room has washing machine",
+    "aliases": [
+      "washing machine",
+      "laundry in room"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 34,
+      "facility_name": "WASHING_MACHINE"
+    }
+  },
+  {
+    "id": "room.video",
+    "type": "boolean",
+    "description": "Room has video",
+    "aliases": [
+      "video"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 35,
+      "facility_name": "VIDEO"
+    }
+  },
+  {
+    "id": "room.video_games",
+    "type": "boolean",
+    "description": "Room has video games",
+    "aliases": [
+      "video games"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 36,
+      "facility_name": "VIDEO_GAMES"
+    }
+  },
+  {
+    "id": "room.patio",
+    "type": "boolean",
+    "description": "Room has patio",
+    "aliases": [
+      "patio"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 37,
+      "facility_name": "PATIO"
+    }
+  },
+  {
+    "id": "room.extra_long_beds_2_meter",
+    "type": "boolean",
+    "description": "Room has extra long beds (2 meters)",
+    "aliases": [
+      "extra long beds (2 meters)",
+      "extra long beds 2 meters"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 39,
+      "facility_name": "EXTRA_LONG_BEDS__2_METER",
+      "booking_extended_legacy_code": 5039
+    }
+  },
+  {
+    "id": "room.heating",
+    "type": "boolean",
+    "description": "Room has heating",
+    "aliases": [
+      "heating"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 40,
+      "facility_name": "HEATING"
+    }
+  },
+  {
+    "id": "room.dressing_room",
+    "type": "boolean",
+    "description": "Room has dressing room",
+    "aliases": [
+      "dressing room",
+      "walk-in closet"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 41,
+      "facility_name": "DRESSING_ROOM",
+      "booking_extended_legacy_code": 5041
+    }
+  },
+  {
+    "id": "room.guest_toilet",
+    "type": "boolean",
+    "description": "Room has guest toilet",
+    "aliases": [
+      "guest toilet"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 42,
+      "facility_name": "GUEST_TOILET",
+      "booking_extended_legacy_code": 5042
+    }
+  },
+  {
+    "id": "room.slippers",
+    "type": "boolean",
+    "description": "Room has slippers",
+    "aliases": [
+      "slippers"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 43,
+      "facility_name": "SLIPPERS"
+    }
+  },
+  {
+    "id": "room.satellite_channels",
+    "type": "boolean",
+    "description": "Room has satellite channels",
+    "aliases": [
+      "satellite channels",
+      "satellite tv"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 44,
+      "facility_name": "SATELLITE_CHANNELS"
+    }
+  },
+  {
+    "id": "room.kitchen",
+    "type": "boolean",
+    "description": "Room has kitchen",
+    "aliases": [
+      "kitchen"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 45,
+      "facility_name": "KITCHEN"
+    }
+  },
+  {
+    "id": "room.cable_channels",
+    "type": "boolean",
+    "description": "Room has cable channels",
+    "aliases": [
+      "cable channels",
+      "cable tv"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 68,
+      "facility_name": "CABLE_CHANNELS"
+    }
+  },
+  {
+    "id": "room.bath_or_shower",
+    "type": "boolean",
+    "description": "Room has bath or shower",
+    "aliases": [
+      "bath or shower"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 69,
+      "facility_name": "BATH_OR_SHOWER"
+    }
+  },
+  {
+    "id": "room.carpeted_floor",
+    "type": "boolean",
+    "description": "Room has carpeted floor",
+    "aliases": [
+      "carpeted floor"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 70,
+      "facility_name": "CARPETED_FLOOR",
+      "booking_extended_legacy_code": 5070
+    }
+  },
+  {
+    "id": "room.fireplace",
+    "type": "boolean",
+    "description": "Room has fireplace",
+    "aliases": [
+      "fireplace"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 71,
+      "facility_name": "FIREPLACE"
+    }
+  },
+  {
+    "id": "room.additional_toilet",
+    "type": "boolean",
+    "description": "Room has additional toilet",
+    "aliases": [
+      "additional toilet"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 72,
+      "facility_name": "ADDITIONAL_TOILET",
+      "booking_extended_legacy_code": 5072
+    }
+  },
+  {
+    "id": "room.interconnecting_rooms_available",
+    "type": "boolean",
+    "description": "Room has interconnecting rooms available",
+    "aliases": [
+      "interconnecting rooms available",
+      "connecting rooms",
+      "interconnecting rooms"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 73,
+      "facility_name": "INTERCONNECTING_ROOMS_AVAILABLE"
+    }
+  },
+  {
+    "id": "room.laptop_safe_box",
+    "type": "boolean",
+    "description": "Room has laptop safe box",
+    "aliases": [
+      "laptop safe box",
+      "laptop safe",
+      "large safe"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 74,
+      "facility_name": "LAPTOP_SAFE_BOX"
+    }
+  },
+  {
+    "id": "room.flatscreen_tv",
+    "type": "boolean",
+    "description": "Room has flat-screen TV",
+    "aliases": [
+      "flat-screen tv",
+      "flat screen tv",
+      "flatscreen"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 75,
+      "facility_name": "FLATSCREEN_TV"
+    }
+  },
+  {
+    "id": "room.private_entrance",
+    "type": "boolean",
+    "description": "Room has private entrance",
+    "aliases": [
+      "private entrance",
+      "separate entrance"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 76,
+      "facility_name": "PRIVATE_ENTRANCE",
+      "booking_extended_legacy_code": 5076
+    }
+  },
+  {
+    "id": "room.sofa",
+    "type": "boolean",
+    "description": "Room has sofa",
+    "aliases": [
+      "sofa",
+      "couch"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 77,
+      "facility_name": "SOFA",
+      "booking_extended_legacy_code": 5077
+    }
+  },
+  {
+    "id": "room.soundproofing",
+    "type": "boolean",
+    "description": "Room has good soundproofing from hallway, street, or bar noise",
+    "aliases": [
+      "soundproofing",
+      "soundproof",
+      "hallway noise",
+      "noise insulation",
+      "quiet room"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 79,
+      "facility_name": "SOUNDPROOFING"
+    }
+  },
+  {
+    "id": "room.tiled_marble_floor",
+    "type": "boolean",
+    "description": "Room has tiled / marble floor",
+    "aliases": [
+      "tiled / marble floor",
+      "tiled marble floor"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 80,
+      "facility_name": "TILED__MARBLE_FLOOR",
+      "booking_extended_legacy_code": 5080
+    }
+  },
+  {
+    "id": "room.view",
+    "type": "boolean",
+    "description": "Room has view",
+    "aliases": [
+      "view",
+      "with a view",
+      "nice view"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 81,
+      "facility_name": "VIEW",
+      "booking_extended_legacy_code": 5081
+    }
+  },
+  {
+    "id": "room.wooden_parquet_floor",
+    "type": "boolean",
+    "description": "Room has wooden / parquet floor",
+    "aliases": [
+      "wooden / parquet floor",
+      "wooden parquet floor"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 82,
+      "facility_name": "WOODEN__PARQUET_FLOOR",
+      "booking_extended_legacy_code": 5082
+    }
+  },
+  {
+    "id": "room.wake_up_service",
+    "type": "boolean",
+    "description": "Room has wake up service",
+    "aliases": [
+      "wake up service"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 83,
+      "facility_name": "WAKE_UP_SERVICE"
+    }
+  },
+  {
+    "id": "room.alarm_clock",
+    "type": "boolean",
+    "description": "Room has alarm clock",
+    "aliases": [
+      "alarm clock"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 84,
+      "facility_name": "ALARM_CLOCK"
+    }
+  },
+  {
+    "id": "room.dining_area",
+    "type": "boolean",
+    "description": "Room has dining area",
+    "aliases": [
+      "dining area"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 85,
+      "facility_name": "DINING_AREA"
+    }
+  },
+  {
+    "id": "room.electric_kettle",
+    "type": "boolean",
+    "description": "Room has electric kettle",
+    "aliases": [
+      "electric kettle",
+      "kettle"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 86,
+      "facility_name": "ELECTRIC_KETTLE",
+      "booking_extended_legacy_code": 5086
+    }
+  },
+  {
+    "id": "room.executive_lounge_access",
+    "type": "boolean",
+    "description": "Room has executive lounge access",
+    "aliases": [
+      "executive lounge access",
+      "executive lounge",
+      "club lounge"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 87,
+      "facility_name": "EXECUTIVE_LOUNGE_ACCESS",
+      "booking_extended_legacy_code": 5087
+    }
+  },
+  {
+    "id": "room.ipod_docking_station",
+    "type": "boolean",
+    "description": "Room has iPod docking station",
+    "aliases": [
+      "ipod docking station"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 88,
+      "facility_name": "IPOD_DOCKING_STATION"
+    }
+  },
+  {
+    "id": "room.kitchenware",
+    "type": "boolean",
+    "description": "Room has kitchenware",
+    "aliases": [
+      "kitchenware"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 89,
+      "facility_name": "KITCHENWARE"
+    }
+  },
+  {
+    "id": "room.mosquito_net",
+    "type": "boolean",
+    "description": "Room has mosquito net",
+    "aliases": [
+      "mosquito net"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 90,
+      "facility_name": "MOSQUITO_NET",
+      "booking_extended_legacy_code": 5090
+    }
+  },
+  {
+    "id": "room.towelslinens_at_surcharge",
+    "type": "boolean",
+    "description": "Room has towels / linens at surcharge",
+    "aliases": [
+      "towels / linens at surcharge",
+      "towels linens at surcharge"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 91,
+      "facility_name": "TOWELSLINENS_AT_SURCHARGE",
+      "booking_extended_legacy_code": 5091
+    }
+  },
+  {
+    "id": "room.sauna",
+    "type": "boolean",
+    "description": "Room has sauna",
+    "aliases": [
+      "sauna"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 92,
+      "facility_name": "SAUNA",
+      "booking_extended_legacy_code": 5092
+    }
+  },
+  {
+    "id": "room.private_pool",
+    "type": "boolean",
+    "description": "Room has private pool",
+    "aliases": [
+      "private pool",
+      "own pool"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 93,
+      "facility_name": "PRIVATE_POOL"
+    }
+  },
+  {
+    "id": "room.tumble_dryer_machine",
+    "type": "boolean",
+    "description": "Room has tumble dryer machine",
+    "aliases": [
+      "tumble dryer machine",
+      "dryer",
+      "tumble dryer"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 94,
+      "facility_name": "TUMBLE_DRYER_MACHINE"
+    }
+  },
+  {
+    "id": "room.wardrobecloset",
+    "type": "boolean",
+    "description": "Room has wardrobe / closet",
+    "aliases": [
+      "wardrobe / closet",
+      "wardrobe closet",
+      "wardrobe",
+      "closet"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 95,
+      "facility_name": "WARDROBECLOSET"
+    }
+  },
+  {
+    "id": "room.oven",
+    "type": "boolean",
+    "description": "Room has oven",
+    "aliases": [
+      "oven"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 96,
+      "facility_name": "OVEN"
+    }
+  },
+  {
+    "id": "room.stove",
+    "type": "boolean",
+    "description": "Room has stove",
+    "aliases": [
+      "stove"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 97,
+      "facility_name": "STOVE"
+    }
+  },
+  {
+    "id": "room.toaster",
+    "type": "boolean",
+    "description": "Room has toaster",
+    "aliases": [
+      "toaster"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 98,
+      "facility_name": "TOASTER"
+    }
+  },
+  {
+    "id": "room.barbecue",
+    "type": "boolean",
+    "description": "Room has barbecue",
+    "aliases": [
+      "barbecue"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 99,
+      "facility_name": "BARBECUE"
+    }
+  },
+  {
+    "id": "room.bidet",
+    "type": "boolean",
+    "description": "Room has bidet",
+    "aliases": [
+      "bidet"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 100,
+      "facility_name": "BIDET"
+    }
+  },
+  {
+    "id": "room.computer",
+    "type": "boolean",
+    "description": "Room has computer",
+    "aliases": [
+      "computer"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 101,
+      "facility_name": "COMPUTER"
+    }
+  },
+  {
+    "id": "room.ipad",
+    "type": "boolean",
+    "description": "Room has ipad",
+    "aliases": [
+      "ipad"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 102,
+      "facility_name": "IPAD",
+      "booking_extended_legacy_code": 5102
+    }
+  },
+  {
+    "id": "room.game_console",
+    "type": "boolean",
+    "description": "Room has game console",
+    "aliases": [
+      "game console"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 103,
+      "facility_name": "GAME_CONSOLE"
+    }
+  },
+  {
+    "id": "room.game_console_xbox_360",
+    "type": "boolean",
+    "description": "Room has game console (Xbox 360)",
+    "aliases": [
+      "game console (xbox 360)",
+      "game console xbox 360"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 104,
+      "facility_name": "GAME_CONSOLE__XBOX_360",
+      "booking_extended_legacy_code": 5104
+    }
+  },
+  {
+    "id": "room.game_console_ps2",
+    "type": "boolean",
+    "description": "Room has game console (PS2)",
+    "aliases": [
+      "game console (ps2)",
+      "game console ps2"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 105,
+      "facility_name": "GAME_CONSOLE__PS2",
+      "booking_extended_legacy_code": 5105
+    }
+  },
+  {
+    "id": "room.game_console_ps3",
+    "type": "boolean",
+    "description": "Room has game console (PS3)",
+    "aliases": [
+      "game console (ps3)",
+      "game console ps3"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 106,
+      "facility_name": "GAME_CONSOLE__PS3",
+      "booking_extended_legacy_code": 5106
+    }
+  },
+  {
+    "id": "room.game_console_nintendo_wii",
+    "type": "boolean",
+    "description": "Room has game console (Nintendo Wii)",
+    "aliases": [
+      "game console (nintendo wii)",
+      "game console nintendo wii"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 107,
+      "facility_name": "GAME_CONSOLE__NINTENDO_WII",
+      "booking_extended_legacy_code": 5107
+    }
+  },
+  {
+    "id": "room.sea_view",
+    "type": "boolean",
+    "description": "Room has sea view",
+    "aliases": [
+      "sea view",
+      "ocean view",
+      "view of the sea"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 108,
+      "facility_name": "SEA_VIEW"
+    }
+  },
+  {
+    "id": "room.lake_view",
+    "type": "boolean",
+    "description": "Room has lake view",
+    "aliases": [
+      "lake view"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 109,
+      "facility_name": "LAKE_VIEW",
+      "booking_extended_legacy_code": 5109
+    }
+  },
+  {
+    "id": "room.garden_view",
+    "type": "boolean",
+    "description": "Room has garden view",
+    "aliases": [
+      "garden view"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 110,
+      "facility_name": "GARDEN_VIEW",
+      "booking_extended_legacy_code": 5110
+    }
+  },
+  {
+    "id": "room.pool_view",
+    "type": "boolean",
+    "description": "Room has pool view",
+    "aliases": [
+      "pool view"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 111,
+      "facility_name": "POOL_VIEW",
+      "booking_extended_legacy_code": 5111
+    }
+  },
+  {
+    "id": "room.mountain_view",
+    "type": "boolean",
+    "description": "Room has mountain view",
+    "aliases": [
+      "mountain view"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 112,
+      "facility_name": "MOUNTAIN_VIEW"
+    }
+  },
+  {
+    "id": "room.landmark_view",
+    "type": "boolean",
+    "description": "Room has landmark view",
+    "aliases": [
+      "landmark view"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 113,
+      "facility_name": "LANDMARK_VIEW",
+      "booking_extended_legacy_code": 5113
+    }
+  },
+  {
+    "id": "room.laptop",
+    "type": "boolean",
+    "description": "Room has laptop",
+    "aliases": [
+      "laptop"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 114,
+      "facility_name": "LAPTOP"
+    }
+  },
+  {
+    "id": "room.allergyfree",
+    "type": "boolean",
+    "description": "Room is allergy-free",
+    "aliases": [
+      "allergy-free",
+      "allergy free",
+      "allergy free room",
+      "hypoallergenic"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 115,
+      "facility_name": "ALLERGYFREE"
+    }
+  },
+  {
+    "id": "room.cleaning_products",
+    "type": "boolean",
+    "description": "Room has cleaning products",
+    "aliases": [
+      "cleaning products"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 116,
+      "facility_name": "CLEANING_PRODUCTS",
+      "booking_extended_legacy_code": 5116
+    }
+  },
+  {
+    "id": "room.electric_blankets",
+    "type": "boolean",
+    "description": "Room has electric blankets",
+    "aliases": [
+      "electric blankets"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 117,
+      "facility_name": "ELECTRIC_BLANKETS",
+      "booking_extended_legacy_code": 5117
+    }
+  },
+  {
+    "id": "room.additional_bathroom",
+    "type": "boolean",
+    "description": "Room has additional bathroom",
+    "aliases": [
+      "additional bathroom"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 118,
+      "facility_name": "ADDITIONAL_BATHROOM",
+      "booking_extended_legacy_code": 5118
+    }
+  },
+  {
+    "id": "room.bluray_player",
+    "type": "boolean",
+    "description": "Room has Blu-ray player",
+    "aliases": [
+      "blu-ray player",
+      "blu ray player"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 119,
+      "facility_name": "BLURAY_PLAYER"
+    }
+  },
+  {
+    "id": "room.coffee_machine",
+    "type": "boolean",
+    "description": "Room has coffee machine",
+    "aliases": [
+      "coffee machine",
+      "espresso machine"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 120,
+      "facility_name": "COFFEE_MACHINE",
+      "booking_extended_legacy_code": 5120
+    }
+  },
+  {
+    "id": "room.city_view",
+    "type": "boolean",
+    "description": "Room has city view",
+    "aliases": [
+      "city view"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 121,
+      "facility_name": "CITY_VIEW",
+      "booking_extended_legacy_code": 5121
+    }
+  },
+  {
+    "id": "room.river_view",
+    "type": "boolean",
+    "description": "Room has river view",
+    "aliases": [
+      "river view"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 122,
+      "facility_name": "RIVER_VIEW",
+      "booking_extended_legacy_code": 5122
+    }
+  },
+  {
+    "id": "room.terrace",
+    "type": "boolean",
+    "description": "Room has terrace",
+    "aliases": [
+      "terrace"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 123,
+      "facility_name": "TERRACE"
+    }
+  },
+  {
+    "id": "room.towels",
+    "type": "boolean",
+    "description": "Room has towels",
+    "aliases": [
+      "towels"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 124,
+      "facility_name": "TOWELS",
+      "booking_extended_legacy_code": 5124
+    }
+  },
+  {
+    "id": "room.linen",
+    "type": "boolean",
+    "description": "Room has linen",
+    "aliases": [
+      "linen"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 125,
+      "facility_name": "LINEN",
+      "allowed_details": [
+        "LinenDetails"
+      ]
+    }
+  },
+  {
+    "id": "room.dining_table",
+    "type": "boolean",
+    "description": "Room has dining table",
+    "aliases": [
+      "dining table"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 126,
+      "facility_name": "DINING_TABLE",
+      "booking_extended_legacy_code": 5126
+    }
+  },
+  {
+    "id": "room.children_highchair",
+    "type": "boolean",
+    "description": "Room has children highchair",
+    "aliases": [
+      "children highchair",
+      "high chair"
+    ],
+    "conflicts_with": [
+      "hotel.adult_only"
+    ],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 127,
+      "facility_name": "CHILDREN_HIGHCHAIR",
+      "booking_extended_legacy_code": 5127
+    }
+  },
+  {
+    "id": "room.outdoor_furniture",
+    "type": "boolean",
+    "description": "Room has outdoor furniture",
+    "aliases": [
+      "outdoor furniture"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 129,
+      "facility_name": "OUTDOOR_FURNITURE",
+      "booking_extended_legacy_code": 5129
+    }
+  },
+  {
+    "id": "room.outdoor_dining_area",
+    "type": "boolean",
+    "description": "Room has outdoor dining area",
+    "aliases": [
+      "outdoor dining area"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 130,
+      "facility_name": "OUTDOOR_DINING_AREA",
+      "booking_extended_legacy_code": 5130
+    }
+  },
+  {
+    "id": "room.entire_property_on_ground_floor",
+    "type": "boolean",
+    "description": "Entire unit is on the ground floor",
+    "aliases": [
+      "entire property on ground floor"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 131,
+      "facility_name": "ENTIRE_PROPERTY_ON_GROUND_FLOOR",
+      "booking_extended_legacy_code": 5131
+    }
+  },
+  {
+    "id": "room.upper_floor_reachable_by_lift",
+    "type": "boolean",
+    "description": "Upper floors are reachable by lift",
+    "aliases": [
+      "upper floor reachable by lift"
+    ],
+    "conflicts_with": [
+      "room.upper_floor_reachable_by_stairs_only"
+    ],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 132,
+      "facility_name": "UPPER_FLOOR_REACHABLE_BY_LIFT",
+      "booking_extended_legacy_code": 5132
+    }
+  },
+  {
+    "id": "room.upper_floor_reachable_by_stairs_only",
+    "type": "boolean",
+    "description": "Upper floors are reachable by stairs only",
+    "aliases": [
+      "upper floor reachable by stairs only"
+    ],
+    "conflicts_with": [
+      "room.accessible_by_lift",
+      "room.entire_unit_wheelchair_accessible",
+      "room.upper_floor_reachable_by_lift"
+    ],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 133,
+      "facility_name": "UPPER_FLOOR_REACHABLE_BY_STAIRS_ONLY",
+      "booking_extended_legacy_code": 5133
+    }
+  },
+  {
+    "id": "room.entire_unit_wheelchair_accessible",
+    "type": "boolean",
+    "description": "Entire unit is wheelchair accessible",
+    "aliases": [
+      "entire unit wheelchair accessible",
+      "wheelchair accessible room",
+      "accessible unit"
+    ],
+    "conflicts_with": [
+      "room.upper_floor_reachable_by_stairs_only"
+    ],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 134,
+      "facility_name": "ENTIRE_UNIT_WHEELCHAIR_ACCESSIBLE",
+      "booking_extended_legacy_code": 5134
+    }
+  },
+  {
+    "id": "room.detached",
+    "type": "boolean",
+    "description": "Unit is a detached property",
+    "aliases": [
+      "detached"
+    ],
+    "conflicts_with": [
+      "room.private_flat_in_block_of_flats",
+      "room.semidetached"
+    ],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 135,
+      "facility_name": "DETACHED",
+      "booking_extended_legacy_code": 5135
+    }
+  },
+  {
+    "id": "room.semidetached",
+    "type": "boolean",
+    "description": "Unit is a semi-detached property",
+    "aliases": [
+      "semi-detached",
+      "semi detached"
+    ],
+    "conflicts_with": [
+      "room.detached",
+      "room.private_flat_in_block_of_flats"
+    ],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 136,
+      "facility_name": "SEMIDETACHED",
+      "booking_extended_legacy_code": 5136
+    }
+  },
+  {
+    "id": "room.private_flat_in_block_of_flats",
+    "type": "boolean",
+    "description": "Unit is a private flat in a block of flats",
+    "aliases": [
+      "private flat in block of flats"
+    ],
+    "conflicts_with": [
+      "room.detached",
+      "room.semidetached"
+    ],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 137,
+      "facility_name": "PRIVATE_FLAT_IN_BLOCK_OF_FLATS",
+      "booking_extended_legacy_code": 5137
+    }
+  },
+  {
+    "id": "room.clothes_rack",
+    "type": "boolean",
+    "description": "Room has clothes rack",
+    "aliases": [
+      "clothes rack"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 138,
+      "facility_name": "CLOTHES_RACK",
+      "booking_extended_legacy_code": 5138
+    }
+  },
+  {
+    "id": "room.drying_rack",
+    "type": "boolean",
+    "description": "Room has drying rack",
+    "aliases": [
+      "drying rack"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 140,
+      "facility_name": "DRYING_RACK",
+      "booking_extended_legacy_code": 5140
+    }
+  },
+  {
+    "id": "room.toilet_paper",
+    "type": "boolean",
+    "description": "Room has toilet paper",
+    "aliases": [
+      "toilet paper"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 141,
+      "facility_name": "TOILET_PAPER",
+      "booking_extended_legacy_code": 5141
+    }
+  },
+  {
+    "id": "room.child_safety_socket_covers",
+    "type": "boolean",
+    "description": "Room has child safety socket covers",
+    "aliases": [
+      "child safety socket covers"
+    ],
+    "conflicts_with": [
+      "hotel.adult_only"
+    ],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 142,
+      "facility_name": "CHILD_SAFETY_SOCKET_COVERS",
+      "booking_extended_legacy_code": 5142
+    }
+  },
+  {
+    "id": "room.board_games_puzzles",
+    "type": "boolean",
+    "description": "Room has board games and puzzles",
+    "aliases": [
+      "board games and puzzles"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 143,
+      "facility_name": "BOARD_GAMES_PUZZLES",
+      "booking_extended_legacy_code": 5143
+    }
+  },
+  {
+    "id": "room.book_dvd_music_library_for_children",
+    "type": "boolean",
+    "description": "Room has book dvd music library for children",
+    "aliases": [
+      "book dvd music library for children"
+    ],
+    "conflicts_with": [
+      "hotel.adult_only"
+    ],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 144,
+      "facility_name": "BOOK_DVD_MUSIC_LIBRARY_FOR_CHILDREN",
+      "booking_extended_legacy_code": 5144
+    }
+  },
+  {
+    "id": "room.baby_safety_gates",
+    "type": "boolean",
+    "description": "Room has baby safety gates",
+    "aliases": [
+      "baby safety gates"
+    ],
+    "conflicts_with": [
+      "hotel.adult_only"
+    ],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 145,
+      "facility_name": "BABY_SAFETY_GATES",
+      "booking_extended_legacy_code": 5145
+    }
+  },
+  {
+    "id": "room.sofa_bed",
+    "type": "boolean",
+    "description": "Room has sofa bed",
+    "aliases": [
+      "sofa bed"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 146,
+      "facility_name": "SOFA_BED",
+      "booking_extended_legacy_code": 5146
+    }
+  },
+  {
+    "id": "room.toilet_with_grab_rails",
+    "type": "boolean",
+    "description": "Room has toilet with grab rails",
+    "aliases": [
+      "toilet with grab rails"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 147,
+      "facility_name": "TOILET_WITH_GRAB_RAILS",
+      "booking_extended_legacy_code": 5147
+    }
+  },
+  {
+    "id": "room.adapted_bath",
+    "type": "boolean",
+    "description": "Room has adapted bath",
+    "aliases": [
+      "adapted bath"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 148,
+      "facility_name": "ADAPTED_BATH",
+      "booking_extended_legacy_code": 5148
+    }
+  },
+  {
+    "id": "room.roll_in_shower",
+    "type": "boolean",
+    "description": "Room has roll in shower",
+    "aliases": [
+      "roll in shower",
+      "roll-in shower",
+      "wheelchair shower"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 149,
+      "facility_name": "ROLL_IN_SHOWER",
+      "booking_extended_legacy_code": 5149
+    }
+  },
+  {
+    "id": "room.walk_in_shower",
+    "type": "boolean",
+    "description": "Room has walk in shower",
+    "aliases": [
+      "walk in shower",
+      "walk-in shower"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 150,
+      "facility_name": "WALK_IN_SHOWER",
+      "booking_extended_legacy_code": 5150
+    }
+  },
+  {
+    "id": "room.higher_level_toilet",
+    "type": "boolean",
+    "description": "Room has higher level toilet",
+    "aliases": [
+      "higher level toilet"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 151,
+      "facility_name": "HIGHER_LEVEL_TOILET",
+      "booking_extended_legacy_code": 5151
+    }
+  },
+  {
+    "id": "room.low_bathroom_sink",
+    "type": "boolean",
+    "description": "Room has low bathroom sink",
+    "aliases": [
+      "low bathroom sink"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 152,
+      "facility_name": "LOW_BATHROOM_SINK",
+      "booking_extended_legacy_code": 5152
+    }
+  },
+  {
+    "id": "room.bathroom_emergency_pull_cord",
+    "type": "boolean",
+    "description": "Room has bathroom emergency pull cord",
+    "aliases": [
+      "bathroom emergency pull cord"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 153,
+      "facility_name": "BATHROOM_EMERGENCY_PULL_CORD",
+      "booking_extended_legacy_code": 5153
+    }
+  },
+  {
+    "id": "room.shower_chair",
+    "type": "boolean",
+    "description": "Room has shower chair",
+    "aliases": [
+      "shower chair"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 154,
+      "facility_name": "SHOWER_CHAIR",
+      "booking_extended_legacy_code": 5154
+    }
+  },
+  {
+    "id": "room.rooftop_pool",
+    "type": "boolean",
+    "description": "Room has rooftop pool",
+    "aliases": [
+      "rooftop pool"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 157,
+      "facility_name": "ROOFTOP_POOL",
+      "booking_extended_legacy_code": 5157
+    }
+  },
+  {
+    "id": "room.infinity_pool",
+    "type": "boolean",
+    "description": "Room has infinity pool",
+    "aliases": [
+      "infinity pool"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 158,
+      "facility_name": "INFINITY_POOL",
+      "booking_extended_legacy_code": 5158
+    }
+  },
+  {
+    "id": "room.pool_with_view",
+    "type": "boolean",
+    "description": "Room has pool with view",
+    "aliases": [
+      "pool with view"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 159,
+      "facility_name": "POOL_WITH_VIEW",
+      "booking_extended_legacy_code": 5159
+    }
+  },
+  {
+    "id": "room.heated_pool",
+    "type": "boolean",
+    "description": "Room has heated pool",
+    "aliases": [
+      "heated pool"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 160,
+      "facility_name": "HEATED_POOL",
+      "booking_extended_legacy_code": 5160
+    }
+  },
+  {
+    "id": "room.salt_water_pool",
+    "type": "boolean",
+    "description": "Room has salt water pool",
+    "aliases": [
+      "salt water pool"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 161,
+      "facility_name": "SALT_WATER_POOL",
+      "booking_extended_legacy_code": 5161
+    }
+  },
+  {
+    "id": "room.plunge_pool",
+    "type": "boolean",
+    "description": "Room has plunge pool",
+    "aliases": [
+      "plunge pool"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 162,
+      "facility_name": "PLUNGE_POOL"
+    }
+  },
+  {
+    "id": "room.pool_towels",
+    "type": "boolean",
+    "description": "Room has pool towels",
+    "aliases": [
+      "pool towels"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 163,
+      "facility_name": "POOL_TOWELS",
+      "booking_extended_legacy_code": 5163
+    }
+  },
+  {
+    "id": "room.shallow_end",
+    "type": "boolean",
+    "description": "Room has shallow end",
+    "aliases": [
+      "shallow end"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 164,
+      "facility_name": "SHALLOW_END",
+      "booking_extended_legacy_code": 5164
+    }
+  },
+  {
+    "id": "room.pool_cover",
+    "type": "boolean",
+    "description": "Room has pool cover",
+    "aliases": [
+      "pool cover"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 165,
+      "facility_name": "POOL_COVER",
+      "booking_extended_legacy_code": 5165
+    }
+  },
+  {
+    "id": "room.wine_or_champagne",
+    "type": "boolean",
+    "description": "Room has wine or champagne",
+    "aliases": [
+      "wine or champagne"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 166,
+      "facility_name": "WINE_OR_CHAMPAGNE",
+      "booking_extended_legacy_code": 5166
+    }
+  },
+  {
+    "id": "room.bottle_of_water",
+    "type": "boolean",
+    "description": "Room has bottle of water",
+    "aliases": [
+      "bottle of water"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 167,
+      "facility_name": "BOTTLE_OF_WATER",
+      "booking_extended_legacy_code": 5167
+    }
+  },
+  {
+    "id": "room.fruits",
+    "type": "boolean",
+    "description": "Room has fruits",
+    "aliases": [
+      "fruits"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 168,
+      "facility_name": "FRUITS",
+      "booking_extended_legacy_code": 5168
+    }
+  },
+  {
+    "id": "room.chocolate_or_cookie",
+    "type": "boolean",
+    "description": "Room has chocolate or cookie",
+    "aliases": [
+      "chocolate or cookie"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 169,
+      "facility_name": "CHOCOLATE_OR_COOKIE",
+      "booking_extended_legacy_code": 5169
+    }
+  },
+  {
+    "id": "room.trash_cans",
+    "type": "boolean",
+    "description": "Room has trash cans",
+    "aliases": [
+      "trash cans"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 170,
+      "facility_name": "TRASH_CANS",
+      "booking_extended_legacy_code": 5170
+    }
+  },
+  {
+    "id": "room.wine_glasses",
+    "type": "boolean",
+    "description": "Room has wine glasses",
+    "aliases": [
+      "wine glasses"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 171,
+      "facility_name": "WINE_GLASSES",
+      "booking_extended_legacy_code": 5171
+    }
+  },
+  {
+    "id": "room.game_console_xbox_one",
+    "type": "boolean",
+    "description": "Room has game console (Xbox One)",
+    "aliases": [
+      "game console (xbox one)",
+      "game console xbox one"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 172,
+      "facility_name": "GAME_CONSOLE__XBOX_ONE",
+      "booking_extended_legacy_code": 5172
+    }
+  },
+  {
+    "id": "room.game_console_nintendo_wii_u",
+    "type": "boolean",
+    "description": "Room has game console (Nintendo Wii U)",
+    "aliases": [
+      "game console (nintendo wii u)",
+      "game console nintendo wii u"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 173,
+      "facility_name": "GAME_CONSOLE__NINTENDO_WII_U",
+      "booking_extended_legacy_code": 5173
+    }
+  },
+  {
+    "id": "room.game_console_ps4",
+    "type": "boolean",
+    "description": "Room has game console (PS4)",
+    "aliases": [
+      "game console (ps4)",
+      "game console ps4"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 174,
+      "facility_name": "GAME_CONSOLE__PS4",
+      "booking_extended_legacy_code": 5174
+    }
+  },
+  {
+    "id": "room.children_crib_cots",
+    "type": "boolean",
+    "description": "Room has children crib cots",
+    "aliases": [
+      "children crib cots",
+      "crib",
+      "cot",
+      "baby bed"
+    ],
+    "conflicts_with": [
+      "hotel.adult_only"
+    ],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 175,
+      "facility_name": "CHILDREN_CRIB_COTS",
+      "booking_extended_legacy_code": 5175,
+      "allowed_details": [
+        "CribDetails"
+      ]
+    }
+  },
+  {
+    "id": "room.toothbrush",
+    "type": "boolean",
+    "description": "Room has toothbrush",
+    "aliases": [
+      "toothbrush"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 176,
+      "facility_name": "TOOTHBRUSH",
+      "booking_extended_legacy_code": 5176
+    }
+  },
+  {
+    "id": "room.shampoo",
+    "type": "boolean",
+    "description": "Room has shampoo",
+    "aliases": [
+      "shampoo"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 177,
+      "facility_name": "SHAMPOO",
+      "booking_extended_legacy_code": 5177
+    }
+  },
+  {
+    "id": "room.conditioner",
+    "type": "boolean",
+    "description": "Room has conditioner",
+    "aliases": [
+      "conditioner"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 178,
+      "facility_name": "CONDITIONER",
+      "booking_extended_legacy_code": 5178
+    }
+  },
+  {
+    "id": "room.body_soap",
+    "type": "boolean",
+    "description": "Room has body soap",
+    "aliases": [
+      "body soap"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 179,
+      "facility_name": "BODY_SOAP",
+      "booking_extended_legacy_code": 5179
+    }
+  },
+  {
+    "id": "room.shower_cap",
+    "type": "boolean",
+    "description": "Room has shower cap",
+    "aliases": [
+      "shower cap"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 180,
+      "facility_name": "SHOWER_CAP",
+      "booking_extended_legacy_code": 5180
+    }
+  },
+  {
+    "id": "room.pajamas",
+    "type": "boolean",
+    "description": "Room has pajamas",
+    "aliases": [
+      "pajamas"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 181,
+      "facility_name": "PAJAMAS",
+      "booking_extended_legacy_code": 5181
+    }
+  },
+  {
+    "id": "room.yukata",
+    "type": "boolean",
+    "description": "Room has yukata",
+    "aliases": [
+      "yukata"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 182,
+      "facility_name": "YUKATA",
+      "booking_extended_legacy_code": 5182
+    }
+  },
+  {
+    "id": "room.socket_near_the_bed",
+    "type": "boolean",
+    "description": "Room has socket near the bed",
+    "aliases": [
+      "socket near the bed",
+      "socket near bed",
+      "power outlet by the bed"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 184,
+      "facility_name": "SOCKET_NEAR_THE_BED",
+      "booking_extended_legacy_code": 5184
+    }
+  },
+  {
+    "id": "room.adapter",
+    "type": "boolean",
+    "description": "Room has adapter",
+    "aliases": [
+      "adapter"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 185,
+      "facility_name": "ADAPTER",
+      "booking_extended_legacy_code": 5185
+    }
+  },
+  {
+    "id": "room.feather_pillow",
+    "type": "boolean",
+    "description": "Room has feather pillow",
+    "aliases": [
+      "feather pillow"
+    ],
+    "conflicts_with": [
+      "room.non_feather_pillow"
+    ],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 186,
+      "facility_name": "FEATHER_PILLOW",
+      "booking_extended_legacy_code": 5186
+    }
+  },
+  {
+    "id": "room.non_feather_pillow",
+    "type": "boolean",
+    "description": "Room has non feather pillow",
+    "aliases": [
+      "non feather pillow",
+      "non-feather pillow",
+      "synthetic pillow"
+    ],
+    "conflicts_with": [
+      "room.feather_pillow"
+    ],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 187,
+      "facility_name": "NON_FEATHER_PILLOW",
+      "booking_extended_legacy_code": 5187
+    }
+  },
+  {
+    "id": "room.hypoallergenic_pillow",
+    "type": "boolean",
+    "description": "Room has hypoallergenic pillow",
+    "aliases": [
+      "hypoallergenic pillow"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 188,
+      "facility_name": "HYPOALLERGENIC_PILLOW",
+      "booking_extended_legacy_code": 5188
+    }
+  },
+  {
+    "id": "room.accessible_by_lift",
+    "type": "boolean",
+    "description": "Unit is accessible by lift",
+    "aliases": [
+      "accessible by lift",
+      "elevator access"
+    ],
+    "conflicts_with": [
+      "room.upper_floor_reachable_by_stairs_only"
+    ],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 189,
+      "facility_name": "ACCESSIBLE_BY_LIFT",
+      "booking_extended_legacy_code": 5189
+    }
+  },
+  {
+    "id": "room.inner_court_view",
+    "type": "boolean",
+    "description": "Room has inner court view",
+    "aliases": [
+      "inner court view"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 190,
+      "facility_name": "INNER_COURT_VIEW",
+      "booking_extended_legacy_code": 5190
+    }
+  },
+  {
+    "id": "room.quite_street_view",
+    "type": "boolean",
+    "description": "Room has quiet street view",
+    "aliases": [
+      "quiet street view",
+      "quiet side"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 191,
+      "facility_name": "QUITE_STREET_VIEW",
+      "booking_extended_legacy_code": 5191
+    }
+  },
+  {
+    "id": "room.portable_wifi",
+    "type": "boolean",
+    "description": "Room has portable wifi",
+    "aliases": [
+      "portable wifi",
+      "pocket wifi"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 196,
+      "facility_name": "PORTABLE_WIFI",
+      "booking_extended_legacy_code": 5196
+    }
+  },
+  {
+    "id": "room.smartphone",
+    "type": "boolean",
+    "description": "Room has smartphone",
+    "aliases": [
+      "smartphone",
+      "smartphone in room"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 198,
+      "facility_name": "SMARTPHONE",
+      "booking_extended_legacy_code": 5198
+    }
+  },
+  {
+    "id": "room.streaming_service",
+    "type": "boolean",
+    "description": "Room has streaming service",
+    "aliases": [
+      "streaming service",
+      "netflix",
+      "streaming"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 199,
+      "facility_name": "STREAMING_SERVICE",
+      "booking_extended_legacy_code": 5199
+    }
+  },
+  {
+    "id": "room.lockers",
+    "type": "boolean",
+    "description": "Room has lockers",
+    "aliases": [
+      "lockers"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 200,
+      "facility_name": "LOCKERS",
+      "booking_extended_legacy_code": 5200
+    }
+  },
+  {
+    "id": "room.fire_alarms",
+    "type": "boolean",
+    "description": "Room has fire alarms",
+    "aliases": [
+      "fire alarms"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 201,
+      "facility_name": "FIRE_ALARMS",
+      "booking_extended_legacy_code": 5201
+    }
+  },
+  {
+    "id": "room.fire_extinguishers",
+    "type": "boolean",
+    "description": "Room has fire extinguishers",
+    "aliases": [
+      "fire extinguishers"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 202,
+      "facility_name": "FIRE_EXTINGUISHERS",
+      "booking_extended_legacy_code": 5202
+    }
+  },
+  {
+    "id": "room.metal_key_access",
+    "type": "boolean",
+    "description": "Room has metal key access",
+    "aliases": [
+      "metal key access"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 203,
+      "facility_name": "METAL_KEY_ACCESS",
+      "booking_extended_legacy_code": 5203
+    }
+  },
+  {
+    "id": "room.electronic_key_card_access",
+    "type": "boolean",
+    "description": "Room has electronic key card access",
+    "aliases": [
+      "electronic key card access"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 204,
+      "facility_name": "ELECTRONIC_KEY_CARD_ACCESS",
+      "booking_extended_legacy_code": 5204
+    }
+  },
+  {
+    "id": "room.reading_light",
+    "type": "boolean",
+    "description": "Room has reading light",
+    "aliases": [
+      "reading light"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 205,
+      "facility_name": "READING_LIGHT",
+      "booking_extended_legacy_code": 5205
+    }
+  },
+  {
+    "id": "room.earplugs",
+    "type": "boolean",
+    "description": "Room has earplugs",
+    "aliases": [
+      "earplugs"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 206,
+      "facility_name": "EARPLUGS",
+      "booking_extended_legacy_code": 5206
+    }
+  },
+  {
+    "id": "room.private_curtain",
+    "type": "boolean",
+    "description": "Room has private curtain",
+    "aliases": [
+      "private curtain"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 207,
+      "facility_name": "PRIVATE_CURTAIN",
+      "booking_extended_legacy_code": 5207
+    }
+  },
+  {
+    "id": "room.window",
+    "type": "boolean",
+    "description": "Room has window",
+    "aliases": [
+      "window",
+      "room with a window"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 208,
+      "facility_name": "WINDOW",
+      "booking_extended_legacy_code": 5208
+    }
+  },
+  {
+    "id": "room.private_open_air_bath",
+    "type": "boolean",
+    "description": "Room has private open-air bath",
+    "aliases": [
+      "private open-air bath",
+      "private open air bath"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 209,
+      "facility_name": "PRIVATE_OPEN_AIR_BATH",
+      "booking_extended_legacy_code": 5209
+    }
+  },
+  {
+    "id": "room.tatami",
+    "type": "boolean",
+    "description": "Room has tatami",
+    "aliases": [
+      "tatami"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 210,
+      "facility_name": "TATAMI",
+      "booking_extended_legacy_code": 5210
+    }
+  },
+  {
+    "id": "room.carbon_monoxide_detector",
+    "type": "boolean",
+    "description": "Room has carbon monoxide detector",
+    "aliases": [
+      "carbon monoxide detector"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 211,
+      "facility_name": "CARBON_MONOXIDE_DETECTOR",
+      "booking_extended_legacy_code": 5211
+    }
+  },
+  {
+    "id": "room.carbon_monoxide_source",
+    "type": "boolean",
+    "description": "Room has carbon monoxide source",
+    "aliases": [
+      "carbon monoxide source"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 212,
+      "facility_name": "CARBON_MONOXIDE_SOURCE",
+      "booking_extended_legacy_code": 5212
+    }
+  },
+  {
+    "id": "room.air_purifiers_installed",
+    "type": "boolean",
+    "description": "Room has air purifiers installed",
+    "aliases": [
+      "air purifiers installed",
+      "air purifier"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 215,
+      "facility_name": "AIR_PURIFIERS_INSTALLED",
+      "booking_extended_legacy_code": 5215
+    }
+  },
+  {
+    "id": "room.complementary_breakfast_in_executive_lounge",
+    "type": "boolean",
+    "description": "Room has complementary breakfast in executive lounge",
+    "aliases": [
+      "complementary breakfast in executive lounge"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 217,
+      "facility_name": "COMPLEMENTARY_BREAKFAST_IN_EXECUTIVE_LOUNGE",
+      "booking_extended_legacy_code": 5217
+    }
+  },
+  {
+    "id": "room.complementary_snacks_and_drinks_in_executive_lounge_entire_day",
+    "type": "boolean",
+    "description": "Room has complementary snacks and drinks in executive lounge entire day",
+    "aliases": [
+      "complementary snacks and drinks in executive lounge entire day"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 218,
+      "facility_name": "COMPLEMENTARY_SNACKS_AND_DRINKS_IN_EXECUTIVE_LOUNGE_ENTIRE_DAY",
+      "booking_extended_legacy_code": 5218
+    }
+  },
+  {
+    "id": "room.complementary_afternoon_snacks_and_drinks_in_executive_lounge",
+    "type": "boolean",
+    "description": "Room has complementary afternoon snacks and drinks in executive lounge",
+    "aliases": [
+      "complementary afternoon snacks and drinks in executive lounge"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 219,
+      "facility_name": "COMPLEMENTARY_AFTERNOON_SNACKS_AND_DRINKS_IN_EXECUTIVE_LOUNGE",
+      "booking_extended_legacy_code": 5219
+    }
+  },
+  {
+    "id": "room.free_spa_access",
+    "type": "boolean",
+    "description": "Room has free spa access",
+    "aliases": [
+      "free spa access",
+      "spa included"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 221,
+      "facility_name": "FREE_SPA_ACCESS",
+      "booking_extended_legacy_code": 5221
+    }
+  },
+  {
+    "id": "room.free_gym_access",
+    "type": "boolean",
+    "description": "Room has free gym access",
+    "aliases": [
+      "free gym access",
+      "gym included"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 222,
+      "facility_name": "FREE_GYM_ACCESS",
+      "booking_extended_legacy_code": 5222
+    }
+  },
+  {
+    "id": "room.complementary_access_to_conference_room_business_area",
+    "type": "boolean",
+    "description": "Room has complementary access to conference room business area",
+    "aliases": [
+      "complementary access to conference room business area"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 223,
+      "facility_name": "COMPLEMENTARY_ACCESS_TO_CONFERENCE_ROOM_BUSINESS_AREA",
+      "booking_extended_legacy_code": 5223
+    }
+  },
+  {
+    "id": "room.access_to_private_pool",
+    "type": "boolean",
+    "description": "Room has access to private pool",
+    "aliases": [
+      "access to private pool"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 224,
+      "facility_name": "ACCESS_TO_PRIVATE_POOL",
+      "booking_extended_legacy_code": 5224
+    }
+  },
+  {
+    "id": "room.access_to_private_beach",
+    "type": "boolean",
+    "description": "Room has access to private beach",
+    "aliases": [
+      "access to private beach"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 225,
+      "facility_name": "ACCESS_TO_PRIVATE_BEACH",
+      "booking_extended_legacy_code": 5225
+    }
+  },
+  {
+    "id": "room.private_checkin_checkout_in_executive_lounge",
+    "type": "boolean",
+    "description": "Room has private checkin checkout in executive lounge",
+    "aliases": [
+      "private checkin checkout in executive lounge"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 226,
+      "facility_name": "PRIVATE_CHECKIN_CHECKOUT_IN_EXECUTIVE_LOUNGE",
+      "booking_extended_legacy_code": 5226
+    }
+  },
+  {
+    "id": "room.concierge_services",
+    "type": "boolean",
+    "description": "Room has concierge services",
+    "aliases": [
+      "concierge services"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 227,
+      "facility_name": "CONCIERGE_SERVICES",
+      "booking_extended_legacy_code": 5227
+    }
+  },
+  {
+    "id": "room.free_newspapers_and_magazines_in_executive_lounge",
+    "type": "boolean",
+    "description": "Room has free newspapers and magazines in executive lounge",
+    "aliases": [
+      "free newspapers and magazines in executive lounge"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 228,
+      "facility_name": "FREE_NEWSPAPERS_AND_MAGAZINES_IN_EXECUTIVE_LOUNGE",
+      "booking_extended_legacy_code": 5228
+    }
+  },
+  {
+    "id": "room.free_laundry_services",
+    "type": "boolean",
+    "description": "Room has free laundry services",
+    "aliases": [
+      "free laundry services"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 229,
+      "facility_name": "FREE_LAUNDRY_SERVICES",
+      "booking_extended_legacy_code": 5229
+    }
+  },
+  {
+    "id": "room.individual_air_conditioning",
+    "type": "boolean",
+    "description": "Room has individual air conditioning",
+    "aliases": [
+      "individual air conditioning",
+      "own ac control"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 230,
+      "facility_name": "INDIVIDUAL_AIR_CONDITIONING",
+      "booking_extended_legacy_code": 5230
+    }
+  },
+  {
+    "id": "room.hand_sanitizer_in_room",
+    "type": "boolean",
+    "description": "Room has hand sanitizer in room",
+    "aliases": [
+      "hand sanitizer in room"
+    ],
+    "conflicts_with": [],
+    "source": {
+      "facility_type": "room",
+      "facility_id": 231,
+      "facility_name": "HAND_SANITIZER_IN_ROOM",
+      "booking_extended_legacy_code": 5231
+    }
+  },
+  {
+    "id": "hotel.pets_allowed",
+    "type": "boolean",
+    "description": "Property allows pets",
+    "aliases": [
+      "pet friendly",
+      "pets allowed",
+      "dog friendly",
+      "travelling with a dog"
+    ],
+    "conflicts_with": []
   },
   {
     "id": "room.size_m2",
     "type": "range",
     "description": "Room floor area",
-    "aliases": ["room size", "large room", "spacious room"],
+    "aliases": [
+      "room size",
+      "large room",
+      "spacious room",
+      "square meters"
+    ],
     "unit": "m2",
-    "bounds": {"min": 0}
+    "bounds": {
+      "min": 0,
+      "max": 500
+    },
+    "conflicts_with": []
   },
   {
     "id": "price.per_night",
     "type": "range",
     "description": "Price per night",
-    "aliases": ["price", "budget", "cheap", "per night price"],
-    "unit": "USD",
-    "bounds": {"min": 0}
+    "aliases": [
+      "price",
+      "budget",
+      "cheap",
+      "per night price",
+      "nightly rate"
+    ],
+    "unit": "EUR",
+    "bounds": {
+      "min": 0
+    },
+    "conflicts_with": []
   },
   {
     "id": "rating.stars",
     "type": "range",
     "description": "Hotel star rating",
-    "aliases": ["star rating", "stars", "luxury"],
+    "aliases": [
+      "star rating",
+      "stars",
+      "luxury",
+      "five star"
+    ],
     "unit": "stars",
-    "bounds": {"min": 1, "max": 5}
+    "bounds": {
+      "min": 1,
+      "max": 5
+    },
+    "conflicts_with": []
+  },
+  {
+    "id": "rating.guest_score",
+    "type": "range",
+    "description": "Average guest review score",
+    "aliases": [
+      "review score",
+      "guest rating",
+      "well reviewed",
+      "highly rated"
+    ],
+    "unit": "points",
+    "bounds": {
+      "min": 0,
+      "max": 10
+    },
+    "conflicts_with": []
   },
   {
     "id": "distance.to_center_km",
     "type": "range",
-    "description": "Distance to the city center",
-    "aliases": ["distance to center", "near city center", "close to downtown"],
+    "description": "Distance from the property to the city center",
+    "aliases": [
+      "distance to center",
+      "near city center",
+      "close to downtown",
+      "walking distance to center"
+    ],
     "unit": "km",
-    "bounds": {"min": 0}
+    "bounds": {
+      "min": 0
+    },
+    "conflicts_with": []
   }
 ]

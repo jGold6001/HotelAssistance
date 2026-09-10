@@ -1,7 +1,6 @@
 import pytest
-from pydantic import ValidationError
-
 from hotel_assistance.domain.models import GuestConfig
+from pydantic import ValidationError
 
 
 def test_defaults_to_one_adult_and_no_children() -> None:
