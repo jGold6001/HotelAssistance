@@ -125,6 +125,7 @@ function renderState(state) {
   setFact(elements.destination, state.destination);
   setFact(elements.dates, formatDates(state.check_in, state.check_out));
   setFact(elements.guests, formatGuests(state.adults, state.children));
+  markPending(state.pending);
 
   elements.filterCount.textContent = String(state.filters.length);
   elements.filters.replaceChildren();
@@ -162,6 +163,25 @@ function renderState(state) {
 function setFact(node, value) {
   node.textContent = value || "not set";
   node.classList.toggle("empty", !value);
+}
+
+/**
+ * Say why a trip detail went blank: the user replaced it without pinning it
+ * down, so it is waiting on an answer rather than never having been set.
+ */
+function markPending(pending) {
+  const fields = {
+    destination: elements.destination,
+    dates: elements.dates,
+    guests: elements.guests,
+  };
+  for (const node of Object.values(fields)) node.classList.remove("pending");
+
+  const node = pending && fields[pending.field];
+  if (!node) return;
+  node.textContent = `waiting \u2014 you said \u201c${pending.hint}\u201d`;
+  node.classList.remove("empty");
+  node.classList.add("pending");
 }
 
 function formatDates(checkIn, checkOut) {

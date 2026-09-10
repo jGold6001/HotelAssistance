@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field
 
 from hotel_assistance.application.chat_orchestrator import ChatResult
 from hotel_assistance.domain.models.filter_value import RangeValue
+from hotel_assistance.domain.models.pending_change import PendingTripChange
 from hotel_assistance.domain.models.search_state import SearchState
 from hotel_assistance.domain.services.filter_registry import FilterRegistry
 from hotel_assistance.domain.services.relaxation import RelaxationSuggestion
@@ -33,6 +34,18 @@ class AppliedFilterView(BaseModel):
     type: str
 
 
+class PendingChangeView(BaseModel):
+    """A trip detail the user replaced but has not pinned down yet.
+
+    Shown so the panel can say why a detail went blank, rather than leaving
+    the user to guess. The value it superseded stays server-side: it is there
+    to be restored, not to be displayed as if it were still in the search.
+    """
+
+    field: str
+    hint: str
+
+
 class SearchStateView(BaseModel):
     destination: str | None = None
     check_in: date | None = None
@@ -40,6 +53,7 @@ class SearchStateView(BaseModel):
     adults: int | None = None
     children: int | None = None
     filters: list[AppliedFilterView] = []
+    pending: PendingChangeView | None = None
     ready_for_search: bool = False
 
 
@@ -55,7 +69,11 @@ class ChatResponse(BaseModel):
     relaxation_suggestions: list[RelaxationSuggestion] = []
 
 
-def to_state_view(state: SearchState, registry: FilterRegistry) -> SearchStateView:
+def to_state_view(
+    state: SearchState,
+    registry: FilterRegistry,
+    pending: PendingTripChange | None = None,
+) -> SearchStateView:
     filters: list[AppliedFilterView] = []
     for applied in state.filters:
         definition = registry.get(applied.filter_id)
@@ -79,6 +97,7 @@ def to_state_view(state: SearchState, registry: FilterRegistry) -> SearchStateVi
         adults=state.guests.adults if state.guests else None,
         children=state.guests.children if state.guests else None,
         filters=filters,
+        pending=PendingChangeView(field=pending.field.value, hint=pending.hint) if pending else None,
         ready_for_search=state.is_ready_for_search(),
     )
 
@@ -86,7 +105,7 @@ def to_state_view(state: SearchState, registry: FilterRegistry) -> SearchStateVi
 def to_chat_response(result: ChatResult, registry: FilterRegistry) -> ChatResponse:
     return ChatResponse(
         reply=result.reply,
-        state=to_state_view(result.state, registry),
+        state=to_state_view(result.state, registry, result.pending),
         issues=result.issues,
         unmapped_requests=result.unmapped_requests,
         missing_trip_info=result.missing_trip_info,

@@ -6,6 +6,7 @@ are checked against the declared filter type, and dates are really parsed.
 Anything that does not survive is dropped with an explicit issue.
 """
 
+import re
 from datetime import date
 
 from pydantic import ValidationError
@@ -95,8 +96,53 @@ def build_patch(
         guests=_build_guests(result, state, issues),
         operations=operations,
         reset=result.reset_requested,
+        # A hint means the user moved this detail without naming a new value,
+        # so the old one is no longer what they are asking for. The validator
+        # still prefers a concrete value when the message carried both.
+        clear_destination=bool(_clean(result.trip.destination_hint)),
+        clear_dates=bool(_clean(result.trip.date_hint)),
     )
     return patch, issues
+
+
+def clean_unmapped_requests(result: ExtractionResult) -> list[str]:
+    """Keep only the requests that are genuinely unsupported filters.
+
+    A trip detail the assistant is already asking about ("something in May")
+    is not an unsupported feature, and reporting it as one buries the
+    follow-up question the user actually has to answer. Duplicates and blanks
+    are dropped for the same reason: the list is read by a human.
+    """
+
+    hints = [hint for hint in map(_clean, (result.trip.destination_hint, result.trip.date_hint)) if hint]
+
+    kept: list[str] = []
+    seen: set[str] = set()
+    for raw in result.unmapped_requests:
+        text = _clean(raw)
+        if text is None:
+            continue
+        key = text.lower()
+        if key in seen or any(_mentions(text, hint) for hint in hints):
+            continue
+        seen.add(key)
+        kept.append(text)
+    return kept
+
+
+def _mentions(text: str, hint: str) -> bool:
+    """Whole-word containment, so "May" does not match "maybe"."""
+
+    return re.search(rf"\b{re.escape(hint)}\b", text, flags=re.IGNORECASE) is not None
+
+
+def _clean(raw: str | None) -> str | None:
+    """Collapse model whitespace and treat an empty string as absent."""
+
+    if raw is None:
+        return None
+    text = " ".join(raw.split())
+    return text or None
 
 
 def _operation_value(extracted: ExtractedFilter) -> FilterValue:

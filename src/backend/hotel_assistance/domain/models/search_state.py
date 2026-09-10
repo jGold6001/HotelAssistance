@@ -34,3 +34,19 @@ class SearchState(BaseModel):
 
     def is_ready_for_search(self) -> bool:
         return bool(self.destination and self.date_range() and self.guests)
+
+    def missing_trip_info(self) -> list[str]:
+        """Required trip facts still absent, in the order they are asked for.
+
+        Derived from the validated state rather than reported by the model, so
+        the assistant can never ask again for something it already holds.
+        """
+
+        missing: list[str] = []
+        if not self.destination:
+            missing.append("destination")
+        if self.date_range() is None:
+            missing.append("dates")
+        if self.guests is None:
+            missing.append("guests")
+        return missing

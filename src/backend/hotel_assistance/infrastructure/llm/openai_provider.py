@@ -6,6 +6,7 @@ from typing import Any
 from hotel_assistance.domain.models.extraction import ExtractionResult
 from hotel_assistance.domain.models.filter_definition import FilterType
 from hotel_assistance.domain.models.filter_value import RangeValue
+from hotel_assistance.domain.models.pending_change import PendingTripChange
 from hotel_assistance.domain.models.search_state import SearchState
 from hotel_assistance.infrastructure.llm.prompts import EXTRACTION_INSTRUCTIONS
 from hotel_assistance.infrastructure.llm.provider import (
@@ -47,7 +48,7 @@ class OpenAIProvider:
         self._temperature = temperature
 
     async def extract(self, request: ExtractionRequest) -> ExtractionResult:
-        model = self._select_model(request.message)
+        model = self._select_model(request)
         request_kwargs: dict[str, Any] = {
             "model": model,
             "instructions": EXTRACTION_INSTRUCTIONS,
@@ -86,14 +87,19 @@ class OpenAIProvider:
             )
         return result
 
-    def _select_model(self, message: str) -> str:
-        """Route short follow-ups ("make it 3 stars") to the cheaper model.
+    def _select_model(self, request: ExtractionRequest) -> str:
+        """Route short opening messages to the cheaper model.
 
         Long, detail-dense first messages are where the stronger model earns
-        its cost; a handful of words does not need it.
+        its cost; a handful of words does not need it. A later turn is the
+        exception: "I need something in May" is short but only means anything
+        against CURRENT_STATE, and reading that context correctly is exactly
+        what the weaker model gets wrong.
         """
 
-        if self._fallback_model and len(message.split()) <= self._fallback_max_words:
+        if not self._fallback_model or request.history:
+            return self._model
+        if len(request.message.split()) <= self._fallback_max_words:
             logger.debug("model routing: fallback=%s", self._fallback_model)
             return self._fallback_model
         return self._model
@@ -115,11 +121,29 @@ def _build_input(request: ExtractionRequest) -> str:
         f"CURRENT_STATE:\n{json.dumps(_state_summary(request.state), ensure_ascii=False, indent=2)}",
         f"CANDIDATE_FILTERS:\n{json.dumps(candidates, ensure_ascii=False, indent=2)}",
     ]
+    if request.pending is not None:
+        sections.append(
+            f"PENDING_CHANGE:\n{json.dumps(_pending_summary(request.pending), ensure_ascii=False, indent=2)}"
+        )
     if request.history:
         transcript = "\n".join(f"{turn.role.value}: {turn.content}" for turn in request.history)
         sections.append(f"CONVERSATION_SO_FAR:\n{transcript}")
     sections.append(f"USER_MESSAGE:\n{request.message}")
     return "\n\n".join(sections)
+
+
+def _pending_summary(pending: PendingTripChange) -> dict[str, Any]:
+    """The open trip question, with the value it replaced still recoverable."""
+
+    return {
+        "field": pending.field.value,
+        "user_words": pending.hint,
+        "superseded_value": {
+            "destination": pending.previous_destination,
+            "check_in": pending.previous_check_in.isoformat() if pending.previous_check_in else None,
+            "check_out": pending.previous_check_out.isoformat() if pending.previous_check_out else None,
+        },
+    }
 
 
 def _state_summary(state: SearchState) -> dict[str, Any]:

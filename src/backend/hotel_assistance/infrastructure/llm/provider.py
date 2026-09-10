@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 from hotel_assistance.domain.models.candidate_filter import CandidateFilter
 from hotel_assistance.domain.models.chat import ChatTurn
 from hotel_assistance.domain.models.extraction import ExtractionResult
+from hotel_assistance.domain.models.pending_change import PendingTripChange
 from hotel_assistance.domain.models.search_state import SearchState
 
 
@@ -28,6 +29,7 @@ class ExtractionRequest(BaseModel):
     candidates: list[CandidateFilter] = Field(default_factory=list)
     state: SearchState = Field(default_factory=SearchState)
     history: list[ChatTurn] = Field(default_factory=list)
+    pending: PendingTripChange | None = None
     today: date
 
 

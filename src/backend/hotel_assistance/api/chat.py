@@ -96,7 +96,9 @@ async def read_state(
     orchestrator: ChatOrchestrator = Depends(get_orchestrator),
     registry: FilterRegistry = Depends(get_registry),
 ) -> SearchStateView:
-    return to_state_view(orchestrator.state_for(session_id), registry)
+    return to_state_view(
+        orchestrator.state_for(session_id), registry, orchestrator.pending_for(session_id)
+    )
 
 
 @router.post("/state/reset", response_model=SearchStateView)

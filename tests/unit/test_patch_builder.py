@@ -1,6 +1,6 @@
 from datetime import date
 
-from hotel_assistance.application.patch_builder import build_patch
+from hotel_assistance.application.patch_builder import build_patch, clean_unmapped_requests
 from hotel_assistance.domain.models.applied_filter import AppliedFilter
 from hotel_assistance.domain.models.candidate_filter import CandidateFilter
 from hotel_assistance.domain.models.extraction import (
@@ -148,3 +148,57 @@ def test_reset_request_is_carried_through() -> None:
     )
 
     assert patch.reset is True
+
+
+def test_a_date_hint_clears_the_dates_it_supersedes() -> None:
+    result = ExtractionResult(trip=TripDetails(date_hint="May"))
+
+    patch, issues = build_patch(result, candidates(), build_registry(), SearchState())
+
+    assert patch.clear_dates is True
+    assert patch.check_in is None and patch.check_out is None
+    assert issues == []
+
+
+def test_a_destination_hint_clears_the_destination_it_supersedes() -> None:
+    result = ExtractionResult(trip=TripDetails(destination_hint="worldwide"))
+
+    patch, _ = build_patch(result, candidates(), build_registry(), SearchState())
+
+    assert patch.clear_destination is True
+    assert patch.destination is None
+
+
+def test_a_message_without_hints_clears_nothing() -> None:
+    result = ExtractionResult(trip=TripDetails(destination="Haarlem"))
+
+    patch, _ = build_patch(result, candidates(), build_registry(), SearchState())
+
+    assert patch.clear_dates is False
+    assert patch.clear_destination is False
+
+
+def test_a_trip_detail_is_not_reported_as_an_unsupported_filter() -> None:
+    """The bug behind "Not supported: something in May"."""
+
+    result = ExtractionResult(
+        trip=TripDetails(date_hint="May"),
+        unmapped_requests=["something in May", "a rain shower"],
+    )
+
+    assert clean_unmapped_requests(result) == ["a rain shower"]
+
+
+def test_unmapped_requests_are_deduplicated_and_stripped() -> None:
+    result = ExtractionResult(unmapped_requests=["a rain  shower", "  ", "A rain shower", "reading lights"])
+
+    assert clean_unmapped_requests(result) == ["a rain shower", "reading lights"]
+
+
+def test_a_hint_only_swallows_whole_words() -> None:
+    result = ExtractionResult(
+        trip=TripDetails(date_hint="May"),
+        unmapped_requests=["a room that maybe has a balcony"],
+    )
+
+    assert clean_unmapped_requests(result) == ["a room that maybe has a balcony"]

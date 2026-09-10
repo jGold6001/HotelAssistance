@@ -12,15 +12,18 @@ from enum import StrEnum
 
 from pydantic import BaseModel, Field, ValidationError
 
-from hotel_assistance.application.patch_builder import build_patch
+from hotel_assistance.application.patch_builder import build_patch, clean_unmapped_requests
 from hotel_assistance.application.reply_composer import (
-    OUT_OF_SCOPE_REPLY,
+    compose_out_of_scope_reply,
     compose_reply,
 )
 from hotel_assistance.application.session_store import SessionStore
 from hotel_assistance.domain.models.candidate_filter import CandidateFilter
 from hotel_assistance.domain.models.chat import ChatRole
+from hotel_assistance.domain.models.extraction import TripDetails
+from hotel_assistance.domain.models.pending_change import PendingTripChange
 from hotel_assistance.domain.models.search_state import SearchState
+from hotel_assistance.domain.models.trip_field import TripField
 from hotel_assistance.domain.services.candidate_retriever import CandidateRetriever
 from hotel_assistance.domain.services.filter_registry import FilterRegistry
 from hotel_assistance.domain.services.relaxation import (
@@ -60,6 +63,7 @@ class ChatStage(StrEnum):
 class ChatResult(BaseModel):
     reply: str
     state: SearchState
+    pending: PendingTripChange | None = None
     issues: list[ValidationIssue] = Field(default_factory=list)
     unmapped_requests: list[str] = Field(default_factory=list)
     missing_trip_info: list[str] = Field(default_factory=list)
@@ -91,6 +95,9 @@ class ChatOrchestrator:
     def state_for(self, session_id: str) -> SearchState:
         return self._sessions.get(session_id).state
 
+    def pending_for(self, session_id: str) -> PendingTripChange | None:
+        return self._sessions.get(session_id).pending
+
     def reset(self, session_id: str) -> SearchState:
         return self._sessions.reset(session_id).state
 
@@ -111,6 +118,7 @@ class ChatOrchestrator:
             candidates=candidates,
             state=session.state,
             history=list(session.history),
+            pending=session.pending,
             today=date.today(),
         )
         try:
@@ -123,15 +131,29 @@ class ChatOrchestrator:
         session.record(ChatRole.USER, message)
 
         if not extraction.is_hotel_search_related:
-            session.record(ChatRole.ASSISTANT, OUT_OF_SCOPE_REPLY)
+            # A refusal must not cost the user the search they already built.
+            reply = compose_out_of_scope_reply(session.state)
+            session.record(ChatRole.ASSISTANT, reply)
             await _notify(on_stage, ChatStage.DONE)
-            return ChatResult(reply=OUT_OF_SCOPE_REPLY, state=session.state, candidates=candidates)
+            return ChatResult(
+                reply=reply,
+                state=session.state,
+                pending=session.pending,
+                missing_trip_info=session.state.missing_trip_info(),
+                candidates=candidates,
+            )
 
         await _notify(on_stage, ChatStage.VALIDATING)
         patch, build_issues = build_patch(extraction, candidates, self._registry, session.state)
+        previous_state = session.state
         outcome = self._validator.apply(session.state, patch)
         session.state = outcome.state
         issues = build_issues + outcome.issues
+        unmapped_requests = clean_unmapped_requests(extraction)
+
+        # A vague change opens a question; the state answering it closes one.
+        carried = None if patch.reset else _resolve_pending(session.pending, session.state)
+        session.pending = _open_pending(extraction.trip, previous_state, session.state) or carried
 
         await _notify(on_stage, ChatStage.SEARCHING)
         offers = await self._count_offers(session.state)
@@ -143,13 +165,15 @@ class ChatOrchestrator:
             state=session.state,
             registry=self._registry,
             applied=outcome.applied,
+            applied_trip=outcome.applied_trip,
             issues=issues,
-            unmapped_requests=extraction.unmapped_requests,
-            missing_trip_info=list(extraction.missing_trip_info),
+            unmapped_requests=unmapped_requests,
             clarification_question=extraction.clarification_question,
             available_offers_count=offers.available_offers_count,
             relaxations=relaxations,
             was_reset=patch.reset,
+            destination_hint=_hint_for(TripField.DESTINATION, extraction.trip.destination_hint, session.pending),
+            date_hint=_hint_for(TripField.DATES, extraction.trip.date_hint, session.pending),
         )
         session.record(ChatRole.ASSISTANT, reply)
 
@@ -166,9 +190,12 @@ class ChatOrchestrator:
         return ChatResult(
             reply=reply,
             state=session.state,
+            pending=session.pending,
             issues=issues,
-            unmapped_requests=extraction.unmapped_requests,
-            missing_trip_info=list(extraction.missing_trip_info),
+            unmapped_requests=unmapped_requests,
+            # What is still missing is a fact about the validated state, not
+            # something the model is asked to keep track of.
+            missing_trip_info=session.state.missing_trip_info(),
             candidates=candidates,
             available_offers_count=offers.available_offers_count,
             backend_available=offers.backend_available,
@@ -185,6 +212,53 @@ class ChatOrchestrator:
             # the filter work the user just did.
             logger.warning("hotel backend unavailable: %s", exc)
             return OfferCount()
+
+
+def _open_pending(
+    trip: TripDetails,
+    previous: SearchState,
+    current: SearchState,
+) -> PendingTripChange | None:
+    """Remember the value a vague change dropped, while the question is open.
+
+    Only worth recording while the detail is still unknown: once the state has
+    a real value again there is nothing left to ask or to restore.
+    """
+
+    if trip.date_hint and current.date_range() is None:
+        return PendingTripChange(
+            field=TripField.DATES,
+            hint=trip.date_hint,
+            previous_check_in=previous.check_in,
+            previous_check_out=previous.check_out,
+        )
+    if trip.destination_hint and not current.destination:
+        return PendingTripChange(
+            field=TripField.DESTINATION,
+            hint=trip.destination_hint,
+            previous_destination=previous.destination,
+        )
+    return None
+
+
+def _resolve_pending(pending: PendingTripChange | None, state: SearchState) -> PendingTripChange | None:
+    """Drop a remembered change once the state answers it."""
+
+    if pending is None:
+        return None
+    if pending.field is TripField.DATES and state.date_range() is not None:
+        return None
+    if pending.field is TripField.DESTINATION and state.destination:
+        return None
+    return pending
+
+
+def _hint_for(field: TripField, hint: str | None, pending: PendingTripChange | None) -> str | None:
+    """Keep echoing the user's own words while their question stays open."""
+
+    if hint:
+        return hint
+    return pending.hint if pending is not None and pending.field is field else None
 
 
 async def _notify(on_stage: StageCallback | None, stage: ChatStage) -> None:

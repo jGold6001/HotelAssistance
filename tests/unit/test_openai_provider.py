@@ -4,6 +4,9 @@ from datetime import date
 
 import pytest
 from hotel_assistance.domain.models.candidate_filter import CandidateFilter
+from hotel_assistance.domain.models.chat import ChatRole, ChatTurn
+from hotel_assistance.domain.models.pending_change import PendingTripChange
+from hotel_assistance.domain.models.trip_field import TripField
 from hotel_assistance.domain.models.extraction import ExtractionResult
 from hotel_assistance.domain.models.filter_definition import FilterDefinition
 from hotel_assistance.infrastructure.llm.openai_provider import OpenAIProvider
@@ -79,7 +82,7 @@ def test_backend_provenance_is_never_sent_to_the_model() -> None:
     assert "facility_id" not in responses.calls[0]["input"]
 
 
-def test_short_follow_ups_are_routed_to_the_cheaper_model() -> None:
+def test_short_opening_messages_are_routed_to_the_cheaper_model() -> None:
     responses = FakeResponses(parsed=ExtractionResult())
     provider = build_provider(responses, fallback_model="gpt-4.1-mini", fallback_max_words=12)
 
@@ -88,6 +91,22 @@ def test_short_follow_ups_are_routed_to_the_cheaper_model() -> None:
 
     assert responses.calls[0]["model"] == "gpt-4.1-mini"
     assert responses.calls[1]["model"] == "gpt-5-mini"
+
+
+def test_a_follow_up_turn_stays_on_the_stronger_model() -> None:
+    """A short later message ("I need something in May") is the hard case."""
+
+    responses = FakeResponses(parsed=ExtractionResult())
+    provider = build_provider(responses, fallback_model="gpt-4.1-mini", fallback_max_words=12)
+    request = build_request("I need something in May")
+    request.history = [
+        ChatTurn(role=ChatRole.USER, content="Haarlem 15-18 Aug, solo"),
+        ChatTurn(role=ChatRole.ASSISTANT, content="Got it: Haarlem, 15-18 Aug 2026 and 1 adult."),
+    ]
+
+    asyncio.run(provider.extract(request))
+
+    assert responses.calls[0]["model"] == "gpt-5-mini"
 
 
 def test_temperature_is_omitted_for_reasoning_models() -> None:
@@ -145,3 +164,29 @@ def test_current_state_is_described_in_the_prompt() -> None:
         "value": {"min": 30.0, "max": None},
         "strength": "required",
     }
+
+
+def test_an_open_trip_question_is_given_to_the_model() -> None:
+    responses = FakeResponses(parsed=ExtractionResult())
+    request = build_request("actually, keep August")
+    request.pending = PendingTripChange(
+        field=TripField.DATES,
+        hint="May",
+        previous_check_in=date(2026, 8, 15),
+        previous_check_out=date(2026, 8, 18),
+    )
+
+    asyncio.run(build_provider(responses).extract(request))
+
+    payload = responses.calls[0]["input"]
+    assert "PENDING_CHANGE" in payload
+    assert "2026-08-15" in payload
+    assert '"user_words": "May"' in payload
+
+
+def test_no_pending_section_is_sent_when_nothing_is_open() -> None:
+    responses = FakeResponses(parsed=ExtractionResult())
+
+    asyncio.run(build_provider(responses).extract(build_request()))
+
+    assert "PENDING_CHANGE" not in responses.calls[0]["input"]

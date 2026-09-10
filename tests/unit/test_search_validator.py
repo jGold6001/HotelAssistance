@@ -9,7 +9,11 @@ from hotel_assistance.domain.models.search_patch import SearchPatch
 from hotel_assistance.domain.models.search_state import SearchState
 from hotel_assistance.domain.models.strength import FilterStrength
 from hotel_assistance.domain.services.filter_registry import FilterRegistry
-from hotel_assistance.domain.services.search_validator import IssueCode, SearchValidator
+from hotel_assistance.domain.services.search_validator import (
+    IssueCode,
+    SearchValidator,
+    TripField,
+)
 
 
 def build_registry() -> FilterRegistry:
@@ -165,6 +169,97 @@ def test_negative_request_does_not_conflict() -> None:
 
     assert result.issues == []
     assert result.state.filter_by_id("hotel.designated_smoking_area").value is False
+
+
+def test_self_contradicting_operations_on_one_filter_are_rejected() -> None:
+    result = build_validator().apply(
+        SearchState(),
+        SearchPatch(
+            operations=[
+                FilterOperation(op="add", filter_id="hotel.parking", value=True),
+                FilterOperation(op="add", filter_id="hotel.parking", value=False),
+            ]
+        ),
+    )
+
+    assert [issue.code for issue in result.issues] == [IssueCode.CONFLICT]
+    assert result.issues[0].filter_id == "hotel.parking"
+    assert result.state.filter_by_id("hotel.parking") is None
+
+
+def test_repeated_operations_with_the_same_value_are_not_a_conflict() -> None:
+    result = build_validator().apply(
+        SearchState(),
+        SearchPatch(
+            operations=[
+                FilterOperation(op="add", filter_id="hotel.parking", value=True),
+                FilterOperation(op="add", filter_id="hotel.parking", value=True),
+            ]
+        ),
+    )
+
+    assert result.issues == []
+    assert result.state.filter_by_id("hotel.parking").value is True
+
+
+def test_a_superseded_stay_is_cleared_when_no_new_dates_are_known() -> None:
+    """"I need something in May" must not leave the August stay in the search."""
+
+    result = build_validator().apply(
+        SearchState(check_in=date(2026, 8, 15), check_out=date(2026, 8, 18), destination="Haarlem"),
+        SearchPatch(clear_dates=True),
+    )
+
+    assert result.state.check_in is None
+    assert result.state.check_out is None
+    assert result.state.destination == "Haarlem"
+    assert result.applied_trip == [TripField.DATES]
+
+
+def test_clearing_the_dates_does_not_pair_a_new_date_with_the_old_one() -> None:
+    result = build_validator().apply(
+        SearchState(check_in=date(2026, 8, 15), check_out=date(2026, 8, 18)),
+        SearchPatch(check_in=date(2027, 5, 12), clear_dates=True),
+    )
+
+    assert result.state.check_in == date(2027, 5, 12)
+    assert result.state.check_out is None
+    assert result.issues == []
+
+
+def test_a_named_destination_wins_over_the_request_to_clear_it() -> None:
+    result = build_validator().apply(
+        SearchState(destination="Haarlem"),
+        SearchPatch(destination="Utrecht", clear_destination=True),
+    )
+
+    assert result.state.destination == "Utrecht"
+    assert result.applied_trip == [TripField.DESTINATION]
+
+
+def test_clearing_what_is_not_set_changes_nothing() -> None:
+    result = build_validator().apply(SearchState(), SearchPatch(clear_dates=True, clear_destination=True))
+
+    assert result.applied_trip == []
+
+
+def test_applied_trip_fields_report_only_what_changed() -> None:
+    result = build_validator().apply(
+        SearchState(),
+        SearchPatch(destination="Haarlem", guests=GuestConfig(adults=2)),
+    )
+
+    assert result.applied_trip == [TripField.DESTINATION, TripField.GUESTS]
+
+
+def test_rejected_dates_are_not_reported_as_applied() -> None:
+    result = build_validator().apply(
+        SearchState(),
+        SearchPatch(check_in=date(2026, 8, 18), check_out=date(2026, 8, 15)),
+    )
+
+    assert result.applied_trip == []
+    assert [issue.code for issue in result.issues] == [IssueCode.INVALID_DATES]
 
 
 def test_dates_are_applied_when_the_range_is_valid() -> None:

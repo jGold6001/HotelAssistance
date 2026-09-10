@@ -54,11 +54,19 @@ class TripDetails(BaseModel):
 
     Dates are plain strings because the model may echo a partially specified
     date; parsing and range validation happen in the application layer.
+
+    The ``*_hint`` fields carry the other half of that story: the user moved a
+    trip detail without pinning it down ("something in May", "worldwide").
+    A hint is never applied as a value - the application drops the superseded
+    detail and asks for the missing one - but it is what keeps such a message
+    from being mistaken for an unsupported filter request.
     """
 
     destination: str | None = None
+    destination_hint: str | None = None
     check_in: str | None = None
     check_out: str | None = None
+    date_hint: str | None = None
     guests: GuestCounts | None = None
 
 

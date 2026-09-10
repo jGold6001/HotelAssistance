@@ -7,6 +7,7 @@ and is not shared between workers.
 from dataclasses import dataclass, field
 
 from hotel_assistance.domain.models.chat import ChatRole, ChatTurn
+from hotel_assistance.domain.models.pending_change import PendingTripChange
 from hotel_assistance.domain.models.search_state import SearchState
 
 MAX_HISTORY_TURNS = 12
@@ -16,6 +17,8 @@ MAX_HISTORY_TURNS = 12
 class Session:
     state: SearchState = field(default_factory=SearchState)
     history: list[ChatTurn] = field(default_factory=list)
+    # The trip detail the user replaced but has not pinned down yet, if any.
+    pending: PendingTripChange | None = None
 
     def record(self, role: ChatRole, content: str) -> None:
         self.history.append(ChatTurn(role=role, content=content))

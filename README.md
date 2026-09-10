@@ -64,7 +64,7 @@ All variables also work without the `HOTEL_ASSISTANCE_` prefix; see [.env.exampl
 | --- | --- | --- |
 | `OPENAI_API_KEY` | — | Required |
 | `OPENAI_MODEL` | `gpt-5-mini` | Extraction model |
-| `OPENAI_FALLBACK_MODEL` | `gpt-4.1-mini` | Used for short follow-ups |
+| `OPENAI_FALLBACK_MODEL` | `gpt-4.1-mini` | Short opening messages only; later turns use `OPENAI_MODEL` |
 | `RETRIEVAL_MODE` | `hybrid` | `hybrid`, `semantic`, or `keyword` (no API calls) |
 | `FILTER_TOP_K` | `24` | Candidates sent to the model |
 | `HOTEL_BACKEND_URL` | empty | Empty means offer counts are reported as unknown |
@@ -74,6 +74,22 @@ All variables also work without the `HOTEL_ASSISTANCE_` prefix; see [.env.exampl
 **Nothing is invented.** With no hotel backend configured, `available_offers_count` is `null`, not a
 guess. Zero-result relaxation advice is derived from the filters the user actually set — preferences
 first, then numeric limits that can be widened, then hard requirements.
+
+**A follow-up turn is not a new search.** "I need something in May" is understood against the state
+the earlier turns built: Haarlem, one adult and the room preferences stay, only the dates move. When
+the user replaces a trip detail without naming a new value, the superseded value is dropped from the
+state rather than kept — a stale August stay must not silently reach the backend — and the reply says
+what the search still holds before it asks the one open question. Because such a turn is short but
+entirely context-dependent, it is never routed to the cheaper model.
+
+The dropped value is not lost: it is remembered on the session as a `PendingTripChange` for as long
+as the question stays open, and reaches the model as a `PENDING_CHANGE` prompt section. So "never
+mind, keep August" is answered from a recorded value instead of from the model's reading of the
+transcript, and it arrives as an ordinary patch that goes through the same date validation as any
+other. It is deliberately not part of `SearchState`: an open question is not a validated fact, and
+`SearchState` is what reaches the hotel backend. The state panel shows such a detail as waiting on
+the user's own words rather than silently blank; the value it superseded stays server-side, because
+it is there to be restored, not to be displayed as if it were still in the search.
 
 **Conflicts are not resolved by the model.** When a requested filter conflicts with an active one,
 the new filter is refused, the conflict is stated, and the user is asked which side to keep. A single
