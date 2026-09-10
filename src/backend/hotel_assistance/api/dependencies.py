@@ -24,6 +24,9 @@ from hotel_assistance.infrastructure.hotel_search.client import (
     HttpHotelSearchClient,
     UnavailableHotelSearchClient,
 )
+from hotel_assistance.infrastructure.hotel_search.simulator import (
+    SimulatedHotelSearchClient,
+)
 from hotel_assistance.infrastructure.llm.openai_provider import OpenAIProvider
 from hotel_assistance.infrastructure.llm.provider import LLMProvider
 from hotel_assistance.infrastructure.retrieval.hybrid_retriever import (
@@ -80,10 +83,13 @@ def build_llm_provider(settings: Settings) -> LLMProvider:
 
 
 def build_hotel_search_client(settings: Settings) -> HotelSearchClient:
-    if not settings.hotel_backend_url:
-        logger.info("no hotel backend configured: offer counts will be reported as unknown")
-        return UnavailableHotelSearchClient()
-    return HttpHotelSearchClient(settings.hotel_backend_url, timeout=settings.hotel_backend_timeout)
+    if settings.hotel_backend_url:
+        return HttpHotelSearchClient(settings.hotel_backend_url, timeout=settings.hotel_backend_timeout)
+    if settings.hotel_simulator_enabled:
+        logger.info("no hotel backend configured: simulating one from the mock property database")
+        return SimulatedHotelSearchClient()
+    logger.info("no hotel backend configured: offer counts will be reported as unknown")
+    return UnavailableHotelSearchClient()
 
 
 @lru_cache

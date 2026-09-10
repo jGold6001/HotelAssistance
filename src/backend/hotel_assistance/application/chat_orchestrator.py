@@ -16,11 +16,14 @@ from hotel_assistance.application.patch_builder import build_patch, clean_unmapp
 from hotel_assistance.application.reply_composer import (
     compose_out_of_scope_reply,
     compose_reply,
+    compose_simulated_search_reply,
 )
-from hotel_assistance.application.session_store import SessionStore
+from hotel_assistance.application.session_store import Session, SessionStore
+from hotel_assistance.application.simulator_directive import extract_offer_directive
 from hotel_assistance.domain.models.candidate_filter import CandidateFilter
 from hotel_assistance.domain.models.chat import ChatRole
 from hotel_assistance.domain.models.extraction import TripDetails
+from hotel_assistance.domain.models.hotel_offer import HotelOffer
 from hotel_assistance.domain.models.pending_change import PendingTripChange
 from hotel_assistance.domain.models.search_state import SearchState
 from hotel_assistance.domain.models.trip_field import TripField
@@ -37,7 +40,7 @@ from hotel_assistance.domain.services.search_validator import (
 from hotel_assistance.infrastructure.hotel_search.client import (
     HotelSearchClient,
     HotelSearchError,
-    OfferCount,
+    OfferResult,
 )
 from hotel_assistance.infrastructure.llm.provider import (
     ExtractionRequest,
@@ -70,6 +73,7 @@ class ChatResult(BaseModel):
     candidates: list[CandidateFilter] = Field(default_factory=list)
     available_offers_count: int | None = None
     backend_available: bool = False
+    offers: list[HotelOffer] = Field(default_factory=list)
     relaxation_suggestions: list[RelaxationSuggestion] = Field(default_factory=list)
 
 
@@ -108,6 +112,13 @@ class ChatOrchestrator:
         on_stage: StageCallback | None = None,
     ) -> ChatResult:
         session = self._sessions.get(session_id)
+
+        # The test directive is an instruction to the simulated backend, not
+        # something to interpret as a search request, so it leaves the message
+        # before retrieval and extraction ever see it.
+        message, requested_offers = extract_offer_directive(message)
+        if requested_offers is not None and not message:
+            return await self._handle_directive_only(session, requested_offers, on_stage)
 
         await _notify(on_stage, ChatStage.RETRIEVING)
         candidates = await self._retriever.retrieve(query=message, top_k=self._top_k)
@@ -156,7 +167,7 @@ class ChatOrchestrator:
         session.pending = _open_pending(extraction.trip, previous_state, session.state) or carried
 
         await _notify(on_stage, ChatStage.SEARCHING)
-        offers = await self._count_offers(session.state)
+        offers = await self._search_offers(session.state, requested_offers)
         relaxations: list[RelaxationSuggestion] = []
         if offers.available_offers_count == 0:
             relaxations = suggest_relaxations(session.state, self._registry)
@@ -171,6 +182,7 @@ class ChatOrchestrator:
             clarification_question=extraction.clarification_question,
             available_offers_count=offers.available_offers_count,
             relaxations=relaxations,
+            offers_note=offers.note,
             was_reset=patch.reset,
             destination_hint=_hint_for(TripField.DESTINATION, extraction.trip.destination_hint, session.pending),
             date_hint=_hint_for(TripField.DATES, extraction.trip.date_hint, session.pending),
@@ -199,19 +211,55 @@ class ChatOrchestrator:
             candidates=candidates,
             available_offers_count=offers.available_offers_count,
             backend_available=offers.backend_available,
+            offers=offers.offers,
             relaxation_suggestions=relaxations,
         )
 
-    async def _count_offers(self, state: SearchState) -> OfferCount:
-        if not state.is_ready_for_search():
-            return OfferCount()
+    async def _handle_directive_only(
+        self,
+        session: Session,
+        requested_offers: int | None,
+        on_stage: StageCallback | None,
+    ) -> ChatResult:
+        """Answer a message that was nothing but a ``@test_aparts`` directive.
+
+        There is no language to interpret, so retrieval and the model are
+        skipped entirely: the turn only re-runs the simulated search and
+        leaves the state exactly as it was.
+        """
+
+        await _notify(on_stage, ChatStage.SEARCHING)
+        offers = await self._search_offers(session.state, requested_offers)
+        relaxations: list[RelaxationSuggestion] = []
+        if offers.available_offers_count == 0:
+            relaxations = suggest_relaxations(session.state, self._registry)
+
+        reply = compose_simulated_search_reply(offers.available_offers_count, relaxations, offers.note)
+        await _notify(on_stage, ChatStage.DONE)
+        return ChatResult(
+            reply=reply,
+            state=session.state,
+            pending=session.pending,
+            missing_trip_info=session.state.missing_trip_info(),
+            available_offers_count=offers.available_offers_count,
+            backend_available=offers.backend_available,
+            offers=offers.offers,
+            relaxation_suggestions=relaxations,
+        )
+
+    async def _search_offers(self, state: SearchState, requested_offers: int | None) -> OfferResult:
+        # A test directive is an explicit instruction to query the simulated
+        # backend, so it overrides the usual "only search once the trip is
+        # fully specified" gate.
+        if requested_offers is None and not state.is_ready_for_search():
+            return OfferResult()
         try:
-            return await self._hotel_search_client.count_offers(state)
+            return await self._hotel_search_client.search_offers(state, requested_offers)
         except HotelSearchError as exc:
             # A backend outage must not fabricate a count, and must not lose
             # the filter work the user just did.
             logger.warning("hotel backend unavailable: %s", exc)
-            return OfferCount()
+            return OfferResult()
 
 
 def _open_pending(

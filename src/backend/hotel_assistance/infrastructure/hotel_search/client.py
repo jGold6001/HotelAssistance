@@ -9,9 +9,10 @@ import logging
 from typing import Any, Protocol
 
 import httpx
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 
 from hotel_assistance.domain.models.filter_value import RangeValue
+from hotel_assistance.domain.models.hotel_offer import HotelOffer
 from hotel_assistance.domain.models.search_state import SearchState
 
 logger = logging.getLogger(__name__)
@@ -21,15 +22,33 @@ class HotelSearchError(Exception):
     """Raised when the hotel backend cannot be reached or answers unusably."""
 
 
-class OfferCount(BaseModel):
-    """How many offers the backend matches, or ``None`` when it is unknown."""
+class OfferResult(BaseModel):
+    """What the backend matched: how many offers, and the properties behind them.
+
+    ``available_offers_count`` is ``None`` when the count is unknown, which is
+    not the same as zero. ``offers`` holds whatever listings the backend
+    returned alongside the count; it may be empty even for a non-zero count.
+    ``note`` is set when the backend answered something other than what was
+    asked, so the reply can say so instead of quietly showing a different
+    number.
+    """
 
     available_offers_count: int | None = None
     backend_available: bool = False
+    offers: list[HotelOffer] = []
+    note: str | None = None
 
 
 class HotelSearchClient(Protocol):
-    async def count_offers(self, state: SearchState) -> OfferCount: ...
+    async def search_offers(
+        self, state: SearchState, requested_count: int | None = None
+    ) -> OfferResult:
+        """Ask the backend what the validated state matches.
+
+        ``requested_count`` is the demo simulator's ``@test_aparts`` override.
+        A real backend counts for itself and ignores it.
+        """
+        ...
 
 
 class UnavailableHotelSearchClient:
@@ -39,19 +58,23 @@ class UnavailableHotelSearchClient:
     fabricated number as if it came from the backend.
     """
 
-    async def count_offers(self, state: SearchState) -> OfferCount:
-        return OfferCount(available_offers_count=None, backend_available=False)
+    async def search_offers(
+        self, state: SearchState, requested_count: int | None = None
+    ) -> OfferResult:
+        return OfferResult(available_offers_count=None, backend_available=False)
 
 
 class HttpHotelSearchClient:
-    """Queries a hotel backend over HTTP for the matching-offer count."""
+    """Queries a hotel backend over HTTP for the matching offers."""
 
     def __init__(self, base_url: str, timeout: float = 10.0, client: httpx.AsyncClient | None = None) -> None:
         self._base_url = base_url.rstrip("/")
         self._timeout = timeout
         self._client = client
 
-    async def count_offers(self, state: SearchState) -> OfferCount:
+    async def search_offers(
+        self, state: SearchState, requested_count: int | None = None
+    ) -> OfferResult:
         payload = build_search_payload(state)
         try:
             if self._client is not None:
@@ -67,7 +90,29 @@ class HttpHotelSearchClient:
         count = body.get("available_offers_count")
         if not isinstance(count, int):
             raise HotelSearchError(f"Hotel backend returned no usable available_offers_count: {body!r}")
-        return OfferCount(available_offers_count=count, backend_available=True)
+        return OfferResult(
+            available_offers_count=count,
+            backend_available=True,
+            offers=_parse_offers(body.get("offers")),
+        )
+
+
+def _parse_offers(raw: Any) -> list[HotelOffer]:
+    """Read the optional listing part of a backend response.
+
+    The count is the contract; listings are a bonus, so a backend that omits
+    them or spells one of them wrong loses the listing, not the whole answer.
+    """
+
+    if not isinstance(raw, list):
+        return []
+    offers: list[HotelOffer] = []
+    for item in raw:
+        try:
+            offers.append(HotelOffer.model_validate(item))
+        except ValidationError:
+            logger.warning("hotel backend returned an unusable offer entry: %r", item)
+    return offers
 
 
 def build_search_payload(state: SearchState) -> dict[str, Any]:

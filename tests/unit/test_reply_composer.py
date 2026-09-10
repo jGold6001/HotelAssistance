@@ -3,6 +3,7 @@ from datetime import date
 from hotel_assistance.application.reply_composer import (
     compose_out_of_scope_reply,
     compose_reply,
+    compose_simulated_search_reply,
 )
 from hotel_assistance.domain.models.applied_filter import AppliedFilter
 from hotel_assistance.domain.models.filter_definition import FilterDefinition
@@ -191,3 +192,29 @@ def test_an_out_of_scope_reply_keeps_the_search_it_refuses_to_change() -> None:
 
 def test_an_out_of_scope_reply_on_an_empty_search_stays_short() -> None:
     assert "unchanged" not in compose_out_of_scope_reply(SearchState())
+
+
+def test_a_simulated_search_reports_only_what_the_backend_returned() -> None:
+    assert "matches 32 offers" in compose_simulated_search_reply(32, [])
+    assert "matches 1 offer." in compose_simulated_search_reply(1, [])
+
+
+def test_a_simulated_search_with_no_offers_offers_relaxations() -> None:
+    reply = compose_simulated_search_reply(
+        0,
+        [RelaxationSuggestion(filter_id="hotel.parking", label="drop parking", reason="rarely available")],
+    )
+
+    assert "no offers" in reply
+    assert "drop parking" in reply
+
+
+def test_a_simulated_search_never_invents_a_count() -> None:
+    assert "cannot say how many" in compose_simulated_search_reply(None, [])
+
+
+def test_a_capped_simulated_count_is_explained() -> None:
+    reply = compose_simulated_search_reply(500, [], "The simulator caps a test run at 500 offers.")
+
+    assert "matches 500 offers" in reply
+    assert "caps a test run at 500" in reply

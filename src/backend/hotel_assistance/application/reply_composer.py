@@ -76,6 +76,7 @@ def compose_reply(
     was_reset: bool,
     destination_hint: str | None = None,
     date_hint: str | None = None,
+    offers_note: str | None = None,
 ) -> str:
     parts: list[str] = []
 
@@ -99,13 +100,7 @@ def compose_reply(
     if unmapped_requests:
         parts.append(_describe_unmapped(unmapped_requests))
 
-    if available_offers_count == 0:
-        parts.append("The hotel backend finds no offers for this search.")
-        if relaxations:
-            options = "; ".join(f"{item.label} - {item.reason}" for item in relaxations)
-            parts.append(f"You could relax: {options}.")
-    elif available_offers_count is not None:
-        parts.append(f"The hotel backend currently matches {available_offers_count} offers.")
+    parts.extend(_describe_offers(available_offers_count, relaxations, offers_note))
 
     if question:
         parts.append(question)
@@ -114,6 +109,46 @@ def compose_reply(
         parts.append("I did not find anything to change in the search. Could you say a bit more about what you want?")
 
     return " ".join(parts)
+
+
+def compose_simulated_search_reply(
+    available_offers_count: int | None,
+    relaxations: list[RelaxationSuggestion],
+    offers_note: str | None = None,
+) -> str:
+    """Answer a bare ``@test_aparts`` directive.
+
+    Nothing about the search changed, so the reply says only what the backend
+    reported back - and says so without a model call, like every other
+    deterministic part of a reply.
+    """
+
+    parts = _describe_offers(available_offers_count, relaxations, offers_note)
+    if not parts:
+        return "The hotel backend is unavailable, so I cannot say how many offers match."
+    return " ".join(parts)
+
+
+def _describe_offers(
+    available_offers_count: int | None,
+    relaxations: list[RelaxationSuggestion],
+    note: str | None = None,
+) -> list[str]:
+    """Report the backend's answer, or stay silent when it has not given one."""
+
+    if available_offers_count is None:
+        return []
+    if available_offers_count == 0:
+        parts = ["The hotel backend finds no offers for this search."]
+        if relaxations:
+            options = "; ".join(f"{item.label} - {item.reason}" for item in relaxations)
+            parts.append(f"You could relax: {options}.")
+    else:
+        plural = "" if available_offers_count == 1 else "s"
+        parts = [f"The hotel backend currently matches {available_offers_count} offer{plural}."]
+    if note:
+        parts.append(note)
+    return parts
 
 
 def compose_out_of_scope_reply(state: SearchState) -> str:

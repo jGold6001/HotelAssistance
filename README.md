@@ -67,12 +67,35 @@ All variables also work without the `HOTEL_ASSISTANCE_` prefix; see [.env.exampl
 | `OPENAI_FALLBACK_MODEL` | `gpt-4.1-mini` | Short opening messages only; later turns use `OPENAI_MODEL` |
 | `RETRIEVAL_MODE` | `hybrid` | `hybrid`, `semantic`, or `keyword` (no API calls) |
 | `FILTER_TOP_K` | `24` | Candidates sent to the model |
-| `HOTEL_BACKEND_URL` | empty | Empty means offer counts are reported as unknown |
+| `HOTEL_BACKEND_URL` | empty | Empty means the mock property simulator stands in for a real backend |
+| `HOTEL_SIMULATOR` | `true` | `false` reports offer counts as unknown instead of simulating them |
+
+## Simulated hotel backend
+
+There is no real property backend yet, so with `HOTEL_BACKEND_URL` unset the app simulates one from
+the mock database in [src/backend/mock_db_hotels/hotels_100.json](src/backend/mock_db_hotels/hotels_100.json)
+(100 properties). The simulator cannot match filters, so it does not decide how many offers exist —
+the tester does, with a directive typed into the chat:
+
+```text
+@test_aparts = 32          # the backend "found" 32 properties; the table lists them
+Quiet room in Haarlem @test_aparts = 5    # works inside a normal request too
+```
+
+- **No directive in the message means zero offers**, which puts the zero-result relaxation advice
+  on the default path.
+- **`@aparts` is accepted as a shorthand**, and a bare `@test_aparts` means zero.
+- **Asking for more than the dataset holds repeats entries at random** rather than inventing
+  properties; a run is capped at 500 offers and the reply says when it capped one.
+- The directive is stripped out of the message before retrieval and extraction see it, so it never
+  reaches the model, never lands in the conversation history, and never touches the search state. A
+  message that is *only* a directive skips the model entirely — testing the table costs nothing.
 
 ## Design notes
 
 **Nothing is invented.** With no hotel backend configured, `available_offers_count` is `null`, not a
-guess. Zero-result relaxation advice is derived from the filters the user actually set — preferences
+guess. The simulator reports what the directive asked for and lists rows straight from the mock
+database; it never makes up a property, a price or a count of its own. Zero-result relaxation advice is derived from the filters the user actually set — preferences
 first, then numeric limits that can be widened, then hard requirements.
 
 **A follow-up turn is not a new search.** "I need something in May" is understood against the state
@@ -114,9 +137,10 @@ src/
 │   │   ├── embeddings/         # OpenAI embeddings adapter
 │   │   ├── llm/                # LLMProvider interface + OpenAI adapter + prompts
 │   │   ├── retrieval/          # semantic and hybrid retrievers
-│   │   └── hotel_search/       # hotel backend client
+│   │   └── hotel_search/       # hotel backend client + mock-database simulator
 │   ├── config/                 # environment-driven settings
 │   └── main.py                 # app wiring; mounts the frontend at /
+├── backend/mock_db_hotels/     # mock property database for the simulator
 └── frontend/                   # static chat UI (no build step)
 ```
 

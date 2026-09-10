@@ -46,6 +46,14 @@ class PendingChangeView(BaseModel):
     hint: str
 
 
+class HotelOfferView(BaseModel):
+    """One property from the hotel backend, as the table renders it."""
+
+    apartment: str
+    address: str
+    price: str
+
+
 class SearchStateView(BaseModel):
     destination: str | None = None
     check_in: date | None = None
@@ -66,6 +74,7 @@ class ChatResponse(BaseModel):
     candidate_filter_ids: list[str] = []
     available_offers_count: int | None = None
     backend_available: bool = False
+    offers: list[HotelOfferView] = []
     relaxation_suggestions: list[RelaxationSuggestion] = []
 
 
@@ -112,5 +121,9 @@ def to_chat_response(result: ChatResult, registry: FilterRegistry) -> ChatRespon
         candidate_filter_ids=[candidate.definition.id for candidate in result.candidates],
         available_offers_count=result.available_offers_count,
         backend_available=result.backend_available,
+        offers=[
+            HotelOfferView(apartment=offer.apartment, address=offer.address, price=offer.price)
+            for offer in result.offers
+        ],
         relaxation_suggestions=result.relaxation_suggestions,
     )

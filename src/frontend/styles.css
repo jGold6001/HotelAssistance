@@ -173,6 +173,85 @@ body {
   gap: 4px;
 }
 
+/* Offer table: the properties behind the backend's count */
+.offers-panel {
+  max-width: min(720px, 94%);
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  border-bottom-left-radius: 5px;
+  overflow: hidden;
+}
+
+.offers-panel-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.offers-panel-note {
+  font-weight: 500;
+  text-transform: none;
+  opacity: 0.75;
+}
+
+/* Long result sets scroll inside the panel instead of burying the chat. */
+.offers-scroll {
+  max-height: 320px;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+
+.offers-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.offers-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--surface-raised);
+  text-align: left;
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.offers-table td {
+  padding: 8px 14px;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
+  vertical-align: top;
+}
+
+.offers-table tbody tr:last-child td { border-bottom: none; }
+.offers-table tbody tr:hover td { background: var(--accent-soft); }
+
+.offers-index {
+  width: 40px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.offers-address { color: var(--text-muted); }
+
+.offers-price {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
 /* Thinking indicator */
 .thinking { display: flex; align-items: center; gap: 10px; }
 

@@ -8,6 +8,7 @@ from hotel_assistance.application.chat_orchestrator import ChatResult, ChatStage
 from hotel_assistance.domain.models.applied_filter import AppliedFilter
 from hotel_assistance.domain.models.filter_definition import FilterDefinition
 from hotel_assistance.domain.models.filter_value import RangeValue
+from hotel_assistance.domain.models.hotel_offer import HotelOffer
 from hotel_assistance.domain.models.pending_change import PendingTripChange
 from hotel_assistance.domain.models.search_state import SearchState
 from hotel_assistance.domain.models.trip_field import TripField
@@ -32,8 +33,14 @@ STATE = SearchState(
 
 
 class FakeOrchestrator:
-    def __init__(self, error: Exception | None = None, pending: PendingTripChange | None = None) -> None:
+    def __init__(
+        self,
+        error: Exception | None = None,
+        pending: PendingTripChange | None = None,
+        offers: list[HotelOffer] | None = None,
+    ) -> None:
         self._error = error
+        self._offers = offers or []
         self.state = STATE
         self.pending = pending
 
@@ -43,7 +50,14 @@ class FakeOrchestrator:
         if on_stage is not None:
             for stage in ChatStage:
                 await on_stage(stage)
-        return ChatResult(reply=f"Applied: Parking. ({message})", state=self.state, pending=self.pending)
+        return ChatResult(
+            reply=f"Applied: Parking. ({message})",
+            state=self.state,
+            pending=self.pending,
+            offers=self._offers,
+            available_offers_count=len(self._offers) or None,
+            backend_available=bool(self._offers),
+        )
 
     def state_for(self, session_id: str) -> SearchState:
         return self.state
@@ -161,3 +175,20 @@ def test_frontend_is_served_at_the_root(client) -> None:
 
     assert response.status_code == 200
     assert "Hotel Assistance" in response.text
+
+
+def test_offers_are_rendered_for_the_table(client) -> None:
+    offers = [HotelOffer(apartment="Amber Haven", address="10 Maple Street", price="$70-$150")]
+
+    body = client(FakeOrchestrator(offers=offers)).post("/api/chat", json={"message": "@test_aparts = 1"}).json()
+
+    assert body["available_offers_count"] == 1
+    assert body["offers"] == [
+        {"apartment": "Amber Haven", "address": "10 Maple Street", "price": "$70-$150"}
+    ]
+
+
+def test_a_reply_without_offers_carries_an_empty_table(client) -> None:
+    body = client(FakeOrchestrator()).post("/api/chat", json={"message": "I need parking"}).json()
+
+    assert body["offers"] == []

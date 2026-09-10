@@ -13,12 +13,13 @@ from hotel_assistance.domain.models.extraction import (
 )
 from hotel_assistance.domain.models.filter_definition import FilterDefinition
 from hotel_assistance.domain.models.filter_value import RangeValue
+from hotel_assistance.domain.models.hotel_offer import HotelOffer
 from hotel_assistance.domain.models.trip_field import TripField
 from hotel_assistance.domain.services.filter_registry import FilterRegistry
 from hotel_assistance.domain.services.search_validator import IssueCode, SearchValidator
 from hotel_assistance.infrastructure.hotel_search.client import (
     HotelSearchError,
-    OfferCount,
+    OfferResult,
 )
 from hotel_assistance.infrastructure.llm.provider import LLMExtractionError
 
@@ -56,11 +57,18 @@ class FakeHotelSearch:
     def __init__(self, count: int | None = None, error: Exception | None = None) -> None:
         self._count = count
         self._error = error
+        self.requested_counts: list[int | None] = []
 
-    async def count_offers(self, state) -> OfferCount:
+    async def search_offers(self, state, requested_count: int | None = None) -> OfferResult:
+        self.requested_counts.append(requested_count)
         if self._error is not None:
             raise self._error
-        return OfferCount(available_offers_count=self._count, backend_available=True)
+        count = self._count if requested_count is None else requested_count
+        offers = [
+            HotelOffer(apartment=f"Mock {index}", address=f"{index} Test Street", price="$100-$200")
+            for index in range(count or 0)
+        ]
+        return OfferResult(available_offers_count=count, backend_available=True, offers=offers)
 
 
 def build_orchestrator(llm, hotel_search=None, definitions=None) -> ChatOrchestrator:
@@ -260,6 +268,90 @@ def test_zero_results_produce_relaxation_suggestions_from_the_current_state() ->
 
     assert result.available_offers_count == 0
     assert [item.filter_id for item in result.relaxation_suggestions] == ["room.soundproofing", "room.size_m2"]
+    assert "no offers" in result.reply
+
+
+def test_a_bare_test_directive_simulates_a_search_without_the_model() -> None:
+    llm = FakeLLM()
+    hotel_search = FakeHotelSearch()
+    orchestrator = build_orchestrator(llm, hotel_search=hotel_search)
+
+    result = asyncio.run(orchestrator.handle_message("s1", "@test_aparts = 32"))
+
+    assert llm.requests == []
+    assert hotel_search.requested_counts == [32]
+    assert result.available_offers_count == 32
+    assert len(result.offers) == 32
+    assert "matches 32 offers" in result.reply
+
+
+def test_a_message_with_no_directive_still_reaches_the_model() -> None:
+    llm = FakeLLM(extraction())
+    orchestrator = build_orchestrator(llm)
+
+    asyncio.run(orchestrator.handle_message("s1", " "))
+
+    assert len(llm.requests) == 1
+
+
+def test_a_test_directive_inside_a_request_is_stripped_before_extraction() -> None:
+    llm = FakeLLM(
+        extraction(
+            ExtractedFilter(
+                filter_id="hotel.parking", op="add", type="boolean", strength="required", boolean_value=True
+            )
+        )
+    )
+    hotel_search = FakeHotelSearch()
+    orchestrator = build_orchestrator(llm, hotel_search=hotel_search)
+
+    result = asyncio.run(orchestrator.handle_message("s1", "I need parking @test_aparts = 4"))
+
+    assert llm.requests[0].message == "I need parking"
+    assert hotel_search.requested_counts == [4]
+    assert result.available_offers_count == 4
+    assert len(result.offers) == 4
+
+
+def test_a_test_directive_leaves_the_search_state_alone() -> None:
+    orchestrator = build_orchestrator(
+        FakeLLM(
+            extraction(
+                ExtractedFilter(
+                    filter_id="hotel.parking", op="add", type="boolean", strength="required", boolean_value=True
+                )
+            )
+        )
+    )
+    asyncio.run(orchestrator.handle_message("s1", "I need parking"))
+
+    result = asyncio.run(orchestrator.handle_message("s1", "@test_aparts = 2"))
+
+    assert [item.filter_id for item in result.state.filters] == ["hotel.parking"]
+    assert len(result.offers) == 2
+
+
+def test_a_zero_directive_still_suggests_relaxations() -> None:
+    orchestrator = build_orchestrator(
+        FakeLLM(
+            extraction(
+                ExtractedFilter(
+                    filter_id="room.soundproofing",
+                    op="add",
+                    type="boolean",
+                    strength="preferred",
+                    boolean_value=True,
+                )
+            )
+        )
+    )
+    asyncio.run(orchestrator.handle_message("s1", "quiet room"))
+
+    result = asyncio.run(orchestrator.handle_message("s1", "@test_aparts = 0"))
+
+    assert result.available_offers_count == 0
+    assert result.offers == []
+    assert [item.filter_id for item in result.relaxation_suggestions] == ["room.soundproofing"]
     assert "no offers" in result.reply
 
 

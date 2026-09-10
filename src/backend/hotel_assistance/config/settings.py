@@ -40,6 +40,9 @@ class Settings(BaseModel):
 
     hotel_backend_url: str | None = None
     hotel_backend_timeout: float = 10.0
+    # With no real backend URL, the mock property simulator stands in for one.
+    # Set to false to report offer counts as unknown instead.
+    hotel_simulator_enabled: bool = True
 
     log_level: str = "INFO"
 
@@ -57,6 +60,7 @@ class Settings(BaseModel):
             embedding_cache_path=_env("EMBEDDING_CACHE_PATH", ".cache/filter_embeddings.json"),
             hotel_backend_url=_env("HOTEL_BACKEND_URL"),
             hotel_backend_timeout=float(_env("HOTEL_BACKEND_TIMEOUT", "10.0")),
+            hotel_simulator_enabled=_flag("HOTEL_SIMULATOR", default=True),
             log_level=_env("LOG_LEVEL", "INFO"),
         )
 
@@ -80,6 +84,13 @@ def _env(name: str, default: str | None = None) -> str | None:
 
 def _optional_float(value: str | None) -> float | None:
     return float(value) if value else None
+
+
+def _flag(name: str, default: bool) -> bool:
+    value = _env(name)
+    if value is None:
+        return default
+    return value.lower() not in {"0", "false", "no", "off"}
 
 
 @lru_cache

@@ -68,6 +68,78 @@ function addNotes(bubble, notes) {
   scrollToBottom();
 }
 
+/**
+ * The properties behind the offer count, as a table under the reply.
+ *
+ * Everything here is backend data passed straight through - the client
+ * neither sorts, filters nor invents a row.
+ */
+function addOffersTable(offers, total) {
+  if (!offers || !offers.length) return;
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "message assistant";
+
+  const panel = document.createElement("div");
+  panel.className = "offers-panel";
+
+  const title = document.createElement("div");
+  title.className = "offers-panel-title";
+  const found = total === null || total === undefined ? offers.length : total;
+  title.textContent = `${found} propert${found === 1 ? "y" : "ies"} found`;
+  if (offers.length < found) {
+    const shown = document.createElement("span");
+    shown.className = "offers-panel-note";
+    shown.textContent = `showing ${offers.length}`;
+    title.appendChild(shown);
+  }
+
+  const scroll = document.createElement("div");
+  scroll.className = "offers-scroll";
+
+  const table = document.createElement("table");
+  table.className = "offers-table";
+  table.appendChild(buildTableHead(["#", "Apartment", "Address", "Price"]));
+
+  const body = document.createElement("tbody");
+  offers.forEach((offer, index) => {
+    const row = document.createElement("tr");
+    row.append(
+      buildCell(String(index + 1), "offers-index"),
+      buildCell(offer.apartment),
+      buildCell(offer.address, "offers-address"),
+      buildCell(offer.price, "offers-price"),
+    );
+    body.appendChild(row);
+  });
+  table.appendChild(body);
+
+  scroll.appendChild(table);
+  panel.append(title, scroll);
+  wrapper.appendChild(panel);
+  elements.messages.appendChild(wrapper);
+  scrollToBottom();
+}
+
+function buildTableHead(labels) {
+  const head = document.createElement("thead");
+  const row = document.createElement("tr");
+  for (const label of labels) {
+    const cell = document.createElement("th");
+    cell.textContent = label;
+    row.appendChild(cell);
+  }
+  head.appendChild(row);
+  return head;
+}
+
+function buildCell(text, className) {
+  const cell = document.createElement("td");
+  cell.textContent = text;
+  if (className) cell.className = className;
+  return cell;
+}
+
 function showThinking() {
   const wrapper = document.createElement("div");
   wrapper.className = "message assistant";
@@ -285,6 +357,7 @@ function handleEvent(event, thinking) {
 
   const bubble = addMessage("assistant", event.reply);
   addNotes(bubble, collectNotes(event));
+  addOffersTable(event.offers, event.available_offers_count);
   renderState(event.state);
   renderOffers(event);
 }

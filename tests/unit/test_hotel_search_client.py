@@ -48,7 +48,7 @@ def test_payload_flattens_the_validated_state() -> None:
 def test_offer_count_comes_from_the_backend() -> None:
     client = build_client(lambda request: httpx.Response(200, json={"available_offers_count": 12}))
 
-    result = asyncio.run(client.count_offers(build_state()))
+    result = asyncio.run(client.search_offers(build_state()))
 
     assert result.available_offers_count == 12
     assert result.backend_available is True
@@ -58,18 +58,18 @@ def test_missing_count_in_the_response_is_an_error() -> None:
     client = build_client(lambda request: httpx.Response(200, json={"hotels": []}))
 
     with pytest.raises(HotelSearchError):
-        asyncio.run(client.count_offers(build_state()))
+        asyncio.run(client.search_offers(build_state()))
 
 
 def test_http_failure_is_translated() -> None:
     client = build_client(lambda request: httpx.Response(503))
 
     with pytest.raises(HotelSearchError):
-        asyncio.run(client.count_offers(build_state()))
+        asyncio.run(client.search_offers(build_state()))
 
 
 def test_unconfigured_backend_reports_an_unknown_count() -> None:
-    result = asyncio.run(UnavailableHotelSearchClient().count_offers(build_state()))
+    result = asyncio.run(UnavailableHotelSearchClient().search_offers(build_state()))
 
     assert result.available_offers_count is None
     assert result.backend_available is False
