@@ -6,9 +6,9 @@ directive is a test instrument, not a search request: it is stripped out of
 the message before anything interprets language, and it never touches the
 search state.
 
-A message with no directive runs no simulated search at all: the offer count
-stays unknown and no properties are shown. Zero is a result the tester asks
-for explicitly, with ``@test_aparts = 0``.
+Without a directive the simulator answers a complete search on its own, so
+the directive is only needed to pin the count down - ``@test_aparts = 0`` to
+see the zero-result flow, or a specific number to check the table.
 """
 
 import re

@@ -82,8 +82,23 @@ All variables also work without the `HOTEL_ASSISTANCE_` prefix; see [.env.exampl
 
 There is no real property backend yet, so with `HOTEL_BACKEND_URL` unset the app simulates one from
 the mock database in [src/backend/mock_db_hotels/hotels_100.json](src/backend/mock_db_hotels/hotels_100.json)
-(100 properties). The simulator cannot match filters, so it does not decide how many offers exist —
-the tester does, with a directive typed into the chat:
+(100 properties).
+
+**A complete search runs by itself.** As soon as the state holds a destination, a stay and the
+guests, the simulator answers with a count drawn from 0-100 and a table of that many properties —
+no directive needed:
+
+```text
+Got it: Haarlem, 23-26 Jan 2027 and 1 adults. Applied: Parking.
+There are 10 hotels available that match your filters.
+```
+
+The draw is seeded by the search state itself, so the same search always reports the same number
+and changing a destination, a date or a filter draws a new one. An incomplete search is never
+answered: the count stays unknown rather than reporting zero for a search nobody ran.
+
+A tester can still pin the count down with a directive typed into the chat, which overrides the
+automatic draw:
 
 ```text
 @test_aparts = 32          # the backend "found" 32 properties; the table lists them
@@ -91,9 +106,8 @@ the tester does, with a directive typed into the chat:
 Quiet room in Haarlem @test_aparts = 5    # works inside a normal request too
 ```
 
-- **No directive means no simulated search at all.** The offer count stays unknown, no table is
-  shown, and the reply says nothing about offers — a search that was never run must not be reported
-  as a search that found nothing. Zero is a result the tester asks for explicitly.
+- **A directive also forces a search on an incomplete state**, which is how the table can be tested
+  before a trip is fully specified.
 - **`@aparts` is accepted as a shorthand**, and a bare `@test_aparts` means zero.
 - **Asking for more than the dataset holds repeats entries at random** rather than inventing
   properties; a run is capped at 500 offers and the reply says when it capped one.
@@ -103,9 +117,12 @@ Quiet room in Haarlem @test_aparts = 5    # works inside a normal request too
 
 ## Design notes
 
-**Nothing is invented.** With no hotel backend configured, `available_offers_count` is `null`, not a
-guess. The simulator reports what the directive asked for and lists rows straight from the mock
-database; it never makes up a property, a price or a count of its own.
+**Nothing is invented.** With no hotel backend configured, the count is simulated — explicitly, and
+only from the mock database: the simulator draws a number and lists rows straight out of
+[hotels_100.json](src/backend/mock_db_hotels/hotels_100.json), never making up a property or a
+price. Nothing downstream treats that number as anything but the backend's answer, so swapping in a
+real `HOTEL_BACKEND_URL` changes where the count comes from and nothing else. An incomplete search
+still reports `available_offers_count` as `null` rather than guessing at one.
 
 **A turn answers in two messages.** What validation settled is known the moment the patch is
 applied; the offer count has to wait for the hotel backend. So the reply is composed in two halves

@@ -1,17 +1,22 @@
 """A stand-in hotel backend for the demo, backed by a mock property database.
 
-There is no real property backend yet, so this client simulates one. It
-cannot match filters, which is exactly why the number of offers is not its
-decision: the count comes from the ``@test_aparts`` directive the tester
-types into the chat. Without a directive the simulator has nothing to say and
-reports the count as unknown - it will not answer zero on a search it never
-actually ran.
+There is no real property backend yet, so this client simulates one. Once the
+search state holds everything a real search needs - destination, stay and
+guests - the simulator answers it on its own with a count drawn from the mock
+database. The draw is seeded by the search state itself, so the same search
+always reports the same number and changing a filter changes it.
+
+A tester can still force the count with the ``@test_aparts`` directive typed
+into the chat, which overrides the automatic draw. An incomplete search is
+never answered: the count stays unknown rather than reporting zero for a
+search that was never run.
 
 The listings themselves come from a fixed JSON dataset. Asking for more
 offers than the dataset holds repeats entries at random rather than
 inventing properties, so nothing in the table is fabricated.
 """
 
+import hashlib
 import json
 import logging
 import random
@@ -24,6 +29,7 @@ from hotel_assistance.domain.models.search_state import SearchState
 from hotel_assistance.infrastructure.hotel_search.client import (
     HotelSearchError,
     OfferResult,
+    build_search_payload,
 )
 
 logger = logging.getLogger(__name__)
@@ -35,9 +41,14 @@ DEFAULT_DATASET_PATH = Path(__file__).resolve().parents[3] / "mock_db_hotels" / 
 # cannot turn a test message into a multi-megabyte response.
 MAX_SIMULATED_OFFERS = 500
 
+# The range an automatic search draws from. Zero is part of it, so the
+# zero-result flow shows up in the demo without anyone forcing it.
+AUTO_OFFER_MIN = 0
+AUTO_OFFER_MAX = 100
+
 
 class SimulatedHotelSearchClient:
-    """Returns as many mock properties as the test directive asked for."""
+    """Answers a complete search from the mock database, or does what the directive says."""
 
     def __init__(
         self,
@@ -53,20 +64,27 @@ class SimulatedHotelSearchClient:
     async def search_offers(
         self, state: SearchState, requested_count: int | None = None
     ) -> OfferResult:
-        if requested_count is None:
-            # No directive, no simulated search: an unknown count leaves the
-            # reply silent about offers rather than claiming none exist.
-            return OfferResult()
-
-        count = min(max(requested_count, 0), self._max_offers)
         note = None
-        if requested_count > self._max_offers:
-            logger.info("simulated offer count %d capped at %d", requested_count, count)
-            note = f"The simulator caps a test run at {self._max_offers} offers, so {requested_count} became {count}."
+        if requested_count is None:
+            if not state.is_ready_for_search():
+                # An incomplete search is not a search: an unknown count
+                # leaves the reply silent about offers rather than claiming
+                # none exist.
+                return OfferResult()
+            rng = _state_rng(state)
+            count = rng.randint(AUTO_OFFER_MIN, AUTO_OFFER_MAX)
+            logger.info("simulated search for a complete state returned %d offers", count)
+        else:
+            rng = self._rng
+            count = min(max(requested_count, 0), self._max_offers)
+            if requested_count > self._max_offers:
+                logger.info("simulated offer count %d capped at %d", requested_count, count)
+                note = f"The simulator caps a test run at {self._max_offers} offers, so {requested_count} became {count}."
+
         return OfferResult(
             available_offers_count=count,
             backend_available=True,
-            offers=self._pick(count),
+            offers=self._pick(count, rng),
             note=note,
         )
 
@@ -74,7 +92,7 @@ class SimulatedHotelSearchClient:
     def dataset_size(self) -> int:
         return len(self._load())
 
-    def _pick(self, count: int) -> list[HotelOffer]:
+    def _pick(self, count: int, rng: random.Random) -> list[HotelOffer]:
         """Draw ``count`` properties, shuffling a fresh pass per dataset-full.
 
         Every property is used once before any is used twice, so a request
@@ -87,7 +105,7 @@ class SimulatedHotelSearchClient:
         picked: list[HotelOffer] = []
         while len(picked) < count:
             batch = list(pool)
-            self._rng.shuffle(batch)
+            rng.shuffle(batch)
             picked.extend(batch[: count - len(picked)])
         return picked
 
@@ -109,3 +127,16 @@ class SimulatedHotelSearchClient:
 
         logger.info("mock property database loaded: %d properties", len(self._properties))
         return self._properties
+
+
+def _state_rng(state: SearchState) -> random.Random:
+    """A generator seeded by the search itself.
+
+    Repeating a search must not repeat the dice: the same destination, stay,
+    guests and filters always produce the same count and the same listings,
+    while any change to them produces a new draw.
+    """
+
+    payload = json.dumps(build_search_payload(state), sort_keys=True, default=str)
+    seed = int.from_bytes(hashlib.sha256(payload.encode("utf-8")).digest()[:8], "big")
+    return random.Random(seed)

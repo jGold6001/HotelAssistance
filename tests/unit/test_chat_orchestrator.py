@@ -22,6 +22,7 @@ from hotel_assistance.infrastructure.hotel_search.client import (
     OfferResult,
 )
 from hotel_assistance.infrastructure.hotel_search.simulator import (
+    AUTO_OFFER_MAX,
     SimulatedHotelSearchClient,
 )
 from hotel_assistance.infrastructure.llm.provider import LLMExtractionError
@@ -360,8 +361,8 @@ def test_a_zero_directive_still_suggests_relaxations() -> None:
     assert result.reply.endswith("Would you like me to relax those preferences?")
 
 
-def test_a_message_without_a_directive_runs_no_simulated_search() -> None:
-    """A complete search still gets no offers unless a directive asks for them."""
+def test_a_complete_search_is_run_without_a_directive() -> None:
+    """Once the trip is fully specified the simulated backend answers on its own."""
 
     orchestrator = build_orchestrator(
         FakeLLM(
@@ -383,6 +384,33 @@ def test_a_message_without_a_directive_runs_no_simulated_search() -> None:
     result = asyncio.run(orchestrator.handle_message("s1", "parking in Haarlem 15-18 Aug for two"))
 
     assert result.state.is_ready_for_search()
+    assert result.backend_available is True
+    assert 0 <= result.available_offers_count <= AUTO_OFFER_MAX
+    assert len(result.offers) == result.available_offers_count
+    # The trip is named once, by the half that settled it, so the count does
+    # not repeat it.
+    assert result.reply.startswith("Got it: Haarlem, 15-18 Aug 2026 and 2 adults.")
+    assert f"There are {result.available_offers_count} hotels available that match your filters." in result.reply
+
+
+def test_an_incomplete_search_runs_no_simulated_search() -> None:
+    """Missing trip details mean no search: unknown, not zero."""
+
+    orchestrator = build_orchestrator(
+        FakeLLM(
+            extraction(
+                ExtractedFilter(
+                    filter_id="hotel.parking", op="add", type="boolean", strength="required", boolean_value=True
+                ),
+                trip=TripDetails(destination="Haarlem"),
+            )
+        ),
+        hotel_search=SimulatedHotelSearchClient(),
+    )
+
+    result = asyncio.run(orchestrator.handle_message("s1", "parking in Haarlem"))
+
+    assert result.state.is_ready_for_search() is False
     assert result.available_offers_count is None
     assert result.backend_available is False
     assert result.offers == []

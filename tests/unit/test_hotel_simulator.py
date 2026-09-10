@@ -1,18 +1,35 @@
 import asyncio
 import json
 import random
+from datetime import date
 from pathlib import Path
 
 import pytest
+from hotel_assistance.domain.models.applied_filter import AppliedFilter
+from hotel_assistance.domain.models.guest_config import GuestConfig
 from hotel_assistance.domain.models.search_state import SearchState
 from hotel_assistance.infrastructure.hotel_search.client import HotelSearchError
 from hotel_assistance.infrastructure.hotel_search.simulator import (
+    AUTO_OFFER_MAX,
+    AUTO_OFFER_MIN,
     DEFAULT_DATASET_PATH,
     MAX_SIMULATED_OFFERS,
     SimulatedHotelSearchClient,
 )
 
 STATE = SearchState()
+
+
+def ready_state(destination: str = "Haarlem", adults: int = 1, **kwargs) -> SearchState:
+    """A state holding everything a search needs, so the simulator answers it."""
+
+    return SearchState(
+        destination=destination,
+        check_in=date(2027, 1, 23),
+        check_out=date(2027, 1, 26),
+        guests=GuestConfig(adults=adults),
+        **kwargs,
+    )
 
 
 @pytest.fixture
@@ -46,17 +63,63 @@ def build_client(dataset, entries: int = 4, **kwargs) -> SimulatedHotelSearchCli
     return SimulatedHotelSearchClient(dataset_path=dataset(entries), rng=random.Random(1), **kwargs)
 
 
-def search(client: SimulatedHotelSearchClient, requested: int | None):
-    return asyncio.run(client.search_offers(STATE, requested))
+def search(client: SimulatedHotelSearchClient, requested: int | None, state: SearchState = STATE):
+    return asyncio.run(client.search_offers(state, requested))
 
 
-def test_without_a_directive_the_simulator_runs_no_search() -> None:
+def test_an_incomplete_search_is_not_answered() -> None:
     result = search(build_client(dataset_none()), None)
 
     # Unknown, not zero: no search was run, so there is nothing to report.
     assert result.available_offers_count is None
     assert result.backend_available is False
     assert result.offers == []
+
+
+def test_a_complete_search_is_answered_without_a_directive(dataset) -> None:
+    result = search(build_client(dataset, entries=200), None, ready_state())
+
+    assert result.backend_available is True
+    assert AUTO_OFFER_MIN <= result.available_offers_count <= AUTO_OFFER_MAX
+    assert len(result.offers) == result.available_offers_count
+    assert result.note is None
+
+
+def test_the_same_search_always_draws_the_same_answer(dataset) -> None:
+    client = build_client(dataset, entries=200)
+
+    first = search(client, None, ready_state())
+    second = search(client, None, ready_state())
+
+    assert first.available_offers_count == second.available_offers_count
+    assert [offer.apartment for offer in first.offers] == [offer.apartment for offer in second.offers]
+
+
+def test_changing_the_search_redraws_the_answer(dataset) -> None:
+    client = build_client(dataset, entries=200)
+    counts = {
+        search(client, None, ready_state(destination=name)).available_offers_count
+        for name in ("Haarlem", "Amsterdam", "Utrecht", "Delft", "Leiden")
+    }
+
+    assert len(counts) > 1
+
+
+def test_a_filter_change_redraws_the_answer(dataset) -> None:
+    client = build_client(dataset, entries=200)
+
+    plain = search(client, None, ready_state())
+    filtered = search(
+        client, None, ready_state(filters=[AppliedFilter(filter_id="hotel.parking", value=True)])
+    )
+
+    assert plain.available_offers_count != filtered.available_offers_count
+
+
+def test_a_directive_overrides_the_automatic_draw(dataset) -> None:
+    result = search(build_client(dataset), 3, ready_state())
+
+    assert result.available_offers_count == 3
 
 
 def test_an_explicit_zero_is_a_result(dataset) -> None:
