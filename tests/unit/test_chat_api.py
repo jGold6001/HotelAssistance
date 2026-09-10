@@ -3,7 +3,11 @@ from datetime import date
 
 import pytest
 from fastapi.testclient import TestClient
-from hotel_assistance.api.dependencies import get_orchestrator, get_registry
+from hotel_assistance.api.dependencies import (
+    get_orchestrator,
+    get_registry,
+    get_transcript_recorder,
+)
 from hotel_assistance.application.chat_orchestrator import ChatResult, ChatStage
 from hotel_assistance.domain.models.applied_filter import AppliedFilter
 from hotel_assistance.domain.models.filter_definition import FilterDefinition
@@ -14,6 +18,7 @@ from hotel_assistance.domain.models.search_state import SearchState
 from hotel_assistance.domain.models.trip_field import TripField
 from hotel_assistance.domain.services.filter_registry import FilterRegistry
 from hotel_assistance.infrastructure.llm.provider import LLMExtractionError
+from hotel_assistance.infrastructure.transcript.recorder import ChatTranscriptRecorder
 from hotel_assistance.main import app
 
 REGISTRY = FilterRegistry(
@@ -86,9 +91,13 @@ class FakeOrchestrator:
 
 @pytest.fixture
 def client():
-    def override(orchestrator: FakeOrchestrator):
+    def override(orchestrator: FakeOrchestrator, recorder: ChatTranscriptRecorder | None = None):
         app.dependency_overrides[get_orchestrator] = lambda: orchestrator
         app.dependency_overrides[get_registry] = lambda: REGISTRY
+        # Recording is off unless a test asks for it, so the suite never
+        # writes a transcript into the working tree.
+        disabled = recorder or ChatTranscriptRecorder(enabled=False)
+        app.dependency_overrides[get_transcript_recorder] = lambda: disabled
         return TestClient(app)
 
     yield override
@@ -220,3 +229,41 @@ def test_a_reply_without_offers_carries_an_empty_table(client) -> None:
     body = client(FakeOrchestrator()).post("/api/chat", json={"message": "I need parking"}).json()
 
     assert body["offers"] == []
+
+
+def test_a_chat_turn_is_written_to_the_dated_transcript(client, tmp_path) -> None:
+    recorder = ChatTranscriptRecorder(directory=tmp_path)
+    test_client = client(FakeOrchestrator(), recorder=recorder)
+
+    test_client.post("/api/chat", json={"message": "I need parking"})
+    test_client.post("/api/chat", json={"message": "and a big room"})
+
+    turns = json.loads(recorder.path_for(date.today()).read_text())
+    assert [turn["user_message"] for turn in turns] == ["I need parking", "and a big room"]
+    assert turns[0]["session_id"] == "default"
+    assert turns[0]["response"]["state"]["destination"] == "Haarlem"
+
+
+def test_a_streamed_turn_is_recorded_once(client, tmp_path) -> None:
+    """The ``filters`` half is the same turn mid-flight, not a second one."""
+
+    recorder = ChatTranscriptRecorder(directory=tmp_path)
+    with client(FakeOrchestrator(), recorder=recorder).stream(
+        "POST", "/api/chat/stream", json={"message": "I need parking"}
+    ) as response:
+        response.read()
+
+    turns = json.loads(recorder.path_for(date.today()).read_text())
+    assert len(turns) == 1
+    assert turns[0]["response"]["offers_reply"] == "There are 2 hotels available."
+
+
+def test_a_failed_turn_is_recorded_with_its_error(client, tmp_path) -> None:
+    recorder = ChatTranscriptRecorder(directory=tmp_path)
+    client(FakeOrchestrator(error=LLMExtractionError("model unavailable")), recorder=recorder).post(
+        "/api/chat", json={"message": "I need parking"}
+    )
+
+    turns = json.loads(recorder.path_for(date.today()).read_text())
+    assert turns[0]["error"] == "model unavailable"
+    assert "response" not in turns[0]

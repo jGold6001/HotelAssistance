@@ -49,6 +49,12 @@ The first request builds the embedding index for the whole registry and caches i
 `.cache/filter_embeddings.json`; later requests only embed the user's message. Editing
 `filters.json` changes the cache fingerprint and rebuilds it automatically.
 
+Every turn - from either chat endpoint - is appended to `output/chat_json_<date>.json`, so
+the JSON the assistant actually produced for a message can be read back afterwards. The file
+is a JSON array of `{timestamp, session_id, user_message, response}` entries; a turn that
+failed records `error` in place of `response`. Set `HOTEL_ASSISTANCE_TRANSCRIPT=false` to
+turn recording off.
+
 ## Test
 
 ```bash
@@ -69,6 +75,8 @@ All variables also work without the `HOTEL_ASSISTANCE_` prefix; see [.env.exampl
 | `FILTER_TOP_K` | `24` | Candidates sent to the model |
 | `HOTEL_BACKEND_URL` | empty | Empty means the mock property simulator stands in for a real backend |
 | `HOTEL_SIMULATOR` | `true` | `false` reports offer counts as unknown instead of simulating them |
+| `TRANSCRIPT` | `true` | `false` stops writing the per-day chat transcript |
+| `TRANSCRIPT_DIR` | `output` | Where `chat_json_<date>.json` is written |
 
 ## Simulated hotel backend
 
@@ -166,7 +174,8 @@ src/
 │   │   ├── embeddings/         # OpenAI embeddings adapter
 │   │   ├── llm/                # LLMProvider interface + OpenAI adapter + prompts
 │   │   ├── retrieval/          # semantic and hybrid retrievers
-│   │   └── hotel_search/       # hotel backend client + mock-database simulator
+│   │   ├── hotel_search/       # hotel backend client + mock-database simulator
+│   │   └── transcript/         # per-day JSON recording of every chat turn
 │   ├── config/                 # environment-driven settings
 │   └── main.py                 # app wiring; mounts the frontend at /
 ├── backend/mock_db_hotels/     # mock property database for the simulator

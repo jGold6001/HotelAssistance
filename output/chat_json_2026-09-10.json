@@ -1,0 +1,548 @@
+[
+  {
+    "timestamp": "2026-09-10T23:09:22+03:00",
+    "session_id": "web",
+    "user_message": "Hey! Going to Haarlem 15-18 Aug. I am traveling solo and looking for a quiet, cozy hotel — ideally something family-run or boutique, not a big chain. The room should be at least 30 square meters, with strong in-room Wi-Fi, a real double bed (not two twins pushed together), and good soundproofing — I hate hearing hallway noise or the bar downstairs. I’d love a rain shower, some floor space to stretch or do yoga, and a reading light on both sides of the bed. Bonus points if there’s a coworking-style lounge or reading room with natural light. Staff speaking English or Dutch would be great!\n@test_aparts=10",
+    "response": {
+      "reply": "Got it: Haarlem, 15-18 Aug 2027 and 1 adult. Applied: Room has good soundproofing from hallway, street, or bar noise, Room floor area (at least 30 m2), Room has internet facilities, Room has reading light, Room has shower and Property offers communal lounge / TV room. I could not map these to a supported filter, so they are not part of the search: family-run or boutique (not a big chain); real double bed (not two twins pushed together); reading light on both sides of the bed, and 1 more. There are 10 hotels available that match your filters.",
+      "filters_reply": "Got it: Haarlem, 15-18 Aug 2027 and 1 adult. Applied: Room has good soundproofing from hallway, street, or bar noise, Room floor area (at least 30 m2), Room has internet facilities, Room has reading light, Room has shower and Property offers communal lounge / TV room. I could not map these to a supported filter, so they are not part of the search: family-run or boutique (not a big chain); real double bed (not two twins pushed together); reading light on both sides of the bed, and 1 more.",
+      "offers_reply": "There are 10 hotels available that match your filters.",
+      "state": {
+        "destination": "Haarlem",
+        "check_in": "2027-08-15",
+        "check_out": "2027-08-18",
+        "adults": 1,
+        "children": 0,
+        "filters": [
+          {
+            "filter_id": "room.soundproofing",
+            "label": "Room has good soundproofing from hallway, street, or bar noise",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.size_m2",
+            "label": "Room floor area",
+            "value_label": "at least 30 m2",
+            "strength": "required",
+            "type": "range"
+          },
+          {
+            "filter_id": "room.internet_facilities",
+            "label": "Room has internet facilities",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.reading_light",
+            "label": "Room has reading light",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.shower",
+            "label": "Room has shower",
+            "value_label": "yes",
+            "strength": "preferred",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "hotel.communal_loungetv_room",
+            "label": "Property offers communal lounge / TV room",
+            "value_label": "yes",
+            "strength": "preferred",
+            "type": "boolean"
+          }
+        ],
+        "pending": null,
+        "ready_for_search": true
+      },
+      "issues": [],
+      "unmapped_requests": [
+        "family-run or boutique (not a big chain)",
+        "real double bed (not two twins pushed together)",
+        "reading light on both sides of the bed",
+        "staff speaking English or Dutch"
+      ],
+      "missing_trip_info": [],
+      "candidate_filter_ids": [
+        "hotel.soundproofrooms",
+        "hotel.openair_bath",
+        "hotel.family_rooms",
+        "room.extra_long_beds_2_meter",
+        "room.soundproofing",
+        "hotel.allergy_free_room_available",
+        "room.internet_facilities",
+        "room.private_open_air_bath",
+        "room.spa_bath",
+        "hotel.communal_loungetv_room",
+        "hotel.roomsfacilities_for_disabled",
+        "hotel.airconditioning",
+        "hotel.steam_room",
+        "hotel.public_bath",
+        "hotel.non_smoking_rooms",
+        "hotel.light_therapy",
+        "hotel.breakfast_in_the_room",
+        "hotel.fitness_room",
+        "hotel.wireless_lan",
+        "room.size_m2",
+        "room.reading_light",
+        "room.airconditioning",
+        "hotel.bar",
+        "room.shower"
+      ],
+      "available_offers_count": 10,
+      "backend_available": true,
+      "offers": [
+        {
+          "apartment": "Amber Haven",
+          "address": "440 Maple Street",
+          "price": "$230-$350"
+        },
+        {
+          "apartment": "Maple Residence",
+          "address": "304 Market Street",
+          "price": "$176-$298"
+        },
+        {
+          "apartment": "Winter Residence",
+          "address": "394 Market Street",
+          "price": "$196-$538"
+        },
+        {
+          "apartment": "Emerald Hotel",
+          "address": "217 Garden Lane",
+          "price": "$223-$564"
+        },
+        {
+          "apartment": "Stone Garden",
+          "address": "219 King Street",
+          "price": "$271-$508"
+        },
+        {
+          "apartment": "Velvet Place",
+          "address": "288 Queen Street",
+          "price": "$322-$646"
+        },
+        {
+          "apartment": "Royal Hotel",
+          "address": "127 Garden Lane",
+          "price": "$203-$324"
+        },
+        {
+          "apartment": "Jade Inn",
+          "address": "295 Pine Street",
+          "price": "$225-$500"
+        },
+        {
+          "apartment": "Dawn Residence",
+          "address": "194 Bridge Avenue",
+          "price": "$206-$518"
+        },
+        {
+          "apartment": "Sky Suites",
+          "address": "256 Sunset Boulevard",
+          "price": "$94-$262"
+        }
+      ],
+      "relaxation_suggestions": []
+    }
+  },
+  {
+    "timestamp": "2026-09-10T23:10:58+03:00",
+    "session_id": "web",
+    "user_message": "I need something in May",
+    "response": {
+      "reply": "I still have Haarlem, 1 adult and 6 saved preferences. Which dates in May would you like to stay (check-in and check-out), and which year?",
+      "filters_reply": "I still have Haarlem, 1 adult and 6 saved preferences. Which dates in May would you like to stay (check-in and check-out), and which year?",
+      "offers_reply": "",
+      "state": {
+        "destination": "Haarlem",
+        "check_in": null,
+        "check_out": null,
+        "adults": 1,
+        "children": 0,
+        "filters": [
+          {
+            "filter_id": "room.soundproofing",
+            "label": "Room has good soundproofing from hallway, street, or bar noise",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.size_m2",
+            "label": "Room floor area",
+            "value_label": "at least 30 m2",
+            "strength": "required",
+            "type": "range"
+          },
+          {
+            "filter_id": "room.internet_facilities",
+            "label": "Room has internet facilities",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.reading_light",
+            "label": "Room has reading light",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.shower",
+            "label": "Room has shower",
+            "value_label": "yes",
+            "strength": "preferred",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "hotel.communal_loungetv_room",
+            "label": "Property offers communal lounge / TV room",
+            "value_label": "yes",
+            "strength": "preferred",
+            "type": "boolean"
+          }
+        ],
+        "pending": {
+          "field": "dates",
+          "hint": "in May"
+        },
+        "ready_for_search": false
+      },
+      "issues": [],
+      "unmapped_requests": [],
+      "missing_trip_info": [
+        "dates"
+      ],
+      "candidate_filter_ids": [
+        "hotel.grocery_deliveries",
+        "hotel.beach_umbrellas",
+        "hotel.fruits",
+        "hotel.massage",
+        "hotel.daily_maid_service",
+        "hotel.meetingbanquet_facilities",
+        "hotel.metal_key_access",
+        "hotel.movie_nights",
+        "hotel.free_face_masks",
+        "room.complementary_afternoon_snacks_and_drinks_in_executive_lounge",
+        "hotel.beach_chairs_loungers",
+        "hotel.wine_champagne",
+        "hotel.manicure",
+        "hotel.first_aid_kit_available",
+        "hotel.fishing",
+        "hotel.tennis_equipment",
+        "hotel.outdoor_furniture",
+        "hotel.aqua_park",
+        "room.complementary_snacks_and_drinks_in_executive_lounge_entire_day",
+        "hotel.minigolf",
+        "hotel.lunch_available",
+        "hotel.bowling",
+        "room.chocolate_or_cookie",
+        "hotel.darts"
+      ],
+      "available_offers_count": null,
+      "backend_available": false,
+      "offers": [],
+      "relaxation_suggestions": []
+    }
+  },
+  {
+    "timestamp": "2026-09-10T23:12:02+03:00",
+    "session_id": "web",
+    "user_message": "23-26 January",
+    "response": {
+      "reply": "Got it: Haarlem, 23-26 Jan 2027 and 1 adult.",
+      "filters_reply": "Got it: Haarlem, 23-26 Jan 2027 and 1 adult.",
+      "offers_reply": "",
+      "state": {
+        "destination": "Haarlem",
+        "check_in": "2027-01-23",
+        "check_out": "2027-01-26",
+        "adults": 1,
+        "children": 0,
+        "filters": [
+          {
+            "filter_id": "room.soundproofing",
+            "label": "Room has good soundproofing from hallway, street, or bar noise",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.size_m2",
+            "label": "Room floor area",
+            "value_label": "at least 30 m2",
+            "strength": "required",
+            "type": "range"
+          },
+          {
+            "filter_id": "room.internet_facilities",
+            "label": "Room has internet facilities",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.reading_light",
+            "label": "Room has reading light",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.shower",
+            "label": "Room has shower",
+            "value_label": "yes",
+            "strength": "preferred",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "hotel.communal_loungetv_room",
+            "label": "Property offers communal lounge / TV room",
+            "value_label": "yes",
+            "strength": "preferred",
+            "type": "boolean"
+          }
+        ],
+        "pending": null,
+        "ready_for_search": true
+      },
+      "issues": [],
+      "unmapped_requests": [],
+      "missing_trip_info": [],
+      "candidate_filter_ids": [
+        "hotel.themed_dinner_nights",
+        "hotel.temporary_art_galleries",
+        "hotel.meetingbanquet_facilities",
+        "hotel.spa_and_wellness_centre",
+        "hotel.twenty_four_hour_front_desk",
+        "hotel.twenty_four_hour_security",
+        "price.per_night",
+        "hotel.dinner_available",
+        "hotel.evening_entertainment",
+        "hotel.live_sports_events_broadcast",
+        "hotel.airconditioning",
+        "hotel.standup_comedy",
+        "hotel.darts",
+        "hotel.wine_champagne",
+        "hotel.movie_nights",
+        "hotel.business_center",
+        "hotel.diving",
+        "hotel.pub_crawls",
+        "hotel.nightclub_dj",
+        "hotel.ski_equipment_hire_on_site",
+        "hotel.rooms_disinfected",
+        "hotel.aerobics",
+        "hotel.tennis_equipment",
+        "hotel.local_culture_tour"
+      ],
+      "available_offers_count": null,
+      "backend_available": false,
+      "offers": [],
+      "relaxation_suggestions": []
+    }
+  },
+  {
+    "timestamp": "2026-09-10T23:12:50+03:00",
+    "session_id": "web",
+    "user_message": "Suggest best deals worldwide",
+    "response": {
+      "reply": "I still have 23-26 Jan 2027, 1 adult and 6 saved preferences. Do you want me to search worldwide (any destination) instead of Haarlem for your existing dates (2027-01-23 to 2027-01-26)?",
+      "filters_reply": "I still have 23-26 Jan 2027, 1 adult and 6 saved preferences. Do you want me to search worldwide (any destination) instead of Haarlem for your existing dates (2027-01-23 to 2027-01-26)?",
+      "offers_reply": "",
+      "state": {
+        "destination": null,
+        "check_in": "2027-01-23",
+        "check_out": "2027-01-26",
+        "adults": 1,
+        "children": 0,
+        "filters": [
+          {
+            "filter_id": "room.soundproofing",
+            "label": "Room has good soundproofing from hallway, street, or bar noise",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.size_m2",
+            "label": "Room floor area",
+            "value_label": "at least 30 m2",
+            "strength": "required",
+            "type": "range"
+          },
+          {
+            "filter_id": "room.internet_facilities",
+            "label": "Room has internet facilities",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.reading_light",
+            "label": "Room has reading light",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.shower",
+            "label": "Room has shower",
+            "value_label": "yes",
+            "strength": "preferred",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "hotel.communal_loungetv_room",
+            "label": "Property offers communal lounge / TV room",
+            "value_label": "yes",
+            "strength": "preferred",
+            "type": "boolean"
+          }
+        ],
+        "pending": {
+          "field": "destination",
+          "hint": "worldwide"
+        },
+        "ready_for_search": false
+      },
+      "issues": [],
+      "unmapped_requests": [],
+      "missing_trip_info": [
+        "destination"
+      ],
+      "candidate_filter_ids": [
+        "hotel.grocery_deliveries",
+        "hotel.currency_exchange",
+        "hotel.car_rental",
+        "hotel.windsurfing",
+        "hotel.local_culture_tour",
+        "hotel.live_sports_events_broadcast",
+        "hotel.standup_comedy",
+        "hotel.badminton_equipment",
+        "hotel.tennis_equipment",
+        "hotel.internet_services",
+        "hotel.daily_maid_service",
+        "hotel.express_checkincheckout",
+        "hotel.snorkeling",
+        "hotel.wine_champagne",
+        "hotel.bike_rental",
+        "hotel.pub_crawls",
+        "hotel.happy_hour",
+        "hotel.bike_tours",
+        "hotel.diving",
+        "price.per_night",
+        "hotel.evening_entertainment",
+        "hotel.spa_wellness_packages",
+        "hotel.public_transport_tickets",
+        "hotel.darts"
+      ],
+      "available_offers_count": null,
+      "backend_available": false,
+      "offers": [],
+      "relaxation_suggestions": []
+    }
+  },
+  {
+    "timestamp": "2026-09-10T23:13:18+03:00",
+    "session_id": "web",
+    "user_message": "London please",
+    "response": {
+      "reply": "Got it: London, 23-26 Jan 2027 and 1 adult.",
+      "filters_reply": "Got it: London, 23-26 Jan 2027 and 1 adult.",
+      "offers_reply": "",
+      "state": {
+        "destination": "London",
+        "check_in": "2027-01-23",
+        "check_out": "2027-01-26",
+        "adults": 1,
+        "children": 0,
+        "filters": [
+          {
+            "filter_id": "room.soundproofing",
+            "label": "Room has good soundproofing from hallway, street, or bar noise",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.size_m2",
+            "label": "Room floor area",
+            "value_label": "at least 30 m2",
+            "strength": "required",
+            "type": "range"
+          },
+          {
+            "filter_id": "room.internet_facilities",
+            "label": "Room has internet facilities",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.reading_light",
+            "label": "Room has reading light",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.shower",
+            "label": "Room has shower",
+            "value_label": "yes",
+            "strength": "preferred",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "hotel.communal_loungetv_room",
+            "label": "Property offers communal lounge / TV room",
+            "value_label": "yes",
+            "strength": "preferred",
+            "type": "boolean"
+          }
+        ],
+        "pending": null,
+        "ready_for_search": true
+      },
+      "issues": [],
+      "unmapped_requests": [],
+      "missing_trip_info": [],
+      "candidate_filter_ids": [
+        "hotel.local_culture_tour",
+        "room.city_view",
+        "hotel.communal_loungetv_room",
+        "hotel.public_transport_tickets",
+        "hotel.lunch_available",
+        "room.landmark_view",
+        "room.complementary_afternoon_snacks_and_drinks_in_executive_lounge",
+        "hotel.luggage_storage",
+        "hotel.live_sports_events_broadcast",
+        "room.complementary_breakfast_in_executive_lounge",
+        "hotel.beach_chairs_loungers",
+        "hotel.live_music_performance",
+        "hotel.pub_crawls",
+        "hotel.evening_entertainment",
+        "room.free_newspapers_and_magazines_in_executive_lounge",
+        "hotel.standup_comedy",
+        "hotel.airport_dropoff",
+        "hotel.darts",
+        "room.complementary_snacks_and_drinks_in_executive_lounge_entire_day",
+        "room.private_checkin_checkout_in_executive_lounge",
+        "room.laptop",
+        "hotel.walking_tours",
+        "hotel.temporary_art_galleries",
+        "rating.stars"
+      ],
+      "available_offers_count": null,
+      "backend_available": false,
+      "offers": [],
+      "relaxation_suggestions": []
+    }
+  }
+]

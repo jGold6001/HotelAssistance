@@ -35,6 +35,7 @@ from hotel_assistance.infrastructure.retrieval.hybrid_retriever import (
 from hotel_assistance.infrastructure.retrieval.semantic_retriever import (
     SemanticCandidateRetriever,
 )
+from hotel_assistance.infrastructure.transcript.recorder import ChatTranscriptRecorder
 
 logger = logging.getLogger(__name__)
 
@@ -90,6 +91,17 @@ def build_hotel_search_client(settings: Settings) -> HotelSearchClient:
         return SimulatedHotelSearchClient()
     logger.info("no hotel backend configured: offer counts will be reported as unknown")
     return UnavailableHotelSearchClient()
+
+
+@lru_cache
+def get_transcript_recorder() -> ChatTranscriptRecorder:
+    settings = get_settings()
+    if settings.transcript_enabled:
+        logger.info("chat turns are recorded under %s/", settings.transcript_dir)
+    return ChatTranscriptRecorder(
+        directory=settings.transcript_dir,
+        enabled=settings.transcript_enabled,
+    )
 
 
 @lru_cache

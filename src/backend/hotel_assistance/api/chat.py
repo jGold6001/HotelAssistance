@@ -6,7 +6,11 @@ from collections.abc import AsyncIterator
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import StreamingResponse
 
-from hotel_assistance.api.dependencies import get_orchestrator, get_registry
+from hotel_assistance.api.dependencies import (
+    get_orchestrator,
+    get_registry,
+    get_transcript_recorder,
+)
 from hotel_assistance.api.schemas import (
     DEFAULT_SESSION_ID,
     ChatRequest,
@@ -22,6 +26,7 @@ from hotel_assistance.application.chat_orchestrator import (
 )
 from hotel_assistance.domain.services.filter_registry import FilterRegistry
 from hotel_assistance.infrastructure.llm.provider import LLMExtractionError
+from hotel_assistance.infrastructure.transcript.recorder import ChatTranscriptRecorder
 
 logger = logging.getLogger(__name__)
 
@@ -33,13 +38,17 @@ async def chat(
     request: ChatRequest,
     orchestrator: ChatOrchestrator = Depends(get_orchestrator),
     registry: FilterRegistry = Depends(get_registry),
+    recorder: ChatTranscriptRecorder = Depends(get_transcript_recorder),
 ) -> ChatResponse:
     try:
         result = await orchestrator.handle_message(request.session_id, request.message)
     except LLMExtractionError as exc:
         logger.warning("extraction failed: %s", exc)
+        await recorder.record(request.session_id, request.message, error=str(exc))
         raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=str(exc)) from exc
-    return to_chat_response(result, registry)
+    response = to_chat_response(result, registry)
+    await recorder.record(request.session_id, request.message, response=response.model_dump(mode="json"))
+    return response
 
 
 @router.post("/chat/stream")
@@ -47,6 +56,7 @@ async def chat_stream(
     request: ChatRequest,
     orchestrator: ChatOrchestrator = Depends(get_orchestrator),
     registry: FilterRegistry = Depends(get_registry),
+    recorder: ChatTranscriptRecorder = Depends(get_transcript_recorder),
 ) -> StreamingResponse:
     """Stream real processing stages, then the final result, as NDJSON.
 
@@ -57,6 +67,9 @@ async def chat_stream(
     the user reads the first half while the search is still running. Once the
     response has started there is no status code left to set, so failures are
     reported as an ``error`` event instead.
+
+    The transcript records the finished turn only: the ``filters`` half is the
+    same turn mid-flight, not a second one.
     """
 
     async def event_stream() -> AsyncIterator[str]:
@@ -78,12 +91,15 @@ async def chat_stream(
                     on_partial=on_partial,
                 )
                 payload = to_chat_response(result, registry).model_dump(mode="json")
+                await recorder.record(request.session_id, request.message, response=payload)
                 await events.put(json.dumps({"type": "result", **payload}))
             except LLMExtractionError as exc:
                 logger.warning("extraction failed: %s", exc)
+                await recorder.record(request.session_id, request.message, error=str(exc))
                 await events.put(json.dumps({"type": "error", "message": str(exc)}))
-            except Exception:
+            except Exception as exc:
                 logger.exception("chat turn failed")
+                await recorder.record(request.session_id, request.message, error=repr(exc))
                 await events.put(
                     json.dumps({"type": "error", "message": "The assistant failed to process this message."})
                 )

@@ -44,6 +44,10 @@ class Settings(BaseModel):
     # Set to false to report offer counts as unknown instead.
     hotel_simulator_enabled: bool = True
 
+    # Every chat turn is appended to ``<dir>/chat_json_<date>.json``.
+    transcript_enabled: bool = True
+    transcript_dir: str = "output"
+
     log_level: str = "INFO"
 
     @classmethod
@@ -61,6 +65,8 @@ class Settings(BaseModel):
             hotel_backend_url=_env("HOTEL_BACKEND_URL"),
             hotel_backend_timeout=float(_env("HOTEL_BACKEND_TIMEOUT", "10.0")),
             hotel_simulator_enabled=_flag("HOTEL_SIMULATOR", default=True),
+            transcript_enabled=_flag("TRANSCRIPT", default=True),
+            transcript_dir=_env("TRANSCRIPT_DIR", "output"),
             log_level=_env("LOG_LEVEL", "INFO"),
         )
 
