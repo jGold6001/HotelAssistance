@@ -37,13 +37,13 @@ uv run uvicorn hotel_assistance.main:app --reload
 
 Open <http://localhost:8000> for the chat UI. The API is on the same port:
 
-| Endpoint | Purpose |
-| --- | --- |
-| `GET /health` | Liveness plus configuration facts (no secrets) |
-| `POST /api/chat` | One turn, plain JSON response |
+| Endpoint                | Purpose                                                                    |
+| ----------------------- | -------------------------------------------------------------------------- |
+| `GET /health`           | Liveness plus configuration facts (no secrets)                             |
+| `POST /api/chat`        | One turn, plain JSON response                                              |
 | `POST /api/chat/stream` | One turn as NDJSON: real stage events, the filter summary, then the result |
-| `GET /api/state` | Current search state for a session |
-| `POST /api/state/reset` | Clear a session |
+| `GET /api/state`        | Current search state for a session                                         |
+| `POST /api/state/reset` | Clear a session                                                            |
 
 The first request builds the embedding index for the whole registry and caches it in
 `.cache/filter_embeddings.json`; later requests only embed the user's message. Editing
@@ -54,6 +54,24 @@ the JSON the assistant actually produced for a message can be read back afterwar
 is a JSON array of `{timestamp, session_id, user_message, response}` entries; a turn that
 failed records `error` in place of `response`. Set `HOTEL_ASSISTANCE_TRANSCRIPT=false` to
 turn recording off.
+
+## Docker
+
+```bash
+cp .env.example .env          # put the OpenAI key in .env
+docker compose up --build     # http://localhost:8000
+```
+
+The image installs the pinned dependencies from `uv.lock` and runs uvicorn as an unprivileged
+user. Two directories are bind-mounted from the host so they survive restarts: `.cache/` (the
+embedding index) and `output/` (chat transcripts). Override the published port with
+`HOTEL_ASSISTANCE_PORT=9000 docker compose up`.
+
+For development with hot reload (mounts `./src`, adds `--reload`):
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+```
 
 ## Test
 
@@ -66,22 +84,22 @@ uv run pytest -m integration   # optional, calls the real OpenAI API
 
 All variables also work without the `HOTEL_ASSISTANCE_` prefix; see [.env.example](.env.example).
 
-| Variable | Default | Notes |
-| --- | --- | --- |
-| `OPENAI_API_KEY` | — | Required |
-| `OPENAI_MODEL` | `gpt-5-mini` | Extraction model |
-| `OPENAI_FALLBACK_MODEL` | `gpt-4.1-mini` | Short opening messages only; later turns use `OPENAI_MODEL` |
-| `RETRIEVAL_MODE` | `hybrid` | `hybrid`, `semantic`, or `keyword` (no API calls) |
-| `FILTER_TOP_K` | `24` | Candidates sent to the model |
-| `HOTEL_BACKEND_URL` | empty | Empty means the mock property simulator stands in for a real backend |
-| `HOTEL_SIMULATOR` | `true` | `false` reports offer counts as unknown instead of simulating them |
-| `TRANSCRIPT` | `true` | `false` stops writing the per-day chat transcript |
-| `TRANSCRIPT_DIR` | `output` | Where `chat_json_<date>.json` is written |
+| Variable                | Default        | Notes                                                                |
+| ----------------------- | -------------- | -------------------------------------------------------------------- |
+| `OPENAI_API_KEY`        | —              | Required                                                             |
+| `OPENAI_MODEL`          | `gpt-5-mini`   | Extraction model                                                     |
+| `OPENAI_FALLBACK_MODEL` | `gpt-4.1-mini` | Short opening messages only; later turns use `OPENAI_MODEL`          |
+| `RETRIEVAL_MODE`        | `hybrid`       | `hybrid`, `semantic`, or `keyword` (no API calls)                    |
+| `FILTER_TOP_K`          | `24`           | Candidates sent to the model                                         |
+| `HOTEL_BACKEND_URL`     | empty          | Empty means the mock property simulator stands in for a real backend |
+| `HOTEL_SIMULATOR`       | `true`         | `false` reports offer counts as unknown instead of simulating them   |
+| `TRANSCRIPT`            | `true`         | `false` stops writing the per-day chat transcript                    |
+| `TRANSCRIPT_DIR`        | `output`       | Where `chat_json_<date>.json` is written                             |
 
 ## Simulated hotel backend
 
 There is no real property backend yet, so with `HOTEL_BACKEND_URL` unset the app simulates one from
-the mock database in [src/backend/mock_db_hotels/hotels_100.json](src/backend/mock_db_hotels/hotels_100.json)
+the mock database in [src/backend/mock\_db\_hotels/hotels\_100.json](src/backend/mock_db_hotels/hotels_100.json)
 (100 properties).
 
 **A complete search runs by itself.** As soon as the state holds a destination, a stay and the
@@ -106,12 +124,15 @@ automatic draw:
 Quiet room in Haarlem @test_aparts = 5    # works inside a normal request too
 ```
 
-- **A directive also forces a search on an incomplete state**, which is how the table can be tested
+* **A directive also forces a search on an incomplete state**, which is how the table can be tested
   before a trip is fully specified.
-- **`@aparts` is accepted as a shorthand**, and a bare `@test_aparts` means zero.
-- **Asking for more than the dataset holds repeats entries at random** rather than inventing
+
+* **`@aparts`** **is accepted as a shorthand**, and a bare `@test_aparts` means zero.
+
+* **Asking for more than the dataset holds repeats entries at random** rather than inventing
   properties; a run is capped at 500 offers and the reply says when it capped one.
-- The directive is stripped out of the message before retrieval and extraction see it, so it never
+
+* The directive is stripped out of the message before retrieval and extraction see it, so it never
   reaches the model, never lands in the conversation history, and never touches the search state. A
   message that is *only* a directive skips the model entirely — testing the table costs nothing.
 
@@ -119,7 +140,7 @@ Quiet room in Haarlem @test_aparts = 5    # works inside a normal request too
 
 **Nothing is invented.** With no hotel backend configured, the count is simulated — explicitly, and
 only from the mock database: the simulator draws a number and lists rows straight out of
-[hotels_100.json](src/backend/mock_db_hotels/hotels_100.json), never making up a property or a
+[hotels\_100.json](src/backend/mock_db_hotels/hotels_100.json), never making up a property or a
 price. Nothing downstream treats that number as anything but the backend's answer, so swapping in a
 real `HOTEL_BACKEND_URL` changes where the count comes from and nothing else. An incomplete search
 still reports `available_offers_count` as `null` rather than guessing at one.
@@ -199,8 +220,3 @@ src/
 └── frontend/                   # static chat UI (no build step)
 ```
 
-## Language
-
-- Use English only in code: identifiers, comments, docstrings, commit messages, log messages, and
-  error messages.
-- Non-code chat replies may be in the language the user writes in.

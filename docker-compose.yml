@@ -1,0 +1,33 @@
+# Hotel Assistance
+#
+#   cp .env.example .env         # put the OpenAI key in .env
+#   docker compose up --build    # http://localhost:8000
+#
+# Development with hot reload (mounts ./src, adds --reload):
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+#
+# The container is stateless apart from two host-mounted directories:
+#   .cache/  - embedding index for the filter registry (rebuilt if missing)
+#   output/  - chat transcripts, chat_json_<date>.json
+
+services:
+  app:
+    build:
+      context: .
+      args:
+        # Match the host user so the bind mounts below stay writable.
+        APP_UID: ${APP_UID:-1000}
+    image: hotel-assistance:latest
+    container_name: hotel-assistance
+    env_file:
+      - .env
+    environment:
+      # Keep the cache and transcripts on the mounted paths regardless of .env.
+      HOTEL_ASSISTANCE_EMBEDDING_CACHE_PATH: .cache/filter_embeddings.json
+      HOTEL_ASSISTANCE_TRANSCRIPT_DIR: output
+    ports:
+      - "${HOTEL_ASSISTANCE_PORT:-8000}:8000"
+    volumes:
+      - ./.cache:/app/.cache
+      - ./output:/app/output
+    restart: unless-stopped

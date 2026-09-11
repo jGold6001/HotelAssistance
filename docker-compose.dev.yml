@@ -1,0 +1,19 @@
+# Development override: live source mount plus uvicorn --reload.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+
+services:
+  app:
+    volumes:
+      - ./src:/app/src:ro
+    command:
+      - uvicorn
+      - hotel_assistance.main:app
+      - --host
+      - "0.0.0.0"
+      - --port
+      - "8000"
+      - --reload
+      - --reload-dir
+      - /app/src/backend
+    restart: "no"

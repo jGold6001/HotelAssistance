@@ -1,0 +1,29 @@
+# Keep the build context to what the image needs: manifest, lock, sources.
+.git
+.gitignore
+.github
+.vscode
+.claude
+.venv
+.cache
+.pytest_cache
+.ruff_cache
+__pycache__
+**/__pycache__
+*.py[cod]
+
+# Secrets are passed at runtime via env_file, never baked into the image.
+.env
+.env.*
+!.env.example
+
+# Not needed inside the container.
+docs
+local
+output
+requests
+tests
+*.md
+Dockerfile
+docker-compose*.yml
+compose*.yaml
