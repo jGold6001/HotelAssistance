@@ -1,0 +1,53 @@
+@baseUrl = http://localhost:8000
+@sessionId = demo
+
+### First turn: destination, dates, guests and several filters at once
+POST {{baseUrl}}/api/chat
+Content-Type: application/json
+
+{
+  "session_id": "{{sessionId}}",
+  "message": "Going to Haarlem 15-18 Aug 2027, travelling solo. I want a quiet, soundproofed room of at least 30 square meters with good in-room Wi-Fi. A communal lounge would be a bonus."
+}
+
+### Follow-up: update a range and add a filter
+POST {{baseUrl}}/api/chat
+Content-Type: application/json
+
+{
+  "session_id": "{{sessionId}}",
+  "message": "Actually make it at least 40 square meters, and add parking"
+}
+
+### Follow-up: remove a filter
+POST {{baseUrl}}/api/chat
+Content-Type: application/json
+
+{
+  "session_id": "{{sessionId}}",
+  "message": "never mind the communal lounge"
+}
+
+### Out of scope: state must stay untouched
+POST {{baseUrl}}/api/chat
+Content-Type: application/json
+
+{
+  "session_id": "{{sessionId}}",
+  "message": "Who won the world cup in 1998?"
+}
+
+### Streaming turn (NDJSON: stage events, then the result)
+POST {{baseUrl}}/api/chat/stream
+Content-Type: application/json
+
+{
+  "session_id": "{{sessionId}}",
+  "message": "add free breakfast"
+}
+
+### Read the current state
+GET {{baseUrl}}/api/state?session_id={{sessionId}}
+
+### Reset the session
+POST {{baseUrl}}/api/state/reset?session_id={{sessionId}}

@@ -1,0 +1,140 @@
+import asyncio
+import json
+import logging
+from collections.abc import AsyncIterator
+
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import StreamingResponse
+
+from hotel_assistance.api.dependencies import (
+    get_orchestrator,
+    get_registry,
+    get_transcript_recorder,
+)
+from hotel_assistance.api.schemas import (
+    DEFAULT_SESSION_ID,
+    ChatRequest,
+    ChatResponse,
+    SearchStateView,
+    to_chat_response,
+    to_state_view,
+)
+from hotel_assistance.application.chat_orchestrator import (
+    ChatOrchestrator,
+    ChatResult,
+    ChatStage,
+)
+from hotel_assistance.domain.services.filter_registry import FilterRegistry
+from hotel_assistance.infrastructure.llm.provider import LLMExtractionError
+from hotel_assistance.infrastructure.transcript.recorder import ChatTranscriptRecorder
+
+logger = logging.getLogger(__name__)
+
+router = APIRouter(prefix="/api", tags=["chat"])
+
+
+@router.post("/chat", response_model=ChatResponse)
+async def chat(
+    request: ChatRequest,
+    orchestrator: ChatOrchestrator = Depends(get_orchestrator),
+    registry: FilterRegistry = Depends(get_registry),
+    recorder: ChatTranscriptRecorder = Depends(get_transcript_recorder),
+) -> ChatResponse:
+    try:
+        result = await orchestrator.handle_message(request.session_id, request.message)
+    except LLMExtractionError as exc:
+        logger.warning("extraction failed: %s", exc)
+        await recorder.record(request.session_id, request.message, error=str(exc))
+        raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=str(exc)) from exc
+    response = to_chat_response(result, registry)
+    await recorder.record(request.session_id, request.message, response=response.model_dump(mode="json"))
+    return response
+
+
+@router.post("/chat/stream")
+async def chat_stream(
+    request: ChatRequest,
+    orchestrator: ChatOrchestrator = Depends(get_orchestrator),
+    registry: FilterRegistry = Depends(get_registry),
+    recorder: ChatTranscriptRecorder = Depends(get_transcript_recorder),
+) -> StreamingResponse:
+    """Stream real processing stages, then the final result, as NDJSON.
+
+    Stages are emitted by the orchestrator as they actually happen, so the
+    thinking indicator in the UI reflects work rather than a timer. A turn
+    speaks twice: a ``filters`` event carries what validation settled, and the
+    ``result`` event that follows carries what the hotel backend answered, so
+    the user reads the first half while the search is still running. Once the
+    response has started there is no status code left to set, so failures are
+    reported as an ``error`` event instead.
+
+    The transcript records the finished turn only: the ``filters`` half is the
+    same turn mid-flight, not a second one.
+    """
+
+    async def event_stream() -> AsyncIterator[str]:
+        events: asyncio.Queue[str | None] = asyncio.Queue()
+
+        async def on_stage(stage: ChatStage) -> None:
+            await events.put(json.dumps({"type": "stage", "stage": stage.value}))
+
+        async def on_partial(partial: ChatResult) -> None:
+            payload = to_chat_response(partial, registry).model_dump(mode="json")
+            await events.put(json.dumps({"type": "filters", **payload}))
+
+        async def run_turn() -> None:
+            try:
+                result = await orchestrator.handle_message(
+                    request.session_id,
+                    request.message,
+                    on_stage=on_stage,
+                    on_partial=on_partial,
+                )
+                payload = to_chat_response(result, registry).model_dump(mode="json")
+                await recorder.record(request.session_id, request.message, response=payload)
+                await events.put(json.dumps({"type": "result", **payload}))
+            except LLMExtractionError as exc:
+                logger.warning("extraction failed: %s", exc)
+                await recorder.record(request.session_id, request.message, error=str(exc))
+                await events.put(json.dumps({"type": "error", "message": str(exc)}))
+            except Exception as exc:
+                logger.exception("chat turn failed")
+                await recorder.record(request.session_id, request.message, error=repr(exc))
+                await events.put(
+                    json.dumps({"type": "error", "message": "The assistant failed to process this message."})
+                )
+            finally:
+                await events.put(None)
+
+        task = asyncio.create_task(run_turn())
+        try:
+            while True:
+                event = await events.get()
+                if event is None:
+                    break
+                yield event + "\n"
+        finally:
+            # A client that disconnects mid-turn must not leave the turn running.
+            task.cancel()
+
+    return StreamingResponse(event_stream(), media_type="application/x-ndjson")
+
+
+@router.get("/state", response_model=SearchStateView)
+async def read_state(
+    session_id: str = DEFAULT_SESSION_ID,
+    orchestrator: ChatOrchestrator = Depends(get_orchestrator),
+    registry: FilterRegistry = Depends(get_registry),
+) -> SearchStateView:
+    return to_state_view(
+        orchestrator.state_for(session_id), registry, orchestrator.pending_for(session_id)
+    )
+
+
+@router.post("/state/reset", response_model=SearchStateView)
+async def reset_state(
+    session_id: str = DEFAULT_SESSION_ID,
+    orchestrator: ChatOrchestrator = Depends(get_orchestrator),
+    registry: FilterRegistry = Depends(get_registry),
+) -> SearchStateView:
+    return to_state_view(orchestrator.reset(session_id), registry)

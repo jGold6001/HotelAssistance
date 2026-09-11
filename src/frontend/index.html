@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hotel Assistance</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#127976;</text></svg>" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">HA</span>
+        <div>
+          <h1>Hotel Assistance</h1>
+          <p class="brand-subtitle">Describe your stay in plain language &mdash; I set the search filters.</p>
+        </div>
+      </div>
+      <div class="header-status">
+        <span id="backend-status" class="pill pill-muted">connecting&hellip;</span>
+        <button id="reset-button" class="ghost-button" type="button">Reset search</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="chat" aria-label="Conversation">
+        <div id="messages" class="messages" role="log" aria-live="polite" aria-relevant="additions"></div>
+
+        <div id="suggestions" class="suggestions" aria-label="Example requests">
+          <button class="chip-button" type="button">Quiet boutique hotel in Haarlem, 15-18 Aug, solo traveller</button>
+          <button class="chip-button" type="button">Room at least 30 m2 with good soundproofing</button>
+          <button class="chip-button" type="button">Add free parking and drop the pool</button>
+          <button class="chip-button" type="button">@test_aparts = 32</button>
+        </div>
+
+        <form id="composer" class="composer" autocomplete="off">
+          <label class="sr-only" for="message-input">Your message</label>
+          <textarea id="message-input" rows="1" placeholder="e.g. Family room in Lisbon, 12-15 May, 2 adults and a child, breakfast included" maxlength="4000"></textarea>
+          <button id="send-button" class="send-button" type="submit">
+            <span class="send-label">Send</span>
+          </button>
+        </form>
+        <p class="composer-hint">Enter to send &middot; Shift+Enter for a new line</p>
+      </section>
+
+      <aside class="state-panel" aria-label="Current search state">
+        <h2>Search state</h2>
+
+        <dl class="trip-facts">
+          <div><dt>Destination</dt><dd id="state-destination" class="empty">not set</dd></div>
+          <div><dt>Dates</dt><dd id="state-dates" class="empty">not set</dd></div>
+          <div><dt>Guests</dt><dd id="state-guests" class="empty">not set</dd></div>
+        </dl>
+
+        <h3>Applied filters <span id="filter-count" class="counter">0</span></h3>
+        <ul id="state-filters" class="filter-list">
+          <li class="empty">No filters yet.</li>
+        </ul>
+
+        <div id="offers-box" class="offers-box" hidden>
+          <span class="offers-label">Offers from hotel backend</span>
+          <strong id="offers-count">&mdash;</strong>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

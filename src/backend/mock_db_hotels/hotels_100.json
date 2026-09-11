@@ -1,0 +1,502 @@
+[
+    {
+        "apartment": "Amber Haven",
+        "address": "10 Maple Street",
+        "price": "$70-$150"
+    },
+    {
+        "apartment": "Azure Retreat",
+        "address": "33 Cedar Avenue",
+        "price": "$87-$196"
+    },
+    {
+        "apartment": "Bright Suites",
+        "address": "56 Meadow Lane",
+        "price": "$104-$242"
+    },
+    {
+        "apartment": "Calm Garden",
+        "address": "79 Oak Avenue",
+        "price": "$121-$288"
+    },
+    {
+        "apartment": "Cedar Lodge",
+        "address": "102 Lake Road",
+        "price": "$138-$334"
+    },
+    {
+        "apartment": "Cloud Inn",
+        "address": "125 Forest Street",
+        "price": "$155-$380"
+    },
+    {
+        "apartment": "Coral Place",
+        "address": "148 River Road",
+        "price": "$172-$426"
+    },
+    {
+        "apartment": "Crystal House",
+        "address": "171 Hill Lane",
+        "price": "$189-$472"
+    },
+    {
+        "apartment": "Dawn Residence",
+        "address": "194 Bridge Avenue",
+        "price": "$206-$518"
+    },
+    {
+        "apartment": "Emerald Hotel",
+        "address": "217 Garden Lane",
+        "price": "$223-$564"
+    },
+    {
+        "apartment": "Golden Haven",
+        "address": "240 Park Avenue",
+        "price": "$240-$330"
+    },
+    {
+        "apartment": "Grand Retreat",
+        "address": "263 Station Road",
+        "price": "$257-$376"
+    },
+    {
+        "apartment": "Green Suites",
+        "address": "286 Sunset Boulevard",
+        "price": "$274-$422"
+    },
+    {
+        "apartment": "Harbor Garden",
+        "address": "309 King Street",
+        "price": "$291-$468"
+    },
+    {
+        "apartment": "Ivory Lodge",
+        "address": "332 Church Lane",
+        "price": "$308-$514"
+    },
+    {
+        "apartment": "Jade Inn",
+        "address": "355 Pine Street",
+        "price": "$325-$560"
+    },
+    {
+        "apartment": "Lake Place",
+        "address": "378 Queen Street",
+        "price": "$82-$346"
+    },
+    {
+        "apartment": "Lunar House",
+        "address": "401 Mill Street",
+        "price": "$99-$392"
+    },
+    {
+        "apartment": "Maple Residence",
+        "address": "424 Market Street",
+        "price": "$116-$438"
+    },
+    {
+        "apartment": "Meadow Hotel",
+        "address": "447 Harbor Road",
+        "price": "$133-$484"
+    },
+    {
+        "apartment": "Moon Haven",
+        "address": "470 Maple Street",
+        "price": "$150-$250"
+    },
+    {
+        "apartment": "Oak Retreat",
+        "address": "493 Cedar Avenue",
+        "price": "$167-$296"
+    },
+    {
+        "apartment": "Ocean Suites",
+        "address": "26 Meadow Lane",
+        "price": "$184-$342"
+    },
+    {
+        "apartment": "Olive Garden",
+        "address": "49 Oak Avenue",
+        "price": "$201-$388"
+    },
+    {
+        "apartment": "Pearl Lodge",
+        "address": "72 Lake Road",
+        "price": "$218-$434"
+    },
+    {
+        "apartment": "Pine Inn",
+        "address": "95 Forest Street",
+        "price": "$235-$480"
+    },
+    {
+        "apartment": "Quiet Place",
+        "address": "118 River Road",
+        "price": "$252-$526"
+    },
+    {
+        "apartment": "River House",
+        "address": "141 Hill Lane",
+        "price": "$269-$572"
+    },
+    {
+        "apartment": "Rose Residence",
+        "address": "164 Bridge Avenue",
+        "price": "$286-$618"
+    },
+    {
+        "apartment": "Royal Hotel",
+        "address": "187 Garden Lane",
+        "price": "$303-$384"
+    },
+    {
+        "apartment": "Ruby Haven",
+        "address": "210 Park Avenue",
+        "price": "$320-$430"
+    },
+    {
+        "apartment": "Silver Retreat",
+        "address": "233 Station Road",
+        "price": "$77-$216"
+    },
+    {
+        "apartment": "Sky Suites",
+        "address": "256 Sunset Boulevard",
+        "price": "$94-$262"
+    },
+    {
+        "apartment": "Stone Garden",
+        "address": "279 King Street",
+        "price": "$111-$308"
+    },
+    {
+        "apartment": "Sunny Lodge",
+        "address": "302 Church Lane",
+        "price": "$128-$354"
+    },
+    {
+        "apartment": "Sunset Inn",
+        "address": "325 Pine Street",
+        "price": "$145-$400"
+    },
+    {
+        "apartment": "Velvet Place",
+        "address": "348 Queen Street",
+        "price": "$162-$446"
+    },
+    {
+        "apartment": "Willow House",
+        "address": "371 Mill Street",
+        "price": "$179-$492"
+    },
+    {
+        "apartment": "Winter Residence",
+        "address": "394 Market Street",
+        "price": "$196-$538"
+    },
+    {
+        "apartment": "Woodland Hotel",
+        "address": "417 Harbor Road",
+        "price": "$213-$304"
+    },
+    {
+        "apartment": "Amber Haven",
+        "address": "440 Maple Street",
+        "price": "$230-$350"
+    },
+    {
+        "apartment": "Azure Retreat",
+        "address": "463 Cedar Avenue",
+        "price": "$247-$396"
+    },
+    {
+        "apartment": "Bright Suites",
+        "address": "486 Meadow Lane",
+        "price": "$264-$442"
+    },
+    {
+        "apartment": "Calm Garden",
+        "address": "19 Oak Avenue",
+        "price": "$281-$488"
+    },
+    {
+        "apartment": "Cedar Lodge",
+        "address": "42 Lake Road",
+        "price": "$298-$534"
+    },
+    {
+        "apartment": "Cloud Inn",
+        "address": "65 Forest Street",
+        "price": "$315-$580"
+    },
+    {
+        "apartment": "Coral Place",
+        "address": "88 River Road",
+        "price": "$72-$366"
+    },
+    {
+        "apartment": "Crystal House",
+        "address": "111 Hill Lane",
+        "price": "$89-$412"
+    },
+    {
+        "apartment": "Dawn Residence",
+        "address": "134 Bridge Avenue",
+        "price": "$106-$458"
+    },
+    {
+        "apartment": "Emerald Hotel",
+        "address": "157 Garden Lane",
+        "price": "$123-$224"
+    },
+    {
+        "apartment": "Golden Haven",
+        "address": "180 Park Avenue",
+        "price": "$140-$270"
+    },
+    {
+        "apartment": "Grand Retreat",
+        "address": "203 Station Road",
+        "price": "$157-$316"
+    },
+    {
+        "apartment": "Green Suites",
+        "address": "226 Sunset Boulevard",
+        "price": "$174-$362"
+    },
+    {
+        "apartment": "Harbor Garden",
+        "address": "249 King Street",
+        "price": "$191-$408"
+    },
+    {
+        "apartment": "Ivory Lodge",
+        "address": "272 Church Lane",
+        "price": "$208-$454"
+    },
+    {
+        "apartment": "Jade Inn",
+        "address": "295 Pine Street",
+        "price": "$225-$500"
+    },
+    {
+        "apartment": "Lake Place",
+        "address": "318 Queen Street",
+        "price": "$242-$546"
+    },
+    {
+        "apartment": "Lunar House",
+        "address": "341 Mill Street",
+        "price": "$259-$592"
+    },
+    {
+        "apartment": "Maple Residence",
+        "address": "364 Market Street",
+        "price": "$276-$358"
+    },
+    {
+        "apartment": "Meadow Hotel",
+        "address": "387 Harbor Road",
+        "price": "$293-$404"
+    },
+    {
+        "apartment": "Moon Haven",
+        "address": "410 Maple Street",
+        "price": "$310-$450"
+    },
+    {
+        "apartment": "Oak Retreat",
+        "address": "433 Cedar Avenue",
+        "price": "$327-$496"
+    },
+    {
+        "apartment": "Ocean Suites",
+        "address": "456 Meadow Lane",
+        "price": "$84-$282"
+    },
+    {
+        "apartment": "Olive Garden",
+        "address": "479 Oak Avenue",
+        "price": "$101-$328"
+    },
+    {
+        "apartment": "Pearl Lodge",
+        "address": "12 Lake Road",
+        "price": "$118-$374"
+    },
+    {
+        "apartment": "Pine Inn",
+        "address": "35 Forest Street",
+        "price": "$135-$420"
+    },
+    {
+        "apartment": "Quiet Place",
+        "address": "58 River Road",
+        "price": "$152-$466"
+    },
+    {
+        "apartment": "River House",
+        "address": "81 Hill Lane",
+        "price": "$169-$512"
+    },
+    {
+        "apartment": "Rose Residence",
+        "address": "104 Bridge Avenue",
+        "price": "$186-$278"
+    },
+    {
+        "apartment": "Royal Hotel",
+        "address": "127 Garden Lane",
+        "price": "$203-$324"
+    },
+    {
+        "apartment": "Ruby Haven",
+        "address": "150 Park Avenue",
+        "price": "$220-$370"
+    },
+    {
+        "apartment": "Silver Retreat",
+        "address": "173 Station Road",
+        "price": "$237-$416"
+    },
+    {
+        "apartment": "Sky Suites",
+        "address": "196 Sunset Boulevard",
+        "price": "$254-$462"
+    },
+    {
+        "apartment": "Stone Garden",
+        "address": "219 King Street",
+        "price": "$271-$508"
+    },
+    {
+        "apartment": "Sunny Lodge",
+        "address": "242 Church Lane",
+        "price": "$288-$554"
+    },
+    {
+        "apartment": "Sunset Inn",
+        "address": "265 Pine Street",
+        "price": "$305-$600"
+    },
+    {
+        "apartment": "Velvet Place",
+        "address": "288 Queen Street",
+        "price": "$322-$646"
+    },
+    {
+        "apartment": "Willow House",
+        "address": "311 Mill Street",
+        "price": "$79-$432"
+    },
+    {
+        "apartment": "Winter Residence",
+        "address": "334 Market Street",
+        "price": "$96-$198"
+    },
+    {
+        "apartment": "Woodland Hotel",
+        "address": "357 Harbor Road",
+        "price": "$113-$244"
+    },
+    {
+        "apartment": "Amber Haven",
+        "address": "380 Maple Street",
+        "price": "$130-$290"
+    },
+    {
+        "apartment": "Azure Retreat",
+        "address": "403 Cedar Avenue",
+        "price": "$147-$336"
+    },
+    {
+        "apartment": "Bright Suites",
+        "address": "426 Meadow Lane",
+        "price": "$164-$382"
+    },
+    {
+        "apartment": "Calm Garden",
+        "address": "449 Oak Avenue",
+        "price": "$181-$428"
+    },
+    {
+        "apartment": "Cedar Lodge",
+        "address": "472 Lake Road",
+        "price": "$198-$474"
+    },
+    {
+        "apartment": "Cloud Inn",
+        "address": "495 Forest Street",
+        "price": "$215-$520"
+    },
+    {
+        "apartment": "Coral Place",
+        "address": "28 River Road",
+        "price": "$232-$566"
+    },
+    {
+        "apartment": "Crystal House",
+        "address": "51 Hill Lane",
+        "price": "$249-$332"
+    },
+    {
+        "apartment": "Dawn Residence",
+        "address": "74 Bridge Avenue",
+        "price": "$266-$378"
+    },
+    {
+        "apartment": "Emerald Hotel",
+        "address": "97 Garden Lane",
+        "price": "$283-$424"
+    },
+    {
+        "apartment": "Golden Haven",
+        "address": "120 Park Avenue",
+        "price": "$300-$470"
+    },
+    {
+        "apartment": "Grand Retreat",
+        "address": "143 Station Road",
+        "price": "$317-$516"
+    },
+    {
+        "apartment": "Green Suites",
+        "address": "166 Sunset Boulevard",
+        "price": "$74-$302"
+    },
+    {
+        "apartment": "Harbor Garden",
+        "address": "189 King Street",
+        "price": "$91-$348"
+    },
+    {
+        "apartment": "Ivory Lodge",
+        "address": "212 Church Lane",
+        "price": "$108-$394"
+    },
+    {
+        "apartment": "Jade Inn",
+        "address": "235 Pine Street",
+        "price": "$125-$440"
+    },
+    {
+        "apartment": "Lake Place",
+        "address": "258 Queen Street",
+        "price": "$142-$486"
+    },
+    {
+        "apartment": "Lunar House",
+        "address": "281 Mill Street",
+        "price": "$159-$252"
+    },
+    {
+        "apartment": "Maple Residence",
+        "address": "304 Market Street",
+        "price": "$176-$298"
+    },
+    {
+        "apartment": "Meadow Hotel",
+        "address": "327 Harbor Road",
+        "price": "$193-$344"
+    }
+]

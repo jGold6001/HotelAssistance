@@ -1,0 +1,523 @@
+[
+  {
+    "timestamp": "2026-09-10T23:29:04+03:00",
+    "session_id": "web",
+    "user_message": "Hey! Going to Haarlem 15-18 Aug. I am traveling solo and looking for a quiet, cozy hotel — ideally something family-run or boutique, not a big chain. The room should be at least 30 square meters, with strong in-room Wi-Fi, a real double bed (not two twins pushed together), and good soundproofing — I hate hearing hallway noise or the bar downstairs. I’d love a rain shower, some floor space to stretch or do yoga, and a reading light on both sides of the bed. Bonus points if there’s a coworking-style lounge or reading room with natural light. Staff speaking English or Dutch would be great!",
+    "response": {
+      "reply": "Got it: Haarlem, 15-18 Aug 2027 and 1 adult. Applied: Room floor area (at least 30 m2), Room has internet facilities, Room has good soundproofing from hallway, street, or bar noise, Room has reading light, Room has shower and Property offers communal lounge / TV room. I could not map these to a supported filter, so they are not part of the search: family-run or boutique (not a big chain); real double bed (not two twins pushed together); floor space to stretch or do yoga, and 2 more. There are 29 hotels available that match your filters.",
+      "filters_reply": "Got it: Haarlem, 15-18 Aug 2027 and 1 adult. Applied: Room floor area (at least 30 m2), Room has internet facilities, Room has good soundproofing from hallway, street, or bar noise, Room has reading light, Room has shower and Property offers communal lounge / TV room. I could not map these to a supported filter, so they are not part of the search: family-run or boutique (not a big chain); real double bed (not two twins pushed together); floor space to stretch or do yoga, and 2 more.",
+      "offers_reply": "There are 29 hotels available that match your filters.",
+      "state": {
+        "destination": "Haarlem",
+        "check_in": "2027-08-15",
+        "check_out": "2027-08-18",
+        "adults": 1,
+        "children": 0,
+        "filters": [
+          {
+            "filter_id": "room.size_m2",
+            "label": "Room floor area",
+            "value_label": "at least 30 m2",
+            "strength": "required",
+            "type": "range"
+          },
+          {
+            "filter_id": "room.internet_facilities",
+            "label": "Room has internet facilities",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.soundproofing",
+            "label": "Room has good soundproofing from hallway, street, or bar noise",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.reading_light",
+            "label": "Room has reading light",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.shower",
+            "label": "Room has shower",
+            "value_label": "yes",
+            "strength": "preferred",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "hotel.communal_loungetv_room",
+            "label": "Property offers communal lounge / TV room",
+            "value_label": "yes",
+            "strength": "preferred",
+            "type": "boolean"
+          }
+        ],
+        "pending": null,
+        "ready_for_search": true
+      },
+      "issues": [],
+      "unmapped_requests": [
+        "family-run or boutique (not a big chain)",
+        "real double bed (not two twins pushed together)",
+        "floor space to stretch or do yoga",
+        "reading light on both sides of the bed",
+        "staff speaking English or Dutch"
+      ],
+      "missing_trip_info": [],
+      "candidate_filter_ids": [
+        "hotel.soundproofrooms",
+        "hotel.openair_bath",
+        "hotel.family_rooms",
+        "room.extra_long_beds_2_meter",
+        "room.soundproofing",
+        "hotel.allergy_free_room_available",
+        "room.internet_facilities",
+        "room.private_open_air_bath",
+        "room.spa_bath",
+        "hotel.communal_loungetv_room",
+        "hotel.roomsfacilities_for_disabled",
+        "hotel.airconditioning",
+        "hotel.steam_room",
+        "hotel.public_bath",
+        "hotel.non_smoking_rooms",
+        "hotel.light_therapy",
+        "hotel.breakfast_in_the_room",
+        "hotel.fitness_room",
+        "hotel.wireless_lan",
+        "room.size_m2",
+        "room.reading_light",
+        "room.airconditioning",
+        "hotel.bar",
+        "room.shower"
+      ],
+      "available_offers_count": 29,
+      "backend_available": true,
+      "offers": [
+        {
+          "apartment": "Sunny Lodge",
+          "address": "242 Church Lane",
+          "price": "$288-$554"
+        },
+        {
+          "apartment": "Winter Residence",
+          "address": "394 Market Street",
+          "price": "$196-$538"
+        },
+        {
+          "apartment": "Sunny Lodge",
+          "address": "302 Church Lane",
+          "price": "$128-$354"
+        },
+        {
+          "apartment": "Calm Garden",
+          "address": "19 Oak Avenue",
+          "price": "$281-$488"
+        },
+        {
+          "apartment": "Ocean Suites",
+          "address": "26 Meadow Lane",
+          "price": "$184-$342"
+        },
+        {
+          "apartment": "Bright Suites",
+          "address": "486 Meadow Lane",
+          "price": "$264-$442"
+        },
+        {
+          "apartment": "Crystal House",
+          "address": "171 Hill Lane",
+          "price": "$189-$472"
+        },
+        {
+          "apartment": "Stone Garden",
+          "address": "279 King Street",
+          "price": "$111-$308"
+        },
+        {
+          "apartment": "Cedar Lodge",
+          "address": "472 Lake Road",
+          "price": "$198-$474"
+        },
+        {
+          "apartment": "Azure Retreat",
+          "address": "463 Cedar Avenue",
+          "price": "$247-$396"
+        },
+        {
+          "apartment": "Maple Residence",
+          "address": "424 Market Street",
+          "price": "$116-$438"
+        },
+        {
+          "apartment": "Jade Inn",
+          "address": "235 Pine Street",
+          "price": "$125-$440"
+        },
+        {
+          "apartment": "Stone Garden",
+          "address": "219 King Street",
+          "price": "$271-$508"
+        },
+        {
+          "apartment": "Velvet Place",
+          "address": "348 Queen Street",
+          "price": "$162-$446"
+        },
+        {
+          "apartment": "Jade Inn",
+          "address": "295 Pine Street",
+          "price": "$225-$500"
+        },
+        {
+          "apartment": "Quiet Place",
+          "address": "58 River Road",
+          "price": "$152-$466"
+        },
+        {
+          "apartment": "Oak Retreat",
+          "address": "433 Cedar Avenue",
+          "price": "$327-$496"
+        },
+        {
+          "apartment": "Ruby Haven",
+          "address": "210 Park Avenue",
+          "price": "$320-$430"
+        },
+        {
+          "apartment": "Golden Haven",
+          "address": "240 Park Avenue",
+          "price": "$240-$330"
+        },
+        {
+          "apartment": "Olive Garden",
+          "address": "479 Oak Avenue",
+          "price": "$101-$328"
+        },
+        {
+          "apartment": "Cloud Inn",
+          "address": "495 Forest Street",
+          "price": "$215-$520"
+        },
+        {
+          "apartment": "Azure Retreat",
+          "address": "403 Cedar Avenue",
+          "price": "$147-$336"
+        },
+        {
+          "apartment": "Amber Haven",
+          "address": "440 Maple Street",
+          "price": "$230-$350"
+        },
+        {
+          "apartment": "Maple Residence",
+          "address": "304 Market Street",
+          "price": "$176-$298"
+        },
+        {
+          "apartment": "Woodland Hotel",
+          "address": "357 Harbor Road",
+          "price": "$113-$244"
+        },
+        {
+          "apartment": "Dawn Residence",
+          "address": "74 Bridge Avenue",
+          "price": "$266-$378"
+        },
+        {
+          "apartment": "Grand Retreat",
+          "address": "143 Station Road",
+          "price": "$317-$516"
+        },
+        {
+          "apartment": "Oak Retreat",
+          "address": "493 Cedar Avenue",
+          "price": "$167-$296"
+        },
+        {
+          "apartment": "Cedar Lodge",
+          "address": "42 Lake Road",
+          "price": "$298-$534"
+        }
+      ],
+      "relaxation_suggestions": []
+    }
+  },
+  {
+    "timestamp": "2026-09-10T23:30:18+03:00",
+    "session_id": "web",
+    "user_message": "I need something in May",
+    "response": {
+      "reply": "I still have Haarlem, 1 adult and 6 saved preferences. Which dates in May — and which year — would you like for check-in and check-out?",
+      "filters_reply": "I still have Haarlem, 1 adult and 6 saved preferences. Which dates in May — and which year — would you like for check-in and check-out?",
+      "offers_reply": "",
+      "state": {
+        "destination": "Haarlem",
+        "check_in": null,
+        "check_out": null,
+        "adults": 1,
+        "children": 0,
+        "filters": [
+          {
+            "filter_id": "room.size_m2",
+            "label": "Room floor area",
+            "value_label": "at least 30 m2",
+            "strength": "required",
+            "type": "range"
+          },
+          {
+            "filter_id": "room.internet_facilities",
+            "label": "Room has internet facilities",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.soundproofing",
+            "label": "Room has good soundproofing from hallway, street, or bar noise",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.reading_light",
+            "label": "Room has reading light",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.shower",
+            "label": "Room has shower",
+            "value_label": "yes",
+            "strength": "preferred",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "hotel.communal_loungetv_room",
+            "label": "Property offers communal lounge / TV room",
+            "value_label": "yes",
+            "strength": "preferred",
+            "type": "boolean"
+          }
+        ],
+        "pending": {
+          "field": "dates",
+          "hint": "May"
+        },
+        "ready_for_search": false
+      },
+      "issues": [],
+      "unmapped_requests": [],
+      "missing_trip_info": [
+        "dates"
+      ],
+      "candidate_filter_ids": [
+        "hotel.grocery_deliveries",
+        "hotel.beach_umbrellas",
+        "hotel.fruits",
+        "hotel.massage",
+        "hotel.daily_maid_service",
+        "hotel.meetingbanquet_facilities",
+        "hotel.metal_key_access",
+        "hotel.movie_nights",
+        "hotel.free_face_masks",
+        "room.complementary_afternoon_snacks_and_drinks_in_executive_lounge",
+        "hotel.beach_chairs_loungers",
+        "hotel.wine_champagne",
+        "hotel.manicure",
+        "hotel.first_aid_kit_available",
+        "hotel.fishing",
+        "hotel.tennis_equipment",
+        "hotel.outdoor_furniture",
+        "hotel.aqua_park",
+        "room.complementary_snacks_and_drinks_in_executive_lounge_entire_day",
+        "hotel.minigolf",
+        "hotel.lunch_available",
+        "hotel.bowling",
+        "room.chocolate_or_cookie",
+        "hotel.darts"
+      ],
+      "available_offers_count": null,
+      "backend_available": false,
+      "offers": [],
+      "relaxation_suggestions": []
+    }
+  },
+  {
+    "timestamp": "2026-09-10T23:31:41+03:00",
+    "session_id": "web",
+    "user_message": "22-23 November",
+    "response": {
+      "reply": "Got it: Haarlem, 22-23 Nov 2026 and 1 adult. There are 15 hotels available that match your filters.",
+      "filters_reply": "Got it: Haarlem, 22-23 Nov 2026 and 1 adult.",
+      "offers_reply": "There are 15 hotels available that match your filters.",
+      "state": {
+        "destination": "Haarlem",
+        "check_in": "2026-11-22",
+        "check_out": "2026-11-23",
+        "adults": 1,
+        "children": 0,
+        "filters": [
+          {
+            "filter_id": "room.size_m2",
+            "label": "Room floor area",
+            "value_label": "at least 30 m2",
+            "strength": "required",
+            "type": "range"
+          },
+          {
+            "filter_id": "room.internet_facilities",
+            "label": "Room has internet facilities",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.soundproofing",
+            "label": "Room has good soundproofing from hallway, street, or bar noise",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.reading_light",
+            "label": "Room has reading light",
+            "value_label": "yes",
+            "strength": "required",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "room.shower",
+            "label": "Room has shower",
+            "value_label": "yes",
+            "strength": "preferred",
+            "type": "boolean"
+          },
+          {
+            "filter_id": "hotel.communal_loungetv_room",
+            "label": "Property offers communal lounge / TV room",
+            "value_label": "yes",
+            "strength": "preferred",
+            "type": "boolean"
+          }
+        ],
+        "pending": null,
+        "ready_for_search": true
+      },
+      "issues": [],
+      "unmapped_requests": [],
+      "missing_trip_info": [],
+      "candidate_filter_ids": [
+        "hotel.themed_dinner_nights",
+        "hotel.temporary_art_galleries",
+        "hotel.spa_and_wellness_centre",
+        "hotel.evening_entertainment",
+        "price.per_night",
+        "hotel.dinner_available",
+        "hotel.meetingbanquet_facilities",
+        "hotel.local_culture_tour",
+        "hotel.health_check_available",
+        "hotel.oci_guest_ids_collcted_online",
+        "hotel.movie_nights",
+        "hotel.pub_crawls",
+        "hotel.twenty_four_hour_front_desk",
+        "hotel.public_transport_tickets",
+        "hotel.twenty_four_hour_security",
+        "hotel.standup_comedy",
+        "hotel.bingo",
+        "hotel.bike_tours",
+        "hotel.darts",
+        "hotel.hand_sanitizers_available",
+        "hotel.business_center",
+        "hotel.spa_wellness_packages",
+        "hotel.nightclub_dj",
+        "hotel.thermometers_available"
+      ],
+      "available_offers_count": 15,
+      "backend_available": true,
+      "offers": [
+        {
+          "apartment": "Lake Place",
+          "address": "378 Queen Street",
+          "price": "$82-$346"
+        },
+        {
+          "apartment": "Crystal House",
+          "address": "111 Hill Lane",
+          "price": "$89-$412"
+        },
+        {
+          "apartment": "Stone Garden",
+          "address": "219 King Street",
+          "price": "$271-$508"
+        },
+        {
+          "apartment": "Rose Residence",
+          "address": "164 Bridge Avenue",
+          "price": "$286-$618"
+        },
+        {
+          "apartment": "Bright Suites",
+          "address": "426 Meadow Lane",
+          "price": "$164-$382"
+        },
+        {
+          "apartment": "Olive Garden",
+          "address": "49 Oak Avenue",
+          "price": "$201-$388"
+        },
+        {
+          "apartment": "Lunar House",
+          "address": "281 Mill Street",
+          "price": "$159-$252"
+        },
+        {
+          "apartment": "Winter Residence",
+          "address": "334 Market Street",
+          "price": "$96-$198"
+        },
+        {
+          "apartment": "Stone Garden",
+          "address": "279 King Street",
+          "price": "$111-$308"
+        },
+        {
+          "apartment": "River House",
+          "address": "81 Hill Lane",
+          "price": "$169-$512"
+        },
+        {
+          "apartment": "River House",
+          "address": "141 Hill Lane",
+          "price": "$269-$572"
+        },
+        {
+          "apartment": "Harbor Garden",
+          "address": "189 King Street",
+          "price": "$91-$348"
+        },
+        {
+          "apartment": "Bright Suites",
+          "address": "56 Meadow Lane",
+          "price": "$104-$242"
+        },
+        {
+          "apartment": "Coral Place",
+          "address": "88 River Road",
+          "price": "$72-$366"
+        },
+        {
+          "apartment": "Maple Residence",
+          "address": "424 Market Street",
+          "price": "$116-$438"
+        }
+      ],
+      "relaxation_suggestions": []
+    }
+  }
+]
