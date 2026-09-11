@@ -24,10 +24,19 @@ Requires Python 3.12+ and [uv](https://docs.astral.sh/uv/).
 
 ```bash
 uv sync
-cp .env.example .env      # then set HOTEL_ASSISTANCE_OPENAI_API_KEY
+cp .env.example .env
 ```
 
-OpenAI is the only supported LLM provider.
+OpenAI is the only supported LLM provider, and an API key is **required**: without it the
+assistant cannot extract filters or build the embedding index. Put the key in `.env`:
+
+```dotenv
+HOTEL_ASSISTANCE_OPENAI_API_KEY=sk-...
+```
+
+The plain `OPENAI_API_KEY` name works too, and a variable already exported in the shell takes
+effect the same way. `.env` is git-ignored; never commit the key. To confirm it was picked up,
+`GET /health` reports `"llm_configured": true`.
 
 ## Run
 
@@ -58,8 +67,16 @@ turn recording off.
 ## Docker
 
 ```bash
-cp .env.example .env          # put the OpenAI key in .env
+cp .env.example .env          # set HOTEL_ASSISTANCE_OPENAI_API_KEY inside (required)
 docker compose up --build     # http://localhost:8000
+```
+
+The key reaches the container through `env_file: .env` in `docker-compose.yml`; `.env` is
+excluded from the image by `.dockerignore`, so it is never baked into a layer. To pass it
+without a file, use the host environment instead:
+
+```bash
+docker run --rm -p 8000:8000 -e HOTEL_ASSISTANCE_OPENAI_API_KEY=sk-... hotel-assistance:latest
 ```
 
 The image installs the pinned dependencies from `uv.lock` and runs uvicorn as an unprivileged
