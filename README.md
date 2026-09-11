@@ -198,9 +198,3 @@ src/
 ├── backend/mock_db_hotels/     # mock property database for the simulator
 └── frontend/                   # static chat UI (no build step)
 ```
-
-## Language
-
-- Use English only in code: identifiers, comments, docstrings, commit messages, log messages, and
-  error messages.
-- Non-code chat replies may be in the language the user writes in.
