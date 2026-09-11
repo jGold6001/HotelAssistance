@@ -236,4 +236,3 @@ src/
 ├── backend/mock_db_hotels/     # mock property database for the simulator
 └── frontend/                   # static chat UI (no build step)
 ```
-
